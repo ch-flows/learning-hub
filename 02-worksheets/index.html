@@ -1,11 +1,67 @@
-<link rel="stylesheet" href="../assets/css/global.css">
-<div class="container">
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>华文学习单下载 | Learning Hub</title>
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <style>
+        .list-container { max-width: 650px; width: 100%; margin: 20px; }
+        .file-list { list-style: none; padding: 0; margin: 2rem 0; }
+        .file-item { 
+            background: white; 
+            padding: 1.2rem; 
+            border-radius: 16px; 
+            margin-bottom: 1rem; 
+            border: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.2s;
+        }
+        .file-item:hover { border-color: var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .file-info { display: flex; flex-direction: column; }
+        .file-title { font-weight: 600; color: #202124; margin-bottom: 4px; }
+        .file-status { font-size: 0.8rem; color: #9aa0a6; }
+        .download-btn { 
+            background: #f1f3f4; 
+            color: var(--accent); 
+            padding: 8px 16px; 
+            border-radius: 8px; 
+            text-decoration: none; 
+            font-size: 0.85rem; 
+            font-weight: 700;
+        }
+        .download-btn:hover { background: var(--accent); color: white; }
+        .back-link { display: inline-block; margin-top: 1rem; color: #5f6368; text-decoration: none; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+<div class="container list-container">
     <h2>📝 华文学习单下载</h2>
-    <p>请点击下方链接下载对应单元的 PDF 学习单：</p>
-    <ul style="line-height: 2.5;">
-        <li><a href="#">[待上传] 第一单元：远亲不如近邻 强化练习</a></li>
-        <li><a href="#">[待上传] 第二单元：词汇手册</a></li>
+    <p>请点击文件名直接在线预览或下载：</p>
+
+    <ul class="file-list">
+        <li class="file-item">
+            <div class="file-info">
+                <span class="file-title">第一单元：远亲不如近邻 强化练习</span>
+                <span class="file-status">PDF 格式 | 已上线</span>
+            </div>
+            <a href="unit1-practice.pdf" target="_blank" class="download-btn">点击下载 ↓</a>
+        </li>
+
+        <li class="file-item">
+            <div class="file-info">
+                <span class="file-title">第二单元：核心词汇手册</span>
+                <span class="file-status">待上传</span>
+            </div>
+            <a href="#" class="download-btn" style="opacity: 0.5; cursor: not-allowed;">等待更新</a>
+        </li>
     </ul>
-    <br>
-    <a href="../" style="color: var(--accent); text-decoration: none;">← 返回首页</a>
+
+    <a href="../" class="back-link">← 返回教学主门户</a>
 </div>
+
+</body>
+</html>
