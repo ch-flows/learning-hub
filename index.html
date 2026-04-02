@@ -1,1 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch-Learning-Hub | 教学资源门户</title>
+    <link rel="stylesheet" href="assets/css/global.css">
+    <style>
+        .hero { text-align: center; padding: 4rem 1rem; background: white; border-bottom: 1px solid #eee; margin-bottom: 3rem; width: 100%; }
+        .hero h1 { font-size: 2.2rem; color: #202124; margin-bottom: 0.5rem; }
+        .hero p { color: #5f6368; font-size: 1.1rem; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; width: 90%; max-width: 1100px; margin: 0 auto 5rem; }
+        
+        .nav-card { background: white; padding: 2rem; border-radius: 20px; border: 1.5px solid #f1f3f4; text-decoration: none; transition: 0.3s; display: flex; flex-direction: column; align-items: flex-start; }
+        .nav-card:hover { transform: translateY(-8px); border-color: var(--accent); box-shadow: 0 15px 30px rgba(103, 58, 183, 0.1); }
+        
+        .nav-card .icon { font-size: 2rem; margin-bottom: 1rem; }
+        .nav-card h3 { margin: 0; color: #202124; font-size: 1.3rem; }
+        .nav-card p { color: #70757a; font-size: 0.95rem; margin: 0.8rem 0 1.5rem; line-height: 1.5; }
+        .nav-card .go-btn { color: var(--accent); font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+    </style>
+</head>
+<body style="display: block;"> <section class="hero">
+        <h1>Ch-Learning-Hub</h1>
+        <p>专业、高效、自主的华文学习空间</p>
+    </section>
 
+    <div class="grid">
+        <a href="01-oral-practice/" class="nav-card">
+            <div class="icon">🎤</div>
+            <h3>口试与朗读练习</h3>
+            <p>包含中二朗读、口述演讲等在线录音任务，支持实时上传反馈。</p>
+            <div class="go-btn">进入练习 →</div>
+        </a>
+
+        <a href="worksheets/" class="nav-card">
+            <div class="icon">📝</div>
+            <h3>华文学习单</h3>
+            <p>提供各单元强化练习、词汇表及语法点梳理下载。</p>
+            <div class="go-btn">查看资源 →</div>
+        </a>
+
+        <a href="composition/" class="nav-card">
+            <div class="icon">✍️</div>
+            <h3>作文指导与范文</h3>
+            <p>精选学生优秀作品及写作技巧指导，助力提升表达能力。</p>
+            <div class="go-btn">开始阅读 →</div>
+        </a>
+    </div>
+
+</body>
+</html>
