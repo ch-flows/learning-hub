@@ -2,46 +2,34 @@
 <html lang="zh-Hans">
 <head>
     <meta charset="UTF-8">
-    <title>口试练习自动清单</title>
+    <title>学习中心 - 自动清单</title>
+    <link rel="stylesheet" href="../assets/css/global.css">
     <style>
         body { font-family: sans-serif; padding: 20px; background: #f0f7fa; }
-        .list-container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        h2 { color: #006699; border-bottom: 2px solid #eef7fc; padding-bottom: 10px; }
-        .task-link { display: block; padding: 12px; margin: 10px 0; background: #f9fbfd; color: #006699; text-decoration: none; border-radius: 8px; border: 1px solid #d9edf7; transition: 0.2s; }
-        .task-link:hover { background: #006699; color: white; }
+        .list-container { max-width: 500px; margin: 0 auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .task-link { display: block; padding: 15px; margin: 10px 0; background: #f9fbfd; color: #006699; text-decoration: none; border-radius: 8px; border-left: 4px solid #006699; transition: 0.2s; }
+        .task-link:hover { transform: translateX(5px); background: #eef7fc; }
     </style>
 </head>
 <body>
-    <div class="list-container">
-        <h2>🎤 最新练习清单</h2>
-        <div id="file-list">正在同步最新任务...</div>
-    </div>
 
-    <script>
-        // 配置你的信息
-        const user = 'ch-flows';
-        const repo = 'learning-hub';
-        const path = '01-oral-practice';
+<div class="list-container">
+    <h2 id="folder-title">加载中...</h2>
+    <div id="file-list">正在同步任务...</div>
+    <br>
+    <a href="../index.html" style="color:#999; font-size:0.8rem; text-decoration:none;">← 返回主门户</a>
+</div>
 
-        async function fetchFiles() {
-            const response = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/${path}`);
-            const files = await response.json();
-            const listDiv = document.getElementById('file-list');
-            listDiv.innerHTML = ''; // 清空加载提示
+<script src="../assets/js/auto-list.js"></script>
 
-            files.forEach(file => {
-                // 排除掉 index.html 自己，只显示其他的练习文件
-                if (file.name !== 'index.html' && file.name.endsWith('.html')) {
-                    const link = document.createElement('a');
-                    link.href = file.name;
-                    link.className = 'task-link';
-                    // 把文件名还原成易读的文字（如 3a-reading -> 3a reading）
-                    link.innerText = "📌 " + file.name.replace('.html', '').replace(/-/g, ' ').toUpperCase();
-                    listDiv.appendChild(link);
-                }
-            });
-        }
-        fetchFiles();
-    </script>
+<script>
+    // 2. 调用函数：传入 (文件夹路径, 显示区域ID)
+    // 如果是在口试文件夹，就填 '01-oral-practice'
+    const currentFolder = window.location.pathname.split('/').slice(-2, -1)[0] || '01-oral-practice';
+    document.getElementById('folder-title').innerText = "📂 " + currentFolder.toUpperCase();
+    
+    renderFileList(currentFolder, 'file-list');
+</script>
+
 </body>
 </html>
