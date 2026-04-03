@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <title>作文指导与范文库</title>
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #fdfaf0; } /* 换个淡黄色调，更有纸质感 */
+        .list-container { max-width: 500px; margin: 0 auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-top: 5px solid #d4a373; }
+        .task-link { display: block; padding: 15px; margin: 10px 0; background: #fffcf5; color: #8b5e3c; text-decoration: none; border-radius: 8px; border-left: 4px solid #d4a373; transition: 0.2s; }
+        .task-link:hover { transform: translateX(5px); background: #fefae0; }
+    </style>
+</head>
+<body>
+
+<div class="list-container">
+    <h2 id="folder-title">✍️ 作文指导与范文</h2>
+    <div id="file-list">正在同步最新范文...</div>
+    <br>
+    <a href="../index.html" style="color:#999; font-size:0.8rem; text-decoration:none;">← 返回主门户</a>
+</div>
+
+<script src="../assets/js/auto-list.js"></script>
+
+<script>
+    // 脚本会自动根据当前文件夹 'composition' 去抓取文件
+    const currentFolder = 'composition'; 
+    renderFileList(currentFolder, 'file-list');
+</script>
+
+</body>
+</html>
