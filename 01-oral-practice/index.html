@@ -1,1 +1,47 @@
-<a href="unit1-worksheet.pdf">点击下载第一单元学习单</a>
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <title>口试练习自动清单</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f0f7fa; }
+        .list-container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        h2 { color: #006699; border-bottom: 2px solid #eef7fc; padding-bottom: 10px; }
+        .task-link { display: block; padding: 12px; margin: 10px 0; background: #f9fbfd; color: #006699; text-decoration: none; border-radius: 8px; border: 1px solid #d9edf7; transition: 0.2s; }
+        .task-link:hover { background: #006699; color: white; }
+    </style>
+</head>
+<body>
+    <div class="list-container">
+        <h2>🎤 最新练习清单</h2>
+        <div id="file-list">正在同步最新任务...</div>
+    </div>
+
+    <script>
+        // 配置你的信息
+        const user = 'ch-flows';
+        const repo = 'learning-hub';
+        const path = '01-oral-practice';
+
+        async function fetchFiles() {
+            const response = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/${path}`);
+            const files = await response.json();
+            const listDiv = document.getElementById('file-list');
+            listDiv.innerHTML = ''; // 清空加载提示
+
+            files.forEach(file => {
+                // 排除掉 index.html 自己，只显示其他的练习文件
+                if (file.name !== 'index.html' && file.name.endsWith('.html')) {
+                    const link = document.createElement('a');
+                    link.href = file.name;
+                    link.className = 'task-link';
+                    // 把文件名还原成易读的文字（如 3a-reading -> 3a reading）
+                    link.innerText = "📌 " + file.name.replace('.html', '').replace(/-/g, ' ').toUpperCase();
+                    listDiv.appendChild(link);
+                }
+            });
+        }
+        fetchFiles();
+    </script>
+</body>
+</html>
