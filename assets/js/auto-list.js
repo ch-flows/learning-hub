@@ -1,35 +1,55 @@
-<!DOCTYPE html>
-<html lang="zh-Hans">
-<head>
-    <meta charset="UTF-8">
-    <title>学习中心 - 自动清单</title>
-    <link rel="stylesheet" href="../assets/css/global.css">
-    <style>
-        body { font-family: sans-serif; padding: 20px; background: #f0f7fa; }
-        .list-container { max-width: 500px; margin: 0 auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .task-link { display: block; padding: 15px; margin: 10px 0; background: #f9fbfd; color: #006699; text-decoration: none; border-radius: 8px; border-left: 4px solid #006699; transition: 0.2s; }
-        .task-link:hover { transform: translateX(5px); background: #eef7fc; }
-    </style>
-</head>
-<body>
+// 这里的配置请根据你的 GitHub 实际情况填写
+const user = "ch-flows"; 
+const repo = "learning-hub";
+const branch = "main";
 
-<div class="list-container">
-    <h2 id="folder-title">加载中...</h2>
-    <div id="file-list">正在同步任务...</div>
-    <br>
-    <a href="../index.html" style="color:#999; font-size:0.8rem; text-decoration:none;">← 返回主门户</a>
-</div>
+async function renderFileList(folderPath, elementId) {
+    const listDiv = document.getElementById(elementId);
+    const apiUrl = `https://api.github.com/repos/${user}/${repo}/contents/${folderPath}`;
 
-<script src="../assets/js/auto-list.js"></script>
+    try {
+        const response = await fetch(apiUrl);
+        let files = await response.json();
 
-<script>
-    // 2. 调用函数：传入 (文件夹路径, 显示区域ID)
-    // 如果是在口试文件夹，就填 '01-oral-practice'
-    const currentFolder = window.location.pathname.split('/').slice(-2, -1)[0] || '01-oral-practice';
-    document.getElementById('folder-title').innerText = "📂 " + currentFolder.toUpperCase();
-    
-    renderFileList(currentFolder, 'file-list');
-</script>
+        if (!Array.isArray(files)) {
+            listDiv.innerHTML = "<p style='color:red;'>路径配置错误，请检查文件夹名。</p>";
+            return;
+        }
 
-</body>
-</html>
+        // 1. 过滤掉 index.html，并按文件名排序 (确保 01, 02 这种命名起作用)
+        files = files.filter(f => f.name !== 'index.html' && f.name.endsWith('.html'))
+                     .sort((a, b) => a.name.localeCompare(b.name));
+
+        listDiv.innerHTML = ""; // 清空加载状态
+
+        for (const file of files) {
+            // 构建文件的原始访问地址，用来读取 <h1> 标题
+            const rawUrl = `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${folderPath}/${file.name}`;
+            
+            try {
+                const fileResponse = await fetch(rawUrl);
+                const htmlText = await fileResponse.text();
+                
+                // 正则表达式抓取 <h1> 里的内容
+                const match = htmlText.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
+                const displayTitle = (match && match[1]) ? match[1].trim() : file.name;
+
+                // 创建链接卡片
+                const link = document.createElement('a');
+                link.href = file.name; // 点击跳转
+                link.className = 'task-link';
+                link.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>📌 ${displayTitle}</span>
+                        <span style="font-size: 0.7rem; color: #ccc; opacity: 0.6;">${file.name}</span>
+                    </div>
+                `;
+                listDiv.appendChild(link);
+            } catch (e) {
+                console.error("读取文件标题失败:", file.name);
+            }
+        }
+    } catch (error) {
+        listDiv.innerHTML = "<p>同步失败，请检查网络或 GitHub 配置。</p>";
+    }
+}
