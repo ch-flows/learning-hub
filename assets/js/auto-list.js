@@ -1,7 +1,7 @@
 // 通用自动化列表脚本 - ch-flows 专用版
 async function renderFileList(folderPath, elementId) {
     const user = 'ch-flows';
-    const repo = 'ch-learning-hub'; // 请确认你的仓库名
+    const repo = 'learning-hub'; // 请确认你的仓库名
     const listDiv = document.getElementById(elementId);
 
     try {
