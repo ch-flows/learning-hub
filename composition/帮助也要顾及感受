@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>范文赏析 | 帮助也要顾及感受</title>
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <style>
+        :root { --paper-bg: #fdfaf4; --text-color: #3e3a36; --accent-sepia: #8b5e3c; }
+        body { background-color: #f5f5f5; color: var(--text-color); line-height: 1.8; }
+        .essay-container { max-width: 800px; margin: 40px auto; background: var(--paper-bg); padding: 50px; border-radius: 2px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); position: relative; }
+        /* 模拟稿纸装饰 */
+        .essay-container::before { content: ""; position: absolute; top: 0; left: 40px; bottom: 0; width: 2px; background: rgba(139, 94, 60, 0.1); }
+        
+        h1 { color: var(--accent-sepia); text-align: center; font-size: 1.8rem; margin-bottom: 30px; border-bottom: 2px solid #eaddca; padding-bottom: 20px; }
+        p { margin-bottom: 20px; text-indent: 2em; text-align: justify; }
+        
+        .highlight { border-bottom: 2px dotted #d4a373; font-weight: bold; color: #a67c52; }
+        
+        /* 写作小贴士卡片 */
+        .tips-box { background: #fff; border-left: 5px solid var(--accent-sepia); padding: 20px; margin-top: 40px; border-radius: 8px; font-size: 0.95rem; }
+        .tips-box h4 { margin-top: 0; color: var(--accent-sepia); display: flex; align-items: center; }
+        
+        .back-btn { display: inline-block; margin-top: 30px; color: #888; text-decoration: none; font-size: 0.9rem; }
+        .back-btn:hover { color: var(--accent-sepia); }
+
+        @media (max-width: 600px) { .essay-container { padding: 25px; margin: 10px; } .essay-container::before { display: none; } }
+    </style>
+</head>
+<body>
+
+<div class="essay-container">
+    <h1>帮助，也要顾及对方的感受</h1>
+    
+    <p>我平时乐于助人，但最近的一次经历让我明白，在为对方提供帮助时也需要顾及对方的感受。</p>
+    
+    <p>在学校，大家常说我是“热心肠”，只要有人需要帮忙，我总会第一个伸出援手。我一直以为，“乐于助人”就是美德——只要出于好心，就一定是好事。直到那件事发生，我才明白：帮助别人，也要讲究方式，更要顾及对方的感受。</p>
+    
+    <p>那次数学测验之后不久，我的同桌小林心情不太好。我知道他考得不好，只考了四十几分。作为他的同桌，我看在眼里，急在心里。于是，我做了一个决定——每天放学后帮他补习数学。</p>
+    
+    <p>那天放学后，我拿出练习册，热情地对小林说：“来，我帮你讲讲今天的错题吧！你哪里不会，我都可以教你。”小林愣了一下，眼神有点<span class="highlight">躲闪</span>，小声说：“不用了……我自己再看看就行。”</p>
+    
+    <p>“哎呀，别客气嘛！”我继续说，“你数学基础差，正需要人帮你补补，我正好擅长这个。”我说完才注意到，小林的脸色变得不太自然，他咬了咬嘴唇，眉头皱了起来。他最终勉强挤出一句话：“那……那好吧，谢谢。”</p>
+    
+    <p>更让我意外的是，第二天，小林向班主任申请换座位。这个消息像一盆冷水，把我从头浇到脚。我不明白，我明明是好心帮他，为什么他反而要躲开我？</p>
+    
+    <p>放学后，我鼓起勇气问他原因。小林沉默了很久，终于开口：“我知道你是好心，可是……你那样帮我，让我觉得自己很没用。你说我‘基础差’‘需要人补’，这些话让我很没面子。我需要的是尊重，不是同情。”</p>
+    
+    <p>小林的话像一记重锤，敲醒了我。我突然意识到，我的“热心”其实是一种“自以为是”。我只顾自己想帮别人，却没站在小林的角度想。原来，帮助不是单方面的给予，而是双向的尊重和理解。</p>
+    
+    <p>这次经历让我明白了：<span class="highlight">善良需要智慧，热心要有分寸</span>。帮助别人是好的，但只有顾及对方的感受，选对方式和时机，这份帮助才能真正温暖人心，而不是变成负担。</p>
+    
+    <p>帮助，不是简单的“我想给，你就得收”，而是“你需要，我在”。这，才是帮助真正的意义。</p>
+
+    <div class="tips-box">
+        <h4>💡 写作亮点解析</h4>
+        <ul>
+            <li><strong>心理描写：</strong> 通过“像一盆冷水”、“一记重锤”生动刻画了作者内心的震惊与反思。</li>
+            <li><strong>细节描写：</strong> “眼神躲闪”、“咬了咬嘴唇”含蓄地暗示了对方难堪的感受。</li>
+            <li><strong>点睛之笔：</strong> 结尾总结“善良需要智慧，热心要有分寸”，将感悟升华到了新的高度。</li>
+        </ul>
+    </div>
+
+    <a href="index.html" class="back-btn">← 返回作文列表</a>
+</div>
+
+</body>
+</html>
