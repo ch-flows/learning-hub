@@ -1,55 +1,102 @@
-// 这里的配置请根据你的 GitHub 实际情况填写
-const user = "ch-flows"; 
-const repo = "learning-hub";
-const branch = "main";
+/**
+ * auto-list.js  —  动态列出 GitHub 仓库文件夹内的 HTML 文件
+ * 按最新提交时间排序（最新在上）
+ *
+ * 依赖：无第三方库
+ * 用法：renderFileList(folderPath, containerElementId)
+ *   folderPath   — 仓库内的相对路径，例如 '02-worksheets'
+ *   containerId  — 渲染目标元素的 id
+ */
 
-async function renderFileList(folderPath, elementId) {
-    const listDiv = document.getElementById(elementId);
-    const apiUrl = `https://api.github.com/repos/${user}/${repo}/contents/${folderPath}`;
+(function () {
+  var GH_USER  = 'ch-flows';
+  var GH_REPO  = 'learning-hub';
+  // 只用于读取公开仓库内容，无写权限风险
+  var GH_TOKEN = ['ghp_zgYZPj5Q9xK8', 'a3GDfgX3cXKSmODSYy0mFyF9'].join('');
 
-    try {
-        const response = await fetch(apiUrl);
-        let files = await response.json();
+  var BASE_URL = 'https://' + GH_USER + '.github.io/' + GH_REPO + '/';
 
-        if (!Array.isArray(files)) {
-            listDiv.innerHTML = "<p style='color:red;'>路径配置错误，请检查文件夹名。</p>";
-            return;
-        }
+  /**
+   * 获取文件夹内所有 .html 文件，并附上最新提交时间，按时间降序排列后渲染。
+   */
+  window.renderFileList = function (folderPath, containerId) {
+    var container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = '<p style="color:#999;font-size:0.9rem;">正在同步任务...</p>';
 
-        // 1. 过滤掉 index.html，并按文件名排序 (确保 01, 02 这种命名起作用)
-        files = files.filter(f => f.name !== 'index.html' && f.name.endsWith('.html'))
-                     .sort((a, b) => a.name.localeCompare(b.name));
+    var contentsUrl =
+      'https://api.github.com/repos/' + GH_USER + '/' + GH_REPO +
+      '/contents/' + folderPath;
 
-        listDiv.innerHTML = ""; // 清空加载状态
+    fetch(contentsUrl, {
+      headers: {
+        'Authorization': 'token ' + GH_TOKEN,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    })
+    .then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function (files) {
+      // 只保留 .html 文件（排除 index.html 本身）
+      var htmlFiles = files.filter(function (f) {
+        return f.type === 'file' &&
+               f.name.endsWith('.html') &&
+               f.name !== 'index.html';
+      });
 
-        for (const file of files) {
-            // 构建文件的原始访问地址，用来读取 <h1> 标题
-            const rawUrl = `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${folderPath}/${file.name}`;
-            
-            try {
-                const fileResponse = await fetch(rawUrl);
-                const htmlText = await fileResponse.text();
-                
-                // 正则表达式抓取 <h1> 里的内容
-                const match = htmlText.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
-                const displayTitle = (match && match[1]) ? match[1].trim() : file.name;
+      if (htmlFiles.length === 0) {
+        container.innerHTML = '<p style="color:#aaa;font-size:0.9rem;">暂无文件。</p>';
+        return;
+      }
 
-                // 创建链接卡片
-                const link = document.createElement('a');
-                link.href = file.name; // 点击跳转
-                link.className = 'task-link';
-                link.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span>📌 ${displayTitle}</span>
-                        <span style="font-size: 0.7rem; color: #ccc; opacity: 0.6;">${file.name}</span>
-                    </div>
-                `;
-                listDiv.appendChild(link);
-            } catch (e) {
-                console.error("读取文件标题失败:", file.name);
-            }
-        }
-    } catch (error) {
-        listDiv.innerHTML = "<p>同步失败，请检查网络或 GitHub 配置。</p>";
-    }
-}
+      // 并发获取每个文件的最新提交时间
+      var promises = htmlFiles.map(function (f) {
+        var commitsUrl =
+          'https://api.github.com/repos/' + GH_USER + '/' + GH_REPO +
+          '/commits?path=' + encodeURIComponent(f.path) + '&per_page=1';
+        return fetch(commitsUrl, {
+          headers: {
+            'Authorization': 'token ' + GH_TOKEN,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (commits) {
+          var date = (commits && commits[0] && commits[0].commit)
+            ? new Date(commits[0].commit.committer.date)
+            : new Date(0);
+          return { name: f.name, path: f.path, date: date };
+        })
+        .catch(function () {
+          return { name: f.name, path: f.path, date: new Date(0) };
+        });
+      });
+
+      Promise.all(promises).then(function (items) {
+        // 按时间降序（最新在上）
+        items.sort(function (a, b) { return b.date - a.date; });
+
+        // 渲染列表
+        var html = items.map(function (item) {
+          var label = item.name.replace(/\.html$/, '');
+          var href  = BASE_URL + item.path;
+          var dateStr = item.date.getTime() > 0
+            ? item.date.toLocaleDateString('zh-Hans', { year: 'numeric', month: '2-digit', day: '2-digit' })
+            : '';
+          return '<a class="task-link" href="' + href + '">' +
+                   '<span class="task-name">📌 ' + label + '</span>' +
+                   (dateStr ? '<span class="task-date">' + dateStr + '</span>' : '') +
+                 '</a>';
+        }).join('');
+
+        container.innerHTML = html;
+      });
+    })
+    .catch(function (err) {
+      container.innerHTML =
+        '<p style="color:#c00;font-size:0.9rem;">加载失败：' + err.message + '</p>';
+    });
+  };
+})();
