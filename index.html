@@ -1,52 +1,137 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ch-Learning-Hub | 教学资源门户</title>
-    <link rel="stylesheet" href="assets/css/global.css">
+    <title>CH-FLOWS | My Oral Buddy</title>
     <style>
-        .hero { text-align: center; padding: 4rem 1rem; background: white; border-bottom: 1px solid #eee; margin-bottom: 3rem; width: 100%; }
-        .hero h1 { font-size: 2.2rem; color: #202124; margin-bottom: 0.5rem; }
-        .hero p { color: #5f6368; font-size: 1.1rem; }
-        
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; width: 90%; max-width: 1100px; margin: 0 auto 5rem; }
-        
-        .nav-card { background: white; padding: 2rem; border-radius: 20px; border: 1.5px solid #f1f3f4; text-decoration: none; transition: 0.3s; display: flex; flex-direction: column; align-items: flex-start; }
-        .nav-card:hover { transform: translateY(-8px); border-color: var(--accent); box-shadow: 0 15px 30px rgba(103, 58, 183, 0.1); }
-        
-        .nav-card .icon { font-size: 2rem; margin-bottom: 1rem; }
-        .nav-card h3 { margin: 0; color: #202124; font-size: 1.3rem; }
-        .nav-card p { color: #70757a; font-size: 0.95rem; margin: 0.8rem 0 1.5rem; line-height: 1.5; }
-        .nav-card .go-btn { color: var(--accent); font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        /* 1. 基础重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #fcfcfc; /* 极轻的底色，衬托纯白卡片 */
+            color: #334155;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* 2. 顶部品牌区 - 极致极简 */
+        header {
+            padding: 100px 0 60px;
+            text-align: center;
+        }
+
+        .brand-logo {
+            font-size: 2.2rem;
+            font-weight: 200; /* 极细字体 */
+            letter-spacing: 12px; /* 超宽间距 */
+            color: #0c4a6e;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .brand-sub {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* 3. 卡片容器布局 */
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            width: 90%;
+            max-width: 1000px;
+            margin-bottom: 100px;
+        }
+
+        /* 4. 纯白极简卡片 */
+        .card {
+            background: #ffffff;
+            border: 1px solid #f1f5f9;
+            border-radius: 24px;
+            padding: 50px 20px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: #0369a1;
+            box-shadow: 0 20px 40px rgba(3, 105, 161, 0.08); /* 淡淡的蓝色光晕 */
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: #1e293b;
+            margin-bottom: 40px;
+            letter-spacing: 1px;
+        }
+
+        /* 图标样式 */
+        .icon-box {
+            color: #0369a1;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 5. 响应式处理 */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr; /* 手机端单列 */
+                gap: 20px;
+            }
+            header {
+                padding: 60px 0 40px;
+            }
+        }
     </style>
 </head>
-<body style="display: block;"> <section class="hero">
-        <h1>Ch-Learning-Hub</h1>
-        <p>专业、高效、自主的华文学习空间</p>
-    </section>
+<body>
 
-    <div class="grid">
-        <a href="01-oral-practice/" class="nav-card">
-    <div class="icon">🎤</div>
-    <h3>口试与朗读练习</h3>
-    <p>包含中二朗读、口述演讲等在线录音任务，支持实时上传反馈。</p>
-    <div class="go-btn">进入练习 →</div>
-</a>
+    <header>
+        <div class="brand-logo">CH-FLOWS</div>
+        <div class="brand-sub">My Oral Buddy | Learning Hub</div>
+    </header>
 
-<a href="02-worksheets/" class="nav-card">
-    <div class="icon">📝</div>
-    <h3>华文学习单</h3>
-    <p>提供各单元强化练习、词汇表及语法点梳理下载。</p>
-    <div class="go-btn">查看资源 →</div>
-</a>
+    <div class="container">
+        <a href="01-oral-practice/index.html" class="card">
+            <h3>朗读练习</h3>
+            <div class="icon-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+            </div>
+        </a>
 
-<a href="03-composition/" class="nav-card">
-    <div class="icon">✍️</div>
-    <h3>作文指导与范文</h3>
-    <p>精选学生优秀作品及写作技巧指导，助力提升表达能力。</p>
-    <div class="go-btn">开始阅读 →</div>
-</a>
+        <a href="02-worksheets/index.html" class="card">
+            <h3>课堂互动</h3>
+            <div class="icon-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+        </a>
+
+        <a href="03-resources/index.html" class="card">
+            <h3>精选集</h3>
+            <div class="icon-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+        </a>
     </div>
 
 </body>
