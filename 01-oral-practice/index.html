@@ -9,30 +9,26 @@
         header { padding: 60px 0 40px; text-align: center; }
         .brand { font-size: 1.25rem; font-weight: 200; letter-spacing: 6px; color: #0c4a6e; text-transform: uppercase; text-decoration: none; }
         .sub { font-size: 0.7rem; color: #94a3b8; letter-spacing: 2px; margin-top: 5px; text-transform: uppercase; }
-
-        /* 任务列表容器 */
-        .list-container { width: 90%; max-width: 600px; background: white; border-radius: 24px; border: 1px solid #f1f5f9; box-shadow: 0 4px 20px rgba(0,0,0,0.02); overflow: hidden; }
+        .list-container { width: 90%; max-width: 600px; background: white; border-radius: 24px; border: 1px solid #f1f5f9; box-shadow: 0 4px 20px rgba(0,0,0,0.02); overflow: hidden; padding: 10px 0; }
         
-        /* 适配 auto-list.js 的样式 */
+        /* 核心：这里对接 auto-list.js 生成的列表样式 */
         .task-link { display: flex !important; justify-content: space-between; align-items: center; padding: 25px 30px; text-decoration: none; color: #1e293b; border-bottom: 1px solid #f8fafc; transition: 0.2s; }
         .task-link:hover { background-color: #f0f9ff; padding-left: 35px; }
-        .task-link:last-child { border-bottom: none; }
-        .task-name { font-size: 1.05rem; font-weight: 400; }
+        .task-name { font-size: 1.05rem; }
         .task-date { font-size: 0.75rem; color: #94a3b8; }
-
+        
         .back-home-icon { margin: 60px 0; padding: 12px; border-radius: 50%; transition: 0.3s; display: inline-flex; }
         .back-home-icon:hover { background: #f1f5f9; transform: scale(1.1); }
     </style>
 </head>
 <body>
-
     <header>
         <a href="../index.html" class="brand">CH-FLOWS</a>
-        <div id="folder-title" class="sub">Loading Tasks...</div>
+        <div id="folder-title" class="sub">TASKS LIST</div>
     </header>
 
     <div class="list-container" id="file-list">
-        <p style="text-align: center; color: #94a3b8; padding: 30px;">正在同步最新练习任务...</p>
+        <p style="text-align: center; color: #94a3b8; padding: 30px;">正在获取练习任务...</p>
     </div>
 
     <a href="../index.html" class="back-home-icon">
