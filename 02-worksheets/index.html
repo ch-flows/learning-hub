@@ -9,10 +9,13 @@
         header { padding: 60px 0 40px; text-align: center; }
         .brand { font-size: 1.25rem; font-weight: 200; letter-spacing: 6px; color: #0c4a6e; text-transform: uppercase; text-decoration: none; }
         .sub { font-size: 0.7rem; color: #94a3b8; letter-spacing: 2px; margin-top: 5px; text-transform: uppercase; }
-        .content-area { width: 90%; max-width: 800px; background: white; border-radius: 24px; border: 1px solid #f1f5f9; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
-        .back-home-icon { margin: 60px 0; padding: 12px; border-radius: 50%; transition: all 0.3s ease; display: inline-flex; }
+        
+        /* 嵌入容器：让外部网页看起来像原生卡片 */
+        .content-area { width: 95%; max-width: 900px; height: 70vh; background: white; border-radius: 24px; border: 1px solid #f1f5f9; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        .back-home-icon { margin: 40px 0; padding: 12px; border-radius: 50%; transition: all 0.3s ease; display: inline-flex; }
         .back-home-icon:hover { background: #f1f5f9; transform: scale(1.1); }
-        .back-home-icon:hover svg { stroke: #0369a1; }
     </style>
 </head>
 <body>
@@ -20,9 +23,11 @@
         <a href="../index.html" class="brand">CH-FLOWS</a>
         <div class="sub">Classroom Interaction</div>
     </header>
+
     <div class="content-area">
-        <p style="text-align: center; color: #94a3b8;">任务载入中...</p>
+        <iframe src="您的_WORDWALL_或_SHEETS_链接"></iframe>
     </div>
+
     <a href="../index.html" class="back-home-icon">
         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
     </a>
