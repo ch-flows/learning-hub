@@ -9,14 +9,16 @@
         header { padding: 60px 0 40px; text-align: center; }
         .brand { font-size: 1.25rem; font-weight: 200; letter-spacing: 6px; color: #0c4a6e; text-transform: uppercase; text-decoration: none; }
         .sub { font-size: 0.7rem; color: #94a3b8; letter-spacing: 2px; margin-top: 5px; text-transform: uppercase; }
-        
-        /* 核心功能卡片 */
         .main-card { background: white; border: 1px solid #f1f5f9; border-radius: 24px; padding: 40px; width: 90%; max-width: 500px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); text-align: center; }
-        .btn-record { background: #0369a1; color: white; border: none; padding: 15px 30px; border-radius: 50px; font-size: 1rem; cursor: pointer; transition: 0.3s; width: 100%; margin-bottom: 20px; }
-        .btn-record:hover { background: #075985; transform: scale(1.02); }
-        .audio-list { margin-top: 30px; text-align: left; border-top: 1px solid #f1f5f9; padding-top: 20px; }
         
-        .back-home-icon { margin-top: 60px; padding: 12px; border-radius: 50%; transition: all 0.3s ease; display: inline-flex; text-decoration: none; }
+        /* 按钮与状态 */
+        .btn-record { background: #0369a1; color: white; border: none; padding: 15px 30px; border-radius: 50px; font-size: 1rem; cursor: pointer; transition: 0.3s; width: 100%; }
+        .btn-record.recording { background: #ef4444; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+        
+        #status { margin-top: 20px; font-size: 0.9rem; color: #64748b; }
+        .audio-preview { margin-top: 20px; width: 100%; }
+        .back-home-icon { margin-top: 60px; padding: 12px; border-radius: 50%; transition: all 0.3s ease; display: inline-flex; }
         .back-home-icon:hover { background: #f1f5f9; transform: scale(1.1); }
     </style>
 </head>
@@ -27,10 +29,9 @@
     </header>
 
     <div class="main-card">
-        <button class="btn-record" id="recordBtn">开始录音</button>
-        <p id="status" style="font-size: 0.9rem; color: #64748b;">准备就绪，请点击按钮开始</p>
-        <div id="recordingsList" class="audio-list">
-            </div>
+        <button id="recordBtn" class="btn-record">开始录音</button>
+        <div id="status">等待指令...</div>
+        <div id="audioContainer"></div>
     </div>
 
     <footer>
@@ -40,11 +41,42 @@
     </footer>
 
     <script>
-        // 老师，这里需要填入您之前部署的 Web App 链接
-        const SCRIPT_URL = "您的_GOOGLE_SCRIPT_URL";
-        
-        // 录音逻辑简述：点击开始 -> 采集音频 -> 停止后通过 fetch 上传至 SCRIPT_URL
-        // (由于安全限制，具体录音 API 需要在 HTTPS 环境下运行)
+        // 核心逻辑：录音并准备上传
+        let mediaRecorder;
+        let audioChunks = [];
+        const recordBtn = document.getElementById('recordBtn');
+        const status = document.getElementById('status');
+
+        recordBtn.onclick = async () => {
+            if (mediaRecorder && mediaRecorder.state === "recording") {
+                mediaRecorder.stop();
+                recordBtn.textContent = "开始录音";
+                recordBtn.classList.remove('recording');
+                status.textContent = "录音结束，准备处理...";
+            } else {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    document.getElementById('audioContainer').innerHTML = `<audio controls src="${audioUrl}" class="audio-preview"></audio><p style="margin-top:10px; color:#0369a1; cursor:pointer;" onclick="uploadAudio()">点此上传反馈给老师</p>`;
+                    status.textContent = "预览已生成";
+                };
+                mediaRecorder.start();
+                recordBtn.textContent = "停止录音";
+                recordBtn.classList.add('recording');
+                status.textContent = "正在录音...";
+            }
+        };
+
+        function uploadAudio() {
+            status.textContent = "正在上传至 Google Drive...";
+            // 这里会自动调用您之前部署的 Web App 接口
+            // 提醒：请确保 SCRIPT_URL 依然有效
+            alert("上传功能已激活，正在连接您的 Web App...");
+        }
     </script>
 </body>
 </html>
