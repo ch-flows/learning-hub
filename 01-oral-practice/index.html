@@ -9,10 +9,15 @@
         header { padding: 60px 0 40px; text-align: center; }
         .brand { font-size: 1.25rem; font-weight: 200; letter-spacing: 6px; color: #0c4a6e; text-transform: uppercase; text-decoration: none; }
         .sub { font-size: 0.7rem; color: #94a3b8; letter-spacing: 2px; margin-top: 5px; text-transform: uppercase; }
-        .main-card { background: white; border: 1px solid #f1f5f9; border-radius: 24px; padding: 40px; width: 90%; max-width: 600px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); text-align: center; }
+        
+        /* 核心功能卡片 */
+        .main-card { background: white; border: 1px solid #f1f5f9; border-radius: 24px; padding: 40px; width: 90%; max-width: 500px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); text-align: center; }
+        .btn-record { background: #0369a1; color: white; border: none; padding: 15px 30px; border-radius: 50px; font-size: 1rem; cursor: pointer; transition: 0.3s; width: 100%; margin-bottom: 20px; }
+        .btn-record:hover { background: #075985; transform: scale(1.02); }
+        .audio-list { margin-top: 30px; text-align: left; border-top: 1px solid #f1f5f9; padding-top: 20px; }
+        
         .back-home-icon { margin-top: 60px; padding: 12px; border-radius: 50%; transition: all 0.3s ease; display: inline-flex; text-decoration: none; }
         .back-home-icon:hover { background: #f1f5f9; transform: scale(1.1); }
-        .back-home-icon:hover svg { stroke: #0369a1; }
     </style>
 </head>
 <body>
@@ -20,13 +25,26 @@
         <a href="../index.html" class="brand">CH-FLOWS</a>
         <div class="sub">Oral Practice</div>
     </header>
+
     <div class="main-card">
-        <p style="color: #94a3b8;">录音系统准备就绪</p>
+        <button class="btn-record" id="recordBtn">开始录音</button>
+        <p id="status" style="font-size: 0.9rem; color: #64748b;">准备就绪，请点击按钮开始</p>
+        <div id="recordingsList" class="audio-list">
+            </div>
     </div>
+
     <footer>
         <a href="../index.html" class="back-home-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
         </a>
     </footer>
+
+    <script>
+        // 老师，这里需要填入您之前部署的 Web App 链接
+        const SCRIPT_URL = "您的_GOOGLE_SCRIPT_URL";
+        
+        // 录音逻辑简述：点击开始 -> 采集音频 -> 停止后通过 fetch 上传至 SCRIPT_URL
+        // (由于安全限制，具体录音 API 需要在 HTTPS 环境下运行)
+    </script>
 </body>
 </html>
