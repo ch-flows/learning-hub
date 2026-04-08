@@ -3,79 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ORAL PRACTICE | CH-FLOWS</title>
+    <title>TASKS | CH-FLOWS</title>
     <style>
-        body { font-family: -apple-system, sans-serif; background: #fcfcfc; color: #334155; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        /* 1. 延续 CH-FLOWS 极简风格 */
+        body { font-family: -apple-system, sans-serif; background: #fcfcfc; color: #334155; margin: 0; display: flex; flex-direction: column; align-items: center; }
         header { padding: 60px 0 40px; text-align: center; }
         .brand { font-size: 1.25rem; font-weight: 200; letter-spacing: 6px; color: #0c4a6e; text-transform: uppercase; text-decoration: none; }
         .sub { font-size: 0.7rem; color: #94a3b8; letter-spacing: 2px; margin-top: 5px; text-transform: uppercase; }
-        .main-card { background: white; border: 1px solid #f1f5f9; border-radius: 24px; padding: 40px; width: 90%; max-width: 500px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); text-align: center; }
+
+        /* 2. 列表容器：白色圆角卡片 */
+        .list-container { width: 90%; max-width: 600px; background: white; border-radius: 24px; border: 1px solid #f1f5f9; box-shadow: 0 4px 20px rgba(0,0,0,0.02); overflow: hidden; padding: 10px 0; }
         
-        /* 按钮与状态 */
-        .btn-record { background: #0369a1; color: white; border: none; padding: 15px 30px; border-radius: 50px; font-size: 1rem; cursor: pointer; transition: 0.3s; width: 100%; }
-        .btn-record.recording { background: #ef4444; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
-        
-        #status { margin-top: 20px; font-size: 0.9rem; color: #64748b; }
-        .audio-preview { margin-top: 20px; width: 100%; }
-        .back-home-icon { margin-top: 60px; padding: 12px; border-radius: 50%; transition: all 0.3s ease; display: inline-flex; }
+        /* 3. 自动列表生成的样式兼容 (适配您的 auto-list.js) */
+        .task-link { display: flex !important; justify-content: space-between; align-items: center; padding: 25px 30px; text-decoration: none; color: #1e293b; border-bottom: 1px solid #f8fafc; transition: all 0.2s ease; }
+        .task-link:hover { background-color: #f0f9ff; padding-left: 35px; }
+        .task-link:last-child { border-bottom: none; }
+        .task-name { font-size: 1.05rem; }
+        .task-date { font-size: 0.75rem; color: #94a3b8; }
+
+        /* 4. 底部小房子图标 */
+        .back-home-icon { margin: 60px 0; padding: 12px; border-radius: 50%; transition: all 0.3s ease; display: inline-flex; }
         .back-home-icon:hover { background: #f1f5f9; transform: scale(1.1); }
     </style>
 </head>
 <body>
+
     <header>
         <a href="../index.html" class="brand">CH-FLOWS</a>
-        <div class="sub">Oral Practice</div>
+        <div id="folder-title" class="sub">LOADING...</div>
     </header>
 
-    <div class="main-card">
-        <button id="recordBtn" class="btn-record">开始录音</button>
-        <div id="status">等待指令...</div>
-        <div id="audioContainer"></div>
+    <div class="list-container" id="file-list">
+        <p style="text-align: center; color: #94a3b8; padding: 20px;">正在同步任务...</p>
     </div>
 
-    <footer>
-        <a href="../index.html" class="back-home-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-        </a>
-    </footer>
+    <a href="../index.html" class="back-home-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+    </a>
 
+    <script src="../assets/js/auto-list.js"></script>
     <script>
-        // 核心逻辑：录音并准备上传
-        let mediaRecorder;
-        let audioChunks = [];
-        const recordBtn = document.getElementById('recordBtn');
-        const status = document.getElementById('status');
-
-        recordBtn.onclick = async () => {
-            if (mediaRecorder && mediaRecorder.state === "recording") {
-                mediaRecorder.stop();
-                recordBtn.textContent = "开始录音";
-                recordBtn.classList.remove('recording');
-                status.textContent = "录音结束，准备处理...";
-            } else {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                mediaRecorder = new MediaRecorder(stream);
-                audioChunks = [];
-                mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-                mediaRecorder.onstop = () => {
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                    const audioUrl = URL.createObjectURL(audioBlob);
-                    document.getElementById('audioContainer').innerHTML = `<audio controls src="${audioUrl}" class="audio-preview"></audio><p style="margin-top:10px; color:#0369a1; cursor:pointer;" onclick="uploadAudio()">点此上传反馈给老师</p>`;
-                    status.textContent = "预览已生成";
-                };
-                mediaRecorder.start();
-                recordBtn.textContent = "停止录音";
-                recordBtn.classList.add('recording');
-                status.textContent = "正在录音...";
-            }
-        };
-
-        function uploadAudio() {
-            status.textContent = "正在上传至 Google Drive...";
-            // 这里会自动调用您之前部署的 Web App 接口
-            // 提醒：请确保 SCRIPT_URL 依然有效
-            alert("上传功能已激活，正在连接您的 Web App...");
+        const currentFolder = window.location.pathname.split('/').slice(-2, -1)[0] || '01-oral-practice';
+        document.getElementById('folder-title').innerText = currentFolder.toUpperCase();
+        
+        // 确保 renderFileList 是您 JS 文件里的函数名
+        if (typeof renderFileList === "function") {
+            renderFileList(currentFolder, 'file-list');
+        } else {
+            document.getElementById('file-list').innerHTML = "<p style='text-align:center; padding:20px;'>脚本加载失败，请检查路径</p>";
         }
     </script>
 </body>
