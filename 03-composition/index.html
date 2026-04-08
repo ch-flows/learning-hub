@@ -3,123 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>佳作视界 | CH-FLOWS</title>
+    <title>COLLECTION | CH-FLOWS</title>
     <style>
-        /* 1. 基础样式：延续首页的极简感 */
-        body {
-            font-family: -apple-system, "PingFang SC", sans-serif;
-            background-color: #fcfcfc;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 80px 20px;
-            color: #334155;
-            margin: 0;
-        }
-
-        /* 2. 顶部品牌标识 */
-        .brand-logo {
-            font-size: 1.5rem;
-            font-weight: 200;
-            letter-spacing: 8px;
-            color: #0c4a6e;
-            text-transform: uppercase;
-            margin-bottom: 50px;
-            text-decoration: none;
-            transition: opacity 0.3s;
-        }
-
-        .brand-logo:hover {
-            opacity: 0.7;
-        }
-
-        /* 3. 文章列表容器 */
-        .list-container {
-            width: 100%;
-            max-width: 650px;
-            background: #ffffff;
-            border-radius: 24px;
-            border: 1px solid #f1f5f9;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
-            overflow: hidden;
-        }
-
-        /* 4. 单条文章样式 */
-        .article-link {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 25px 30px;
-            text-decoration: none;
-            color: #1e293b;
-            border-bottom: 1px solid #f8fafc;
-            transition: all 0.2s ease;
-        }
-
-        .article-link:last-child {
-            border-bottom: none;
-        }
-
-        .article-link:hover {
-            background-color: #f0f9ff;
-            padding-left: 35px; /* 悬停时稍微右移，增加动感 */
-        }
-
-        .article-link .title {
-            font-size: 1.1rem;
-            font-weight: 400;
-        }
-
-        /* 5. 标签样式：Secondary 2 */
-        .tag {
-            font-size: 0.75rem;
-            color: #64748b;
-            background: #f1f5f9;
-            padding: 4px 12px;
-            border-radius: 100px;
-            letter-spacing: 0.5px;
-        }
-
-        /* 6. 返回按钮 */
-        .back-home {
-            margin-top: 50px;
-            font-size: 0.9rem;
-            color: #94a3b8;
-            text-decoration: none;
-            transition: color 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .back-home:hover {
-            color: #0369a1;
-        }
-
-        /* 响应式：手机端微调 */
-        @media (max-width: 600px) {
-            body { padding: 60px 15px; }
-            .article-link { padding: 20px; }
-            .article-link .title { font-size: 1rem; }
-        }
+        body { font-family: -apple-system, sans-serif; background: #fcfcfc; color: #334155; margin: 0; display: flex; flex-direction: column; align-items: center; }
+        header { padding: 60px 0 40px; text-align: center; }
+        .brand { font-size: 1.25rem; font-weight: 200; letter-spacing: 6px; color: #0c4a6e; text-transform: uppercase; text-decoration: none; }
+        .sub { font-size: 0.7rem; color: #94a3b8; letter-spacing: 2px; margin-top: 5px; text-transform: uppercase; }
+        .list-container { width: 90%; max-width: 600px; background: white; border-radius: 24px; border: 1px solid #f1f5f9; box-shadow: 0 4px 20px rgba(0,0,0,0.02); overflow: hidden; }
+        .article-link { display: flex; justify-content: space-between; align-items: center; padding: 25px 30px; text-decoration: none; color: #1e293b; border-bottom: 1px solid #f8fafc; transition: all 0.2s ease; }
+        .article-link:hover { background-color: #f0f9ff; padding-left: 35px; }
+        .article-link .title { font-size: 1.05rem; }
+        .tag { font-size: 0.75rem; color: #94a3b8; background: #f1f5f9; padding: 4px 12px; border-radius: 100px; }
+        .back-home-icon { margin: 60px 0; padding: 12px; border-radius: 50%; transition: all 0.3s ease; display: inline-flex; }
+        .back-home-icon:hover { background: #f1f5f9; transform: scale(1.1); }
+        .back-home-icon:hover svg { stroke: #0369a1; }
     </style>
 </head>
 <body>
-
-    <a href="../index.html" class="brand-logo">CH-FLOWS</a>
-
+    <header>
+        <a href="../index.html" class="brand">CH-FLOWS</a>
+        <div class="sub">Curated Collection</div>
+    </header>
     <div class="list-container">
         <a href="comp-s2-help-01.html" class="article-link">
             <span class="title">帮助，也要顾及对方的感受</span>
             <span class="tag">Sec 2</span>
         </a>
-
-        </div>
-
-    <a href="../index.html" class="back-home">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-        返回主页
+    </div>
+    <a href="../index.html" class="back-home-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
     </a>
-
 </body>
 </html>
