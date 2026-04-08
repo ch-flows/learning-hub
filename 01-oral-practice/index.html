@@ -3,26 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TASKS | CH-FLOWS</title>
+    <title>ORAL BUDDY | CH-FLOWS</title>
     <style>
-        /* 1. 延续 CH-FLOWS 极简风格 */
-        body { font-family: -apple-system, sans-serif; background: #fcfcfc; color: #334155; margin: 0; display: flex; flex-direction: column; align-items: center; }
+        /* 1. 延续 CH-FLOWS 品牌视觉 */
+        body { font-family: -apple-system, sans-serif; background: #fcfcfc; color: #334155; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         header { padding: 60px 0 40px; text-align: center; }
         .brand { font-size: 1.25rem; font-weight: 200; letter-spacing: 6px; color: #0c4a6e; text-transform: uppercase; text-decoration: none; }
         .sub { font-size: 0.7rem; color: #94a3b8; letter-spacing: 2px; margin-top: 5px; text-transform: uppercase; }
 
-        /* 2. 列表容器：白色圆角卡片 */
-        .list-container { width: 90%; max-width: 600px; background: white; border-radius: 24px; border: 1px solid #f1f5f9; box-shadow: 0 4px 20px rgba(0,0,0,0.02); overflow: hidden; padding: 10px 0; }
-        
-        /* 3. 自动列表生成的样式兼容 (适配您的 auto-list.js) */
-        .task-link { display: flex !important; justify-content: space-between; align-items: center; padding: 25px 30px; text-decoration: none; color: #1e293b; border-bottom: 1px solid #f8fafc; transition: all 0.2s ease; }
-        .task-link:hover { background-color: #f0f9ff; padding-left: 35px; }
-        .task-link:last-child { border-bottom: none; }
-        .task-name { font-size: 1.05rem; }
-        .task-date { font-size: 0.75rem; color: #94a3b8; }
+        /* 2. 复活 My Oral Buddy 的表单卡片 */
+        .buddy-container { width: 90%; max-width: 500px; background: white; border-radius: 24px; border: 1px solid #f1f5f9; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: #64748b; }
+        .input-group input { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 12px; font-size: 1rem; box-sizing: border-box; outline: none; transition: border 0.3s; }
+        .input-group input:focus { border-color: #0369a1; }
 
-        /* 4. 底部小房子图标 */
-        .back-home-icon { margin: 60px 0; padding: 12px; border-radius: 50%; transition: all 0.3s ease; display: inline-flex; }
+        /* 3. 录音按钮与进度 */
+        .btn-record { background: #0369a1; color: white; border: none; padding: 15px; border-radius: 12px; width: 100%; font-size: 1rem; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .btn-record:disabled { background: #cbd5e1; cursor: not-allowed; }
+        #status-msg { margin-top: 15px; font-size: 0.85rem; color: #64748b; text-align: center; }
+
+        /* 4. 底部返回图标 */
+        .back-home-icon { margin-top: 50px; padding: 12px; border-radius: 50%; transition: all 0.3s ease; display: inline-flex; }
         .back-home-icon:hover { background: #f1f5f9; transform: scale(1.1); }
     </style>
 </head>
@@ -30,28 +32,33 @@
 
     <header>
         <a href="../index.html" class="brand">CH-FLOWS</a>
-        <div id="folder-title" class="sub">LOADING...</div>
+        <div class="sub">Student Recording System</div>
     </header>
 
-    <div class="list-container" id="file-list">
-        <p style="text-align: center; color: #94a3b8; padding: 20px;">正在同步任务...</p>
+    <div class="buddy-container">
+        <div class="input-group">
+            <label>学生姓名 Name</label>
+            <input type="text" id="studentName" placeholder="请输入中文姓名">
+        </div>
+        <div class="input-group">
+            <label>学生编号 Index No.</label>
+            <input type="number" id="indexNo" placeholder="请输入两位数字编号">
+        </div>
+
+        <button id="recordBtn" class="btn-record">开始录音 Start Recording</button>
+        <div id="status-msg">准备就绪，请填写信息后开始</div>
+        <div id="audioPreview" style="margin-top:20px;"></div>
     </div>
 
     <a href="../index.html" class="back-home-icon">
         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
     </a>
 
-    <script src="../assets/js/auto-list.js"></script>
     <script>
-        const currentFolder = window.location.pathname.split('/').slice(-2, -1)[0] || '01-oral-practice';
-        document.getElementById('folder-title').innerText = currentFolder.toUpperCase();
+        const SCRIPT_URL = "您的_GOOGLE_SCRIPT_URL"; // 请把您部署的 Web App 链接填在这里
         
-        // 确保 renderFileList 是您 JS 文件里的函数名
-        if (typeof renderFileList === "function") {
-            renderFileList(currentFolder, 'file-list');
-        } else {
-            document.getElementById('file-list').innerHTML = "<p style='text-align:center; padding:20px;'>脚本加载失败，请检查路径</p>";
-        }
+        // 此处应粘贴原本 My Oral Buddy 的核心录音与上传 JS 逻辑
+        // 如果您不记得了，请告诉我，我为您重写对接 Google Drive 的逻辑
     </script>
 </body>
 </html>
