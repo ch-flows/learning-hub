@@ -1,30 +1,30 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>学习中心 - 自动清单</title>
-    <link rel="stylesheet" href="../assets/css/global.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTERACTION | CH-FLOWS</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; background: #f0f7fa; }
-        .list-container { max-width: 500px; margin: 0 auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .task-link { display: flex; justify-content: space-between; align-items: center; padding: 15px; margin: 10px 0; background: #f9fbfd; color: #006699; text-decoration: none; border-radius: 8px; border-left: 4px solid #006699; transition: 0.2s; }
-        .task-link:hover { transform: translateX(5px); background: #eef7fc; }
-        .task-name { flex: 1; }
-        .task-date { font-size: 0.75rem; color: #aaa; white-space: nowrap; margin-left: 12px; }
+        body { font-family: -apple-system, sans-serif; background: #fcfcfc; color: #334155; margin: 0; display: flex; flex-direction: column; align-items: center; }
+        header { padding: 60px 0 40px; text-align: center; }
+        .brand { font-size: 1.25rem; font-weight: 200; letter-spacing: 6px; color: #0c4a6e; text-transform: uppercase; text-decoration: none; }
+        .sub { font-size: 0.7rem; color: #94a3b8; letter-spacing: 2px; margin-top: 5px; text-transform: uppercase; }
+        .content-area { width: 90%; max-width: 800px; background: white; border-radius: 24px; border: 1px solid #f1f5f9; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+        .back-home-icon { margin: 60px 0; padding: 12px; border-radius: 50%; transition: all 0.3s ease; display: inline-flex; }
+        .back-home-icon:hover { background: #f1f5f9; transform: scale(1.1); }
+        .back-home-icon:hover svg { stroke: #0369a1; }
     </style>
 </head>
 <body>
-<div class="list-container">
-    <h2 id="folder-title">加载中...</h2>
-    <div id="file-list">正在同步任务...</div>
-    <br>
-    <a href="../index.html" style="color:#999; font-size:0.8rem; text-decoration:none;">← 返回主门户</a>
-</div>
-<script src="../assets/js/auto-list.js"></script>
-<script>
-    const currentFolder = window.location.pathname.split('/').slice(-2, -1)[0] || '01-oral-practice';
-    document.getElementById('folder-title').innerText = "📂 " + currentFolder.toUpperCase();
-    renderFileList(currentFolder, 'file-list');
-</script>
+    <header>
+        <a href="../index.html" class="brand">CH-FLOWS</a>
+        <div class="sub">Classroom Interaction</div>
+    </header>
+    <div class="content-area">
+        <p style="text-align: center; color: #94a3b8;">任务载入中...</p>
+    </div>
+    <a href="../index.html" class="back-home-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+    </a>
 </body>
 </html>
