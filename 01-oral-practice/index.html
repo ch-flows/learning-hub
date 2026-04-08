@@ -5,26 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ORAL BUDDY | CH-FLOWS</title>
     <style>
-        /* 1. 延续 CH-FLOWS 品牌视觉 */
         body { font-family: -apple-system, sans-serif; background: #fcfcfc; color: #334155; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         header { padding: 60px 0 40px; text-align: center; }
         .brand { font-size: 1.25rem; font-weight: 200; letter-spacing: 6px; color: #0c4a6e; text-transform: uppercase; text-decoration: none; }
         .sub { font-size: 0.7rem; color: #94a3b8; letter-spacing: 2px; margin-top: 5px; text-transform: uppercase; }
 
-        /* 2. 复活 My Oral Buddy 的表单卡片 */
-        .buddy-container { width: 90%; max-width: 500px; background: white; border-radius: 24px; border: 1px solid #f1f5f9; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+        /* 表单卡片样式 */
+        .buddy-container { width: 90%; max-width: 450px; background: white; border-radius: 24px; border: 1px solid #f1f5f9; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); text-align: center; }
         .input-group { margin-bottom: 20px; text-align: left; }
-        .input-group label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: #64748b; }
-        .input-group input { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 12px; font-size: 1rem; box-sizing: border-box; outline: none; transition: border 0.3s; }
-        .input-group input:focus { border-color: #0369a1; }
+        .input-group label { display: block; margin-bottom: 8px; font-size: 0.85rem; color: #94a3b8; font-weight: 500; }
+        .input-group input { width: 100%; padding: 14px; border: 1px solid #f1f5f9; border-radius: 12px; font-size: 1rem; box-sizing: border-box; outline: none; background: #fbfcfd; }
+        .input-group input:focus { border-color: #0369a1; background: #fff; }
 
-        /* 3. 录音按钮与进度 */
-        .btn-record { background: #0369a1; color: white; border: none; padding: 15px; border-radius: 12px; width: 100%; font-size: 1rem; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-        .btn-record:disabled { background: #cbd5e1; cursor: not-allowed; }
-        #status-msg { margin-top: 15px; font-size: 0.85rem; color: #64748b; text-align: center; }
+        /* 录音按钮状态 */
+        .btn-record { background: #0369a1; color: white; border: none; padding: 16px; border-radius: 14px; width: 100%; font-size: 1rem; cursor: pointer; transition: 0.3s; font-weight: 500; }
+        .btn-record.recording { background: #ef4444; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+        
+        #status { margin-top: 20px; font-size: 0.85rem; color: #64748b; line-height: 1.6; }
+        audio { width: 100%; margin-top: 20px; border-radius: 8px; }
 
-        /* 4. 底部返回图标 */
-        .back-home-icon { margin-top: 50px; padding: 12px; border-radius: 50%; transition: all 0.3s ease; display: inline-flex; }
+        .back-home-icon { margin: 50px 0; padding: 12px; border-radius: 50%; transition: 0.3s; display: inline-flex; }
         .back-home-icon:hover { background: #f1f5f9; transform: scale(1.1); }
     </style>
 </head>
@@ -32,22 +33,22 @@
 
     <header>
         <a href="../index.html" class="brand">CH-FLOWS</a>
-        <div class="sub">Student Recording System</div>
+        <div class="sub">My Oral Buddy System</div>
     </header>
 
     <div class="buddy-container">
         <div class="input-group">
             <label>学生姓名 Name</label>
-            <input type="text" id="studentName" placeholder="请输入中文姓名">
+            <input type="text" id="studentName" placeholder="如：王小明">
         </div>
         <div class="input-group">
             <label>学生编号 Index No.</label>
-            <input type="number" id="indexNo" placeholder="请输入两位数字编号">
+            <input type="number" id="studentNum" placeholder="如：01">
         </div>
 
         <button id="recordBtn" class="btn-record">开始录音 Start Recording</button>
-        <div id="status-msg">准备就绪，请填写信息后开始</div>
-        <div id="audioPreview" style="margin-top:20px;"></div>
+        <div id="status">请填写上方信息后开始录音</div>
+        <div id="previewArea"></div>
     </div>
 
     <a href="../index.html" class="back-home-icon">
@@ -55,10 +56,90 @@
     </a>
 
     <script>
-        const SCRIPT_URL = "您的_GOOGLE_SCRIPT_URL"; // 请把您部署的 Web App 链接填在这里
-        
-        // 此处应粘贴原本 My Oral Buddy 的核心录音与上传 JS 逻辑
-        // 如果您不记得了，请告诉我，我为您重写对接 Google Drive 的逻辑
+        // 【关键配置】请务必将此处改为您部署 GAS 后生成的 Web App URL
+        const SCRIPT_URL = "您的_GOOGLE_SCRIPT_WEB_APP_URL"; 
+
+        let mediaRecorder;
+        let audioChunks = [];
+        const recordBtn = document.getElementById('recordBtn');
+        const status = document.getElementById('status');
+
+        recordBtn.onclick = async () => {
+            const name = document.getElementById('studentName').value.trim();
+            const num = document.getElementById('studentNum').value.trim();
+
+            if(!name || !num) {
+                alert("请先填写姓名和编号！");
+                return;
+            }
+
+            if (mediaRecorder && mediaRecorder.state === "recording") {
+                mediaRecorder.stop();
+                recordBtn.textContent = "开始录音 Start Recording";
+                recordBtn.classList.remove('recording');
+                status.textContent = "正在处理音频，请稍候...";
+            } else {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+                    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                    mediaRecorder.onstop = async () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        const reader = new FileReader();
+                        reader.readAsDataURL(audioBlob);
+                        reader.onloadend = async () => {
+                            const base64Data = reader.result.split(',')[1];
+                            uploadData(base64Data, name, num);
+                        };
+                        
+                        // 显示预览
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        document.getElementById('previewArea').innerHTML = `<audio controls src="${audioUrl}"></audio>`;
+                    };
+                    mediaRecorder.start();
+                    recordBtn.textContent = "停止录音 Stop Recording";
+                    recordBtn.classList.add('recording');
+                    status.textContent = "正在录制您的回答...";
+                } catch (err) {
+                    alert("无法访问麦克风，请确保已授权。");
+                }
+            }
+        };
+
+        async function uploadData(base64, name, num) {
+            status.innerHTML = "<b>⏳ 正在上传至服务器，请勿关闭页面...</b>";
+            
+            const payload = {
+                type: "audio",
+                category: "2", // 对应您 GAS 代码中的 2-口试录音
+                studentName: name,
+                studentNum: num,
+                class: "Sec2-Group", // 这里可以根据您的班级自行修改
+                assignTitle: "Oral_Practice_" + new Date().toLocaleDateString(),
+                audioBase64: base64,
+                audioMimeType: "audio/webm"
+            };
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                if (result.status === "success") {
+                    status.innerHTML = "<b>✅ 上传成功！老师已收到您的录音。</b>";
+                    recordBtn.disabled = true;
+                    recordBtn.style.background = "#10b981";
+                    recordBtn.textContent = "提交完毕 Done";
+                } else {
+                    throw new Error(result.msg);
+                }
+            } catch (err) {
+                status.innerHTML = "<b>❌ 上传失败</b><br>错误原因：" + err.message;
+                console.error(err);
+            }
+        }
     </script>
 </body>
 </html>
