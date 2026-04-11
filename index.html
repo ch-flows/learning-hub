@@ -4,30 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CH-FLOWS | Chinese Learning Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root { 
             --primary-blue: #004e7c; 
             --bg-gradient: linear-gradient(135deg, #004e7c 0%, #0a81ab 100%); 
             --text-main: #1e293b; 
             --text-sub: #64748b; 
+            --text-light: #94a3b8;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        /* 关键：使用 Flex 布局让内容自动撑开 */
         body { 
             font-family: 'Noto Sans SC', sans-serif; 
-            background: #f8fafc;
+            background-color: #f8fafc;
             color: var(--text-main);
-            min-height: 100vh; /* 确保占满全屏高度 */
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* 重点：让上下内容自动拉开距离 */
         }
         
         header {
             background: var(--bg-gradient);
-            padding: 70px 20px 100px; 
+            padding: 60px 20px 80px; 
             text-align: center;
             color: white;
             flex-shrink: 0;
@@ -36,89 +35,96 @@
             font-family: 'Montserrat', sans-serif;
             font-size: 2.2rem;
             font-weight: 600;
-            letter-spacing: 15px;
-            margin-bottom: 12px;
+            letter-spacing: 12px;
+            margin-bottom: 10px;
             text-transform: uppercase;
         }
         .hub-title {
-            font-family: 'Montserrat', sans-serif; font-size: 0.85rem;
-            letter-spacing: 6px; opacity: 0.8; font-weight: 300;
+            font-family: 'Montserrat', sans-serif; font-size: 0.8rem;
+            letter-spacing: 5px; opacity: 0.8; font-weight: 300;
         }
 
-        /* 核心容器：允许它在中间自由伸缩 */
         .main-content {
-            flex: 1; 
+            flex: 1;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            width: 100%;
+            justify-content: center; /* 在大屏下让内容居中分布 */
+            padding-bottom: 40px;
         }
 
         .container {
-            max-width: 1080px;
-            width: 90%;
-            margin: -45px auto 40px; 
+            max-width: 1060px;
+            width: 92%;
+            margin: -35px auto 0; 
             padding: 0 20px;
         }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
         }
 
         .card {
             background: #ffffff;
             border-radius: 16px;
-            padding: 50px 30px;
+            padding: 40px 25px;
             text-align: center;
             text-decoration: none;
-            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.05);
             transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
             border: 1px solid rgba(0, 0, 0, 0.02);
             display: flex; flex-direction: column; align-items: center;
         }
-        .card:hover { transform: translateY(-12px); box-shadow: 0 25px 50px -15px rgba(0, 0, 0, 0.12); }
-        .icon { font-size: 56px; margin-bottom: 30px; }
-        .card h2 { font-size: 1.5rem; letter-spacing: 6px; color: var(--text-main); margin-bottom: 12px; font-weight: 400;}
-        .card .subtitle { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; color: var(--text-sub); letter-spacing: 2px; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1); }
+        .icon { font-size: 48px; margin-bottom: 25px; }
+        .card h2 { font-size: 1.4rem; letter-spacing: 5px; color: var(--text-main); margin-bottom: 8px; font-weight: 400;}
+        .card .subtitle { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: var(--text-sub); letter-spacing: 2px; }
 
-        /* 纯净的名句看板：使用 margin-top: auto 压低重心 */
-        .quote-board {
+        /* 中英双语理念看板 */
+        .vision-board {
             text-align: center;
-            max-width: 600px;
-            padding: 40px 20px;
-            margin-top: auto; /* 关键：在全屏下自动向下推 */
-            margin-bottom: 40px;
-            position: relative;
+            padding: 50px 20px;
+            max-width: 800px;
+            margin: 20px auto 0;
         }
-        .quote-board::before {
-            content: "“";
-            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-            font-size: 3rem; color: rgba(0, 78, 124, 0.05); font-family: serif;
-        }
-        .quote-text {
+        .vision-ch {
             font-size: 1.1rem;
-            line-height: 2.2;
-            color: #94a3b8; /* 调浅一点，更有留白意境 */
+            color: var(--text-sub);
             letter-spacing: 4px;
+            margin-bottom: 12px;
             font-weight: 300;
+        }
+        .vision-en {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            color: var(--text-light);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 300;
+            line-height: 1.8;
         }
 
         footer {
-            padding: 30px 20px;
+            padding: 25px 20px;
             text-align: center;
-            border-top: 1px solid rgba(0,0,0,0.03);
             background: #ffffff;
+            border-top: 1px solid rgba(0,0,0,0.03);
             flex-shrink: 0;
         }
-        .footer-text { font-size: 0.8rem; color: #cbd5e1; letter-spacing: 3px; font-weight: 300; }
+        .footer-text { font-size: 0.75rem; color: #cbd5e1; letter-spacing: 2px; font-weight: 300; }
+
+        /* 针对小窗口/非全屏的优化 */
+        @media (max-height: 800px) {
+            header { padding: 40px 20px 60px; }
+            .vision-board { padding: 30px 20px; }
+            .main-content { justify-content: flex-start; } /* 窗口矮时向上对齐，防止底部被遮 */
+        }
 
         @media (max-width: 768px) {
-            .brand { font-size: 1.8rem; letter-spacing: 8px; }
-            .grid { grid-template-columns: 1fr; }
+            .brand { font-size: 1.7rem; letter-spacing: 8px; }
+            .grid { grid-template-columns: 1fr; gap: 20px; }
             .container { margin-top: 20px; }
-            .quote-board { margin-top: 40px; }
         }
     </style>
 </head>
@@ -149,16 +155,14 @@
             </div>
         </div>
 
-        <div class="quote-board">
-            <p class="quote-text">
-                博观而约取，厚积而薄发。<br>
-                以华文为桥，连接更广阔的世界。
-            </p>
+        <div class="vision-board">
+            <p class="vision-ch">博观而约取，厚积而薄发</p>
+            <p class="vision-en">Broaden your vision to harvest the essence;<br>Accumulate deeply to flourish with brilliance.</p>
         </div>
     </main>
 
     <footer>
-        <div class="footer-text">© 2026 CH-FLOWS · DESIGNED FOR EXCELLENCE</div>
+        <div class="footer-text">© 2026 CH-FLOWS · CONNECTING THE WORLD THROUGH CHINESE</div>
     </footer>
 </body>
 </html>
