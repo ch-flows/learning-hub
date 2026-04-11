@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CH-FLOWS | Learning Hub</title>
+    <title>CH-FLOWS | Chinese Learning Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
     <style>
         :root { 
@@ -14,27 +14,29 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
+        /* 关键：使用 Flex 布局让内容自动撑开 */
         body { 
             font-family: 'Noto Sans SC', sans-serif; 
-            background: linear-gradient(to bottom, #f8fafc 0%, #f1f5f9 100%);
+            background: #f8fafc;
             color: var(--text-main);
-            min-height: 100vh;
+            min-height: 100vh; /* 确保占满全屏高度 */
             display: flex;
             flex-direction: column;
-            overflow-x: hidden; /* 防止全屏切换时出现微小的横向抖动 */
+            justify-content: space-between; /* 重点：让上下内容自动拉开距离 */
         }
         
         header {
             background: var(--bg-gradient);
-            padding: 80px 20px 110px; 
+            padding: 70px 20px 100px; 
             text-align: center;
             color: white;
+            flex-shrink: 0;
         }
         .brand {
             font-family: 'Montserrat', sans-serif;
             font-size: 2.2rem;
             font-weight: 600;
-            letter-spacing: 15px; /* 宽屏下极具美感 */
+            letter-spacing: 15px;
             margin-bottom: 12px;
             text-transform: uppercase;
         }
@@ -43,21 +45,26 @@
             letter-spacing: 6px; opacity: 0.8; font-weight: 300;
         }
 
-        /* 核心布局：控制全屏与非全屏的宽度感 */
+        /* 核心容器：允许它在中间自由伸缩 */
+        .main-content {
+            flex: 1; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
         .container {
-            max-width: 1080px; /* 限制最大宽度，防止全屏时散架 */
+            max-width: 1080px;
             width: 90%;
-            margin: -45px auto 0; 
+            margin: -45px auto 40px; 
             padding: 0 20px;
-            flex: 1;
         }
 
         .grid {
             display: grid;
-            /* 智能响应：在不同屏幕下自动调整列数 */
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 30px;
-            margin-bottom: 80px;
         }
 
         .card {
@@ -71,52 +78,47 @@
             border: 1px solid rgba(0, 0, 0, 0.02);
             display: flex; flex-direction: column; align-items: center;
         }
-        .card:hover { 
-            transform: translateY(-12px); 
-            box-shadow: 0 25px 50px -15px rgba(0, 0, 0, 0.12); 
-            border-color: var(--primary-blue);
-        }
-        
-        .icon { font-size: 56px; margin-bottom: 30px; transition: transform 0.4s ease; }
+        .card:hover { transform: translateY(-12px); box-shadow: 0 25px 50px -15px rgba(0, 0, 0, 0.12); }
+        .icon { font-size: 56px; margin-bottom: 30px; }
         .card h2 { font-size: 1.5rem; letter-spacing: 6px; color: var(--text-main); margin-bottom: 12px; font-weight: 400;}
         .card .subtitle { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; color: var(--text-sub); letter-spacing: 2px; }
 
-        /* 名句看板：移除标签，优化间距 */
+        /* 纯净的名句看板：使用 margin-top: auto 压低重心 */
         .quote-board {
             text-align: center;
             max-width: 600px;
-            margin: 60px auto 120px; /* 增加底部间距，彻底解决“太空”感 */
             padding: 40px 20px;
+            margin-top: auto; /* 关键：在全屏下自动向下推 */
+            margin-bottom: 40px;
             position: relative;
         }
-        /* 增加一个极淡的装饰性引号，提升高级感 */
         .quote-board::before {
             content: "“";
             position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-            font-size: 4rem; color: rgba(0, 78, 124, 0.05); font-family: serif;
+            font-size: 3rem; color: rgba(0, 78, 124, 0.05); font-family: serif;
         }
         .quote-text {
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             line-height: 2.2;
-            color: #64748b;
+            color: #94a3b8; /* 调浅一点，更有留白意境 */
             letter-spacing: 4px;
             font-weight: 300;
         }
 
         footer {
-            padding: 40px 20px;
+            padding: 30px 20px;
             text-align: center;
             border-top: 1px solid rgba(0,0,0,0.03);
-            background: rgba(255,255,255,0.3);
+            background: #ffffff;
+            flex-shrink: 0;
         }
-        .footer-text { font-size: 0.8rem; color: #94a3b8; letter-spacing: 3px; font-weight: 300; }
+        .footer-text { font-size: 0.8rem; color: #cbd5e1; letter-spacing: 3px; font-weight: 300; }
 
-        /* 适配不同尺寸屏幕 */
         @media (max-width: 768px) {
             .brand { font-size: 1.8rem; letter-spacing: 8px; }
             .grid { grid-template-columns: 1fr; }
-            .quote-text { font-size: 1rem; letter-spacing: 2px; }
             .container { margin-top: 20px; }
+            .quote-board { margin-top: 40px; }
         }
     </style>
 </head>
@@ -126,23 +128,25 @@
         <div class="hub-title">CHINESE LEARNING HUB</div>
     </header>
 
-    <div class="container">
-        <div class="grid">
-            <a href="./01-learning-guide/index.html" class="card">
-                <span class="icon">🧭</span>
-                <h2>学法指引</h2>
-                <div class="subtitle">LEARNING GUIDE</div>
-            </a>
-            <a href="./02-interaction/index.html" class="card">
-                <span class="icon">⚡</span>
-                <h2>课堂互动</h2>
-                <div class="subtitle">CLASS INTERACTION</div>
-            </a>
-            <a href="./03-gallery/index.html" class="card">
-                <span class="icon">⭐</span>
-                <h2>佳作视界</h2>
-                <div class="subtitle">EXCELLENCE GALLERY</div>
-            </a>
+    <main class="main-content">
+        <div class="container">
+            <div class="grid">
+                <a href="./01-learning-guide/index.html" class="card">
+                    <span class="icon">🧭</span>
+                    <h2>学法指引</h2>
+                    <div class="subtitle">LEARNING GUIDE</div>
+                </a>
+                <a href="./02-interaction/index.html" class="card">
+                    <span class="icon">⚡</span>
+                    <h2>课堂互动</h2>
+                    <div class="subtitle">CLASS INTERACTION</div>
+                </a>
+                <a href="./03-gallery/index.html" class="card">
+                    <span class="icon">⭐</span>
+                    <h2>佳作视界</h2>
+                    <div class="subtitle">EXCELLENCE GALLERY</div>
+                </a>
+            </div>
         </div>
 
         <div class="quote-board">
@@ -151,7 +155,7 @@
                 以华文为桥，连接更广阔的世界。
             </p>
         </div>
-    </div>
+    </main>
 
     <footer>
         <div class="footer-text">© 2026 CH-FLOWS · DESIGNED FOR EXCELLENCE</div>
