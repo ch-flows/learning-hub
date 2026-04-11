@@ -11,7 +11,6 @@
             --text-main: #1e293b; 
             --text-sub: #475569; 
             --text-english: #64748b; 
-            /* 1. 色调微调：回归深色背景色值，增加稳重感 */
             --bg-base: #f0f4f8; 
         }
         
@@ -25,7 +24,7 @@
         body { 
             font-family: 'Noto Sans SC', sans-serif; 
             display: flex; justify-content: center; align-items: center;
-            /* 1. 关键回归：大标题周围深邃的径向蓝色光晕 */
+            /* 保持你喜欢的蓝色光晕色调 */
             background: radial-gradient(circle at 50% 15%, rgba(10, 129, 171, 0.1) 0%, var(--bg-base) 45%);
         }
 
@@ -40,10 +39,12 @@
         header {
             text-align: center;
             flex-shrink: 0;
-            padding-top: 6vh; /* 保持下移 */
+            padding-top: 8vh; /* 保持标题下移一点 */
             display: flex;
             flex-direction: column;
             align-items: center;
+            /* 移除竖向文字后，稍微拉开底部间距，让呼吸感更自然 */
+            margin-bottom: 2vh; 
         }
 
         .brand {
@@ -62,34 +63,10 @@
             font-size: 0.8rem;
             letter-spacing: 4px;
             color: var(--text-english);
-            text-transform: none; /* 保持标准大小写 */
-            margin-bottom: 25px;
+            text-transform: none; /* 正常大小写 */
         }
 
-        /* 2. 核心修改：移除线条装饰组，改用极淡的纵向水印文本填充空白 */
-        .v-watermark {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .v-watermark-text {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.6rem;
-            letter-spacing: 8px;
-            color: var(--accent-blue);
-            writing-mode: vertical-lr; /* 纵向排版，更有流动感 */
-            text-transform: uppercase;
-            font-weight: 400;
-            opacity: 0.15; /* 极其微弱，像光影水印 */
-            animation: flowBreathe 5s ease-in-out infinite;
-        }
-
-        @keyframes flowBreathe {
-            0%, 100% { opacity: 0.08; transform: translateY(0); }
-            50% { opacity: 0.2; transform: translateY(5px); }
-        }
+        /* 移除了 v-watermark 和所有竖排相关的样式 */
 
         .main-content {
             flex: 1;
@@ -132,6 +109,7 @@
             margin-bottom: 3vh;
         }
 
+        /* 秀气的星号图标 */
         .star-svg {
             width: 50px; height: 50px;
             fill: #ffcf40;
@@ -152,7 +130,6 @@
             font-family: 'Montserrat', sans-serif; 
             font-size: 0.65rem; color: var(--text-english); 
             letter-spacing: 1px;
-            text-transform: none;
         }
 
         .vision-section {
@@ -173,7 +150,6 @@
         @media (max-width: 900px) {
             .grid { gap: 20px; }
             .main-content { padding: 0 20px; }
-            .v-watermark { display: none; } /* 窄屏隐藏装饰文字 */
         }
     </style>
 </head>
@@ -182,10 +158,6 @@
         <header>
             <div class="brand">CH-FLOWS</div>
             <div class="hub-title">Chinese Learning Hub</div>
-            
-            <div class="v-watermark">
-                <div class="v-watermark-text">Explore The Flow</div>
-            </div>
         </header>
 
         <main class="main-content">
