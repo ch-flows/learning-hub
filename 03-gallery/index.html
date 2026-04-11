@@ -2,58 +2,47 @@
 <html lang="zh-Hans">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>佳作视界 | CH-FLOWS</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&family=Montserrat:wght@200;400;500&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #004e7c; --sub: #64748b; --bg: #f0f4f8; --line: #e2e8f0; }
+        :root { --accent-blue: #004e7c; --text-english: #64748b; --bg-base: #f0f4f8; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Noto Sans SC', sans-serif;
-            background: radial-gradient(circle at 50% 10%, rgba(10,129,171,0.10) 0%, var(--bg) 50%);
-            min-height: 100vh; color: #1e293b;
+        html, body { min-height: 100%; background: var(--bg-base); font-family: 'Noto Sans SC', sans-serif; }
+        body { 
+            display: flex; justify-content: center; 
+            background: radial-gradient(circle at 50% 15%, rgba(10, 129, 171, 0.12) 0%, var(--bg-base) 45%);
         }
-        .wrap { max-width: 720px; margin: 0 auto; padding: 6vh 24px 8vh; }
-
-        /* 顶部导航 */
-        .nav { margin-bottom: 4vh; }
-        .back { font-family: 'Montserrat'; font-size: 0.72rem; letter-spacing: 3px;
-                color: var(--accent); text-decoration: none; opacity: 0.5; }
-        .back:hover { opacity: 1; }
-
-        /* 页头 */
-        header { margin-bottom: 4vh; border-bottom: 1px solid var(--line); padding-bottom: 2.5vh; }
-        .page-title { font-size: 1.6rem; letter-spacing: 8px; color: var(--accent); font-weight: 300; }
-        .page-sub { font-family: 'Montserrat'; font-size: 0.7rem; letter-spacing: 3px; color: var(--sub); margin-top: 5px; }
+        .stage { width: 100%; max-width: 1200px; padding: 6vh 20px; display: flex; flex-direction: column; align-items: center; }
+        header { text-align: center; margin-bottom: 6vh; }
+        .back-link { font-family: 'Montserrat'; font-size: 0.75rem; color: var(--accent-blue); text-decoration: none; opacity: 0.5; letter-spacing: 3px; }
+        .page-title { font-size: 2.2rem; letter-spacing: 12px; color: var(--accent-blue); font-weight: 200; margin: 15px 0 5px; }
 
         /* 目录列表 */
-        .article-list { list-style: none; }
-        .article-list li { border-bottom: 1px solid var(--line); }
-        .article-list li:first-child { border-top: 1px solid var(--line); }
+        .article-list { list-style: none; width: 100%; max-width: 680px; }
+        .article-list li { border-bottom: 1px solid rgba(0,78,124,0.1); }
+        .article-list li:first-child { border-top: 1px solid rgba(0,78,124,0.1); }
         .article-list a {
             display: flex; align-items: baseline; justify-content: space-between;
-            gap: 16px; padding: 13px 4px;
+            gap: 16px; padding: 14px 6px;
             text-decoration: none; color: inherit;
-            transition: background 0.15s;
+            transition: padding-left 0.2s;
         }
-        .article-list a:hover { background: rgba(0,78,124,0.04); padding-left: 10px; }
-        .art-title { font-size: 0.97rem; color: var(--accent); flex: 1; min-width: 0;
-                     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .art-meta { font-family: 'Montserrat'; font-size: 0.68rem; letter-spacing: 1px;
-                    color: var(--sub); white-space: nowrap; flex-shrink: 0; }
+        .article-list a:hover { padding-left: 14px; }
+        .art-title { font-size: 0.97rem; color: var(--accent-blue); flex: 1; }
+        .art-date { font-family: 'Montserrat'; font-size: 0.68rem; letter-spacing: 1px; color: var(--text-english); white-space: nowrap; flex-shrink: 0; }
 
-        #empty { color: var(--sub); font-size: 0.88rem; margin-top: 3vh; opacity: 0.6; }
+        #loading { color: var(--accent-blue); opacity: 0.5; font-size: 0.9rem; margin-top: 50px; }
     </style>
 </head>
 <body>
-    <div class="wrap">
-        <nav class="nav"><a href="../index.html" class="back">← BACK</a></nav>
+    <div class="stage">
         <header>
-            <div class="page-title">佳 作 视 界</div>
-            <div class="page-sub">Excellence Gallery</div>
+            <a href="../index.html" class="back-link">← RETURN HUB</a>
+            <h1 class="page-title">佳作视界</h1>
         </header>
+
+        <div id="loading" style="display:none;"></div>
         <ul class="article-list" id="article-list"></ul>
-        <div id="empty" style="display:none;">暂无文章</div>
     </div>
 
     <script>
@@ -63,17 +52,14 @@ var ARTICLES = [];
 // ARTICLES_END
 
 (function(){
-    var list  = document.getElementById('article-list');
-    var empty = document.getElementById('empty');
-    if (!ARTICLES || ARTICLES.length === 0) { empty.style.display = ''; return; }
-    // 最新发布排最前
+    var list = document.getElementById('article-list');
+    if (!ARTICLES || ARTICLES.length === 0) return;
     var sorted = ARTICLES.slice().reverse();
     sorted.forEach(function(a) {
         var li = document.createElement('li');
-        var meta = a.date || '';
         li.innerHTML = '<a href="' + a.file + '">'
             + '<span class="art-title">' + a.title + '</span>'
-            + '<span class="art-meta">' + meta + '</span>'
+            + '<span class="art-date">' + (a.date || '') + '</span>'
             + '</a>';
         list.appendChild(li);
     });
