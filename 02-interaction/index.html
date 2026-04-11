@@ -4,25 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>课堂互动 | CH-FLOWS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&family=Montserrat:wght@200;400;500&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; background-color: #fcfcfc; color: #1e293b; margin: 0; }
-        nav { background: #004e7c; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
-        .nav-brand { color: white; text-decoration: none; font-weight: bold; letter-spacing: 1px; }
-        .back-btn { color: white; text-decoration: none; font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.5); padding: 4px 12px; border-radius: 15px; }
-        .container { max-width: 800px; margin: 50px auto; padding: 0 20px; }
-        h1 { color: #004e7c; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        .status { color: #94a3b8; font-style: italic; margin-top: 40px; }
+        /* 样式与上方保持完全一致，确保跳转时的平滑感 */
+        :root { --accent-blue: #004e7c; --text-main: #1e293b; --text-english: #64748b; --bg-base: #f0f4f8; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; width: 100%; background: var(--bg-base); font-family: 'Noto Sans SC', sans-serif; }
+        body { 
+            display: flex; justify-content: center; 
+            background: radial-gradient(circle at 50% 15%, rgba(10, 129, 171, 0.1) 0%, var(--bg-base) 45%);
+        }
+        .stage { width: 100%; max-width: 1200px; padding: 6vh 20px; display: flex; flex-direction: column; align-items: center; }
+        header { text-align: center; margin-bottom: 8vh; }
+        .back-link { font-family: 'Montserrat'; font-size: 0.8rem; color: var(--accent-blue); text-decoration: none; opacity: 0.6; letter-spacing: 2px; transition: 0.3s; }
+        .back-link:hover { opacity: 1; }
+        .page-title { font-size: 2.2rem; letter-spacing: 10px; color: var(--accent-blue); font-weight: 200; margin: 15px 0 5px; }
+        .page-subtitle { font-family: 'Montserrat'; font-size: 0.8rem; color: var(--text-english); letter-spacing: 4px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; width: 100%; }
+        .card {
+            background: #ffffff; border-radius: 24px; padding: 40px 20px; text-align: center; text-decoration: none;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.03); transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(255,255,255,0.8); display: flex; flex-direction: column; align-items: center;
+        }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,78,124,0.1); }
+        .emoji { font-size: 40px; margin-bottom: 20px; display: block; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.05)); }
+        .card h2 { font-size: 1.1rem; color: var(--accent-blue); margin-bottom: 8px; letter-spacing: 2px; }
+        .card p { font-family: 'Montserrat'; font-size: 0.65rem; color: var(--text-english); }
     </style>
 </head>
 <body>
-    <nav>
-        <a href="../index.html" class="nav-brand">CH-FLOWS</a>
-        <a href="../index.html" class="back-btn">← 返回首页</a>
-    </nav>
-    <div class="container">
-        <h1>课堂互动</h1>
-        <p>CLASS INTERACTION</p>
-        <p class="status">内容正在精心筹备中，敬请期待...</p>
+    <div class="stage">
+        <header>
+            <a href="../index.html" class="back-link">← BACK</a>
+            <h1 class="page-title">课堂互动</h1>
+            <p class="page-subtitle">Class Interaction</p>
+        </header>
+
+        <main class="grid">
+            <a href="quiz-01.html" class="card">
+                <span class="emoji">⚡</span>
+                <h2>即时互动测试</h2>
+                <p>INTERACTIVE QUIZ</p>
+            </a>
+        </main>
     </div>
 </body>
 </html>
