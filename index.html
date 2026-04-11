@@ -5,13 +5,126 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CH-FLOWS | Chinese Learning Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./global.css">
+    
+    <style>
+        /* 直接内嵌样式，防止路径丢失 */
+        :root {
+            --primary-blue: #004e7c;
+            --bg-gradient: linear-gradient(135deg, #004e7c 0%, #0a81ab 100%);
+            --text-main: #1e293b;
+            --text-sub: #94a3b8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f8fafc;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        /* Header 样式 */
+        header {
+            background: var(--bg-gradient);
+            padding: 70px 20px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .brand {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.2rem;
+            font-weight: 600;
+            letter-spacing: 6px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .hub-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            opacity: 0.8;
+        }
+
+        /* 容器布局 */
+        .container {
+            max-width: 1100px;
+            margin: -50px auto 60px;
+            padding: 0 25px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+        }
+
+        /* 优雅卡片设计 */
+        .card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 55px 30px;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border: 1px solid #f1f5f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary-blue);
+        }
+
+        .icon {
+            font-size: 72px; 
+            margin-bottom: 35px;
+            transition: transform 0.4s ease;
+            display: block;
+        }
+
+        .card:hover .icon {
+            transform: scale(1.15) rotate(5deg);
+        }
+
+        .card h2 {
+            font-size: 1.7rem;
+            letter-spacing: 5px;
+            color: var(--text-main);
+            margin-bottom: 15px;
+        }
+
+        .card .subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .brand { font-size: 2.4rem; }
+            .container { margin-top: 20px; }
+            .grid { gap: 25px; }
+        }
+    </style>
 </head>
 <body>
+
     <header>
         <div class="brand">CH-FLOWS</div>
         <div class="hub-title">CHINESE LEARNING HUB</div>
     </header>
+
     <div class="container">
         <div class="grid">
             <a href="./01-learning-guide/index.html" class="card">
@@ -19,11 +132,13 @@
                 <h2>学法指引</h2>
                 <div class="subtitle">LEARNING GUIDE</div>
             </a>
+
             <a href="./02-interaction/index.html" class="card">
                 <span class="icon">⚡</span>
                 <h2>课堂互动</h2>
                 <div class="subtitle">CLASS INTERACTION</div>
             </a>
+
             <a href="./03-gallery/index.html" class="card">
                 <span class="icon">⭐</span>
                 <h2>佳作视界</h2>
@@ -31,5 +146,6 @@
             </a>
         </div>
     </div>
+
 </body>
 </html>
