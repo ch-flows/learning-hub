@@ -7,11 +7,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --accent-blue: #004e7c;
+            /* 定义一套富有活力的色彩体系 */
+            --accent-blue: #004e7c; /* 品牌蓝 */
+            --icon-guide: #ff6b6b; /* 🧭 暖红：指引方向 */
+            --icon-interact: #ffc93c; /* ⚡ 金黄：互动能量 */
+            --icon-gallery: #4ecc71; /* ⭐ 翠绿：佳作生机 */
+            
             --text-main: #1e293b; 
+            --text-accent: #0f172a; /* 更深的颜色，作为 hover 后的文字色 */
             --text-sub: #475569; 
             --text-light: #94a3b8;
-            --soft-bg: #f8fafc; /* 微弱的浅灰蓝背景，提升质感 */
+            --soft-bg: #f8fafc; 
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -25,45 +31,26 @@
             -webkit-font-smoothing: antialiased;
         }
         
-        header {
-            padding: 80px 20px 40px; 
-            text-align: center;
-        }
+        header { padding: 80px 20px 40px; text-align: center; }
         .brand {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 2.4rem;
-            font-weight: 200;
-            letter-spacing: 16px;
-            /* 渐变文字：让极简不再单调 */
+            font-family: 'Montserrat', sans-serif; font-size: 2.5rem; font-weight: 200;
+            letter-spacing: 16px; margin-bottom: 12px; text-transform: uppercase;
+            /* 品牌名保持优雅的渐变蓝 */
             background: linear-gradient(to right, #004e7c, #0a81ab);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 12px;
-            text-transform: uppercase;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         .hub-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.75rem;
-            letter-spacing: 5px;
-            color: var(--text-light);
-            font-weight: 400;
+            font-family: 'Montserrat', sans-serif; font-size: 0.75rem;
+            letter-spacing: 5px; color: var(--text-light); font-weight: 400;
         }
 
-        /* 核心内容区 */
         .main-content {
             flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            display: flex; flex-direction: column; justify-content: center;
             padding: 20px 0;
         }
 
-        .container {
-            max-width: 1080px;
-            width: 90%;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+        .container { max-width: 1080px; width: 90%; margin: 0 auto; padding: 0 20px; }
 
         .grid {
             display: grid;
@@ -71,70 +58,69 @@
             gap: 35px;
         }
 
-        /* 卡片优化：纯白卡片在浅灰蓝背景上会“弹”出来 */
+        /* 卡片优化：增加色彩层级 */
         .card {
             background: #ffffff;
-            border-radius: 4px; /* 极小圆角更显专业 */
+            border-radius: 6px; /* 稍微圆润一点，更亲切 */
             padding: 55px 30px;
             text-align: center;
             text-decoration: none;
             transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
             display: flex; flex-direction: column; align-items: center;
+            border: 1px solid rgba(0,0,0,0.01);
             position: relative;
-            overflow: hidden;
         }
-        /* 增加悬停时的底部光条 */
+        
+        /* 悬停时的底部光条，颜色与品牌蓝呼应 */
         .card::after {
-            content: '';
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 2px;
-            background: var(--accent-blue);
-            transform: scaleX(0);
-            transition: transform 0.5s ease;
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px;
+            background: var(--accent-blue); transform: scaleX(0); transition: transform 0.5s ease;
         }
         .card:hover { 
-            transform: translateY(-10px);
+            transform: translateY(-12px); 
             box-shadow: 0 30px 60px -12px rgba(0,0,0,0.08);
+            border-color: rgba(0,78,124,0.1);
         }
         .card:hover::after { transform: scaleX(1); }
         
+        /* 1. 图标色彩：使用 3D 效果的全彩图标，并做了轻微的渐变和阴影 */
         .icon { 
-            font-size: 42px; margin-bottom: 30px; 
-            filter: grayscale(100%); opacity: 0.5; 
-            transition: 0.5s cubic-bezier(0.22, 1, 0.36, 1); 
+            font-size: 52px; margin-bottom: 30px; 
+            transition: 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            /* 给图标加一个极淡的彩色光晕 */
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
         }
-        .card:hover .icon { filter: grayscale(0%); opacity: 1; transform: scale(1.15); }
+        .card:hover .icon { transform: scale(1.15) rotate(5deg); }
         
-        .card h2 { font-size: 1.4rem; letter-spacing: 5px; color: var(--text-main); margin-bottom: 8px; font-weight: 400;}
-        .card .subtitle { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; color: var(--text-light); letter-spacing: 2px; text-transform: uppercase;}
+        /* 2. 标题文字色彩：深蓝，尽显专业和稳重 */
+        .card h2 { 
+            font-size: 1.45rem; letter-spacing: 6px; 
+            color: var(--accent-blue); /* 核心调整 */
+            margin-bottom: 10px; font-weight: 500;
+        }
+        .card:hover h2 { color: var(--text-accent); } /* Hover 时加深 */
+        
+        .card .subtitle { 
+            font-family: 'Montserrat', sans-serif; font-size: 0.65rem; 
+            color: var(--text-light); letter-spacing: 2px; text-transform: uppercase;
+        }
 
-        /* 底部理念：更紧凑的排版 */
         .vision-board {
-            text-align: center;
-            padding: 60px 20px 40px;
-            max-width: 800px;
-            margin: 0 auto;
+            text-align: center; padding: 60px 20px 40px;
+            max-width: 800px; margin: 0 auto;
         }
         .vision-ch {
-            font-size: 1.1rem;
-            color: var(--text-sub);
-            letter-spacing: 5px;
-            margin-bottom: 12px;
-            font-weight: 400;
+            font-size: 1.1rem; color: var(--text-sub);
+            letter-spacing: 5px; margin-bottom: 15px; font-weight: 400;
         }
         .vision-en {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.8rem;
-            color: var(--text-light);
-            letter-spacing: 0.5px;
-            line-height: 1.8;
-            font-weight: 300;
+            font-family: 'Montserrat', sans-serif; font-size: 0.8rem;
+            color: var(--text-light); letter-spacing: 0.5px; line-height: 1.8; font-weight: 300;
         }
 
         footer {
-            padding: 40px;
-            text-align: center;
-            background: #ffffff; /* 底部使用白色，形成视觉截断，不再感觉空洞 */
-            border-top: 1px solid #edf2f7;
+            padding: 40px; text-align: center;
+            background: #ffffff; border-top: 1px solid #edf2f7;
         }
         .footer-text { font-size: 0.7rem; color: #cbd5e1; letter-spacing: 3px; }
 
