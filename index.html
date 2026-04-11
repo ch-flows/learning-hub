@@ -1,66 +1,226 @@
-<style>
-    /* ... 保持之前的 root 和基础设置 ... */
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CH-FLOWS | Chinese Learning Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&family=Montserrat:wght@200;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --accent-blue: #004e7c;
+            --text-main: #1e293b; 
+            --text-sub: #475569; 
+            --text-english: #64748b; 
+            --bg-base: #f1f5f9;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html, body { 
+            height: 100%; width: 100%; overflow: hidden; 
+            background: var(--bg-base);
+        }
 
-    header {
-        text-align: center;
-        flex-shrink: 0;
-        padding-top: 6vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+        body { 
+            font-family: 'Noto Sans SC', sans-serif; 
+            display: flex; justify-content: center; align-items: center;
+            /* 方案一：环境光晕，增加背景深度 */
+            background: radial-gradient(circle at 50% 15%, rgba(10, 129, 171, 0.08) 0%, var(--bg-base) 45%);
+        }
 
-    .brand {
-        font-family: 'Montserrat', sans-serif;
-        font-size: clamp(2.2rem, 6vh, 3rem);
-        font-weight: 200;
-        letter-spacing: 15px;
-        background: linear-gradient(135deg, #004e7c 0%, #0a81ab 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 8px;
-    }
+        .stage {
+            width: 100%; height: 100%;
+            max-width: 1400px;
+            display: flex; flex-direction: column;
+            justify-content: space-between;
+            padding: 40px 0;
+        }
+        
+        header {
+            text-align: center;
+            flex-shrink: 0;
+            padding-top: 5vh; /* 位置下移 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-    .hub-title {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.8rem;
-        letter-spacing: 4px;
-        color: var(--text-english);
-        text-transform: none;
-        font-weight: 400;
-        margin-bottom: 25px; /* 为装饰线腾出空间 */
-    }
+        .brand {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(2.2rem, 6vh, 3rem);
+            font-weight: 200;
+            letter-spacing: 15px;
+            background: linear-gradient(135deg, #004e7c 0%, #0a81ab 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
 
-    /* 新增：装饰性横线结构 */
-    .header-divider {
-        width: 120px;
-        height: 1px;
-        background: linear-gradient(to right, 
-            transparent, 
-            rgba(0, 78, 124, 0.3) 50%, 
-            transparent);
-        position: relative;
-        margin-bottom: 10px;
-    }
+        .hub-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            color: var(--text-english);
+            text-transform: none; /* 取消全大写 */
+            margin-bottom: 20px;
+        }
 
-    /* 装饰线中间的小圆点，增加精致感 */
-    .header-divider::after {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 4px;
-        height: 4px;
-        background: var(--accent-blue);
-        border-radius: 50%;
-        opacity: 0.5;
-    }
-    
-    /* ... 其余 CSS 保持不变 ... */
-</style>
+        /* 方案二 & 三：兼顾纵向引导线条与文字填充 */
+        .v-guide {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            opacity: 0.6;
+        }
 
-<header>
-    <div class="brand">CH-FLOWS</div>
-    <div class="hub-title">Chinese Learning Hub</div>
-    <div class="header-divider"></div> </header>
+        .v-line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--accent-blue), transparent);
+        }
+
+        .v-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.55rem;
+            letter-spacing: 6px;
+            color: var(--accent-blue);
+            writing-mode: vertical-lr; /* 竖排英文，非常有设计感 */
+            text-transform: uppercase;
+            font-weight: 400;
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { opacity: 0.3; transform: translateY(0); }
+            50% { opacity: 0.8; transform: translateY(5px); }
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 0 60px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(20px, 4vw, 50px);
+            width: 100%;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: clamp(40px, 8vh, 80px) 20px;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.05);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+        
+        .card:hover { 
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px -12px rgba(0, 78, 124, 0.12);
+        }
+        
+        .icon-box { 
+            height: 70px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 3vh;
+        }
+
+        /* 秀气的星星图标 */
+        .star-svg {
+            width: 50px; height: 50px;
+            fill: #ffcf40;
+            filter: drop-shadow(0 4px 6px rgba(255, 180, 0, 0.2));
+        }
+        
+        .emoji-icon {
+            font-size: 50px;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.05));
+        }
+        
+        .card h2 { 
+            font-size: clamp(1.2rem, 2.2vh, 1.4rem); 
+            letter-spacing: 4px; color: var(--accent-blue); 
+            margin-bottom: 12px; font-weight: 500;
+        }
+        .card .subtitle { 
+            font-family: 'Montserrat', sans-serif; 
+            font-size: 0.7rem; color: var(--text-english); 
+            letter-spacing: 1px;
+        }
+
+        .vision-section {
+            text-align: center;
+            flex-shrink: 0;
+            padding-bottom: 30px;
+        }
+        .vision-ch {
+            font-size: 1.1rem; color: var(--text-sub);
+            letter-spacing: 6px; margin-bottom: 15px;
+        }
+        .vision-en {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem; color: var(--text-english);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 900px) {
+            .grid { gap: 20px; }
+            .main-content { padding: 0 20px; }
+            .v-guide { display: none; } /* 窄屏隐藏装饰线 */
+        }
+    </style>
+</head>
+<body>
+    <div class="stage">
+        <header>
+            <div class="brand">CH-FLOWS</div>
+            <div class="hub-title">Chinese Learning Hub</div>
+            <div class="v-guide">
+                <div class="v-line"></div>
+                <div class="v-text">FLOW</div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="grid">
+                <a href="./01-learning-guide/index.html" class="card">
+                    <div class="icon-box"><span class="emoji-icon">🧭</span></div>
+                    <h2>学法指引</h2>
+                    <div class="subtitle">Learning Guide</div>
+                </a>
+                <a href="./02-interaction/index.html" class="card">
+                    <div class="icon-box"><span class="emoji-icon">⚡</span></div>
+                    <h2>课堂互动</h2>
+                    <div class="subtitle">Class Interaction</div>
+                </a>
+                <a href="./03-gallery/index.html" class="card">
+                    <div class="icon-box">
+                        <svg class="star-svg" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="#eab308" stroke-width="0.3" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h2>佳作视界</h2>
+                    <div class="subtitle">Excellence Gallery</div>
+                </a>
+            </div>
+        </main>
+
+        <section class="vision-section">
+            <p class="vision-ch">学思并进，格物致知；灵感流转，佳作共赏</p>
+            <p class="vision-en">Integrate learning with reflection to seek true knowledge.<br>Let inspiration flow and excellence be shared.</p>
+        </section>
+    </div>
+</body>
+</html>
