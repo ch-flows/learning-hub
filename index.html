@@ -3,98 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CH-FLOWS | Chinese Learning Hub</title>
+    <title>CH-FLOWS | Learning Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
     <style>
         :root { 
             --primary-blue: #004e7c; 
             --bg-gradient: linear-gradient(135deg, #004e7c 0%, #0a81ab 100%); 
             --text-main: #1e293b; 
-            --text-sub: #94a3b8; 
+            --text-sub: #64748b; 
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Noto Sans SC', sans-serif; background-color: #fcfcfc; color: var(--text-main); }
         
-        /* Header：缩减高度，增加优雅感 */
+        /* 增加最小高度，确保页面始终撑开 */
+        body { 
+            font-family: 'Noto Sans SC', sans-serif; 
+            background-color: #f8fafc; 
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
         header {
             background: var(--bg-gradient);
-            padding: 60px 20px 80px; /* 底部预留空间减少 */
+            padding: 80px 20px 100px; 
             text-align: center;
             color: white;
         }
         .brand {
             font-family: 'Montserrat', sans-serif;
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             font-weight: 600;
-            letter-spacing: 14px; /* 极致的呼吸感 */
+            letter-spacing: 12px;
             margin-bottom: 12px;
             text-transform: uppercase;
         }
         .hub-title {
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.8rem;
-            letter-spacing: 6px;
-            opacity: 0.7;
+            font-size: 0.9rem;
+            letter-spacing: 5px;
+            opacity: 0.8;
             font-weight: 300;
         }
 
-        /* 容器：大幅收窄，增加页面两侧的“负空间” */
         .container {
-            max-width: 900px; 
-            margin: -25px auto 80px; /* 仅向上叠加 25px，非常轻微的遮盖 */
+            max-width: 1000px; 
+            margin: -40px auto 0; /* 悬浮效果 */
             padding: 0 40px;
+            flex: 1; /* 自动撑开中间区域 */
         }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 35px;
+            margin-bottom: 100px; /* 给卡片下方留出呼吸感 */
         }
 
-        /* 卡片：极致精简，从“厚砖”变“轻卡” */
         .card {
             background: #ffffff;
-            border-radius: 12px;
-            padding: 35px 20px; /* 大幅缩小内边距 */
+            border-radius: 16px;
+            padding: 50px 30px;
             text-align: center;
             text-decoration: none;
-            /* 更轻、更高级的投影 */
-            box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.05);
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            border: 1px solid rgba(0, 0, 0, 0.02);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border: 1px solid rgba(0, 0, 0, 0.03);
             display: flex;
             flex-direction: column;
             align-items: center;
         }
         .card:hover { 
-            transform: translateY(-8px); 
-            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1); 
-            border-color: rgba(0, 78, 124, 0.2);
+            transform: translateY(-12px); 
+            box-shadow: 0 25px 50px -15px rgba(0, 0, 0, 0.12); 
+            border-color: var(--primary-blue);
         }
         
-        .icon { 
-            font-size: 48px; /* 图标缩小，更显精致 */
-            margin-bottom: 25px; 
-            transition: transform 0.4s ease; 
-        }
+        .icon { font-size: 56px; margin-bottom: 30px; transition: transform 0.4s ease; }
         .card:hover .icon { transform: scale(1.1); }
         
-        .card h2 { 
-            font-size: 1.3rem; /* 标题缩小 */
-            letter-spacing: 4px; 
-            color: var(--text-main); 
-            margin-bottom: 8px; 
-            font-weight: 400;
+        .card h2 { font-size: 1.5rem; letter-spacing: 6px; color: var(--text-main); margin-bottom: 12px; font-weight: 500;}
+        .card .subtitle { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; color: var(--text-sub); letter-spacing: 2px; }
+
+        /* 重点：新增优雅页脚 */
+        footer {
+            padding: 60px 20px;
+            text-align: center;
+            background-color: transparent;
+            border-top: 1px solid rgba(0,0,0,0.05);
         }
-        .card .subtitle { 
-            font-family: 'Montserrat', sans-serif; 
-            font-size: 0.7rem; 
-            color: var(--text-sub); 
-            letter-spacing: 2px; 
+        .footer-text {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            letter-spacing: 3px;
+        }
+        .quote {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            font-style: italic;
         }
 
         @media (max-width: 768px) {
-            .brand { font-size: 1.6rem; letter-spacing: 8px; }
+            .brand { font-size: 1.8rem; letter-spacing: 6px; }
             .container { margin-top: 20px; padding: 0 20px; }
         }
     </style>
@@ -104,6 +115,7 @@
         <div class="brand">CH-FLOWS</div>
         <div class="hub-title">CHINESE LEARNING HUB</div>
     </header>
+
     <div class="container">
         <div class="grid">
             <a href="./01-learning-guide/index.html" class="card">
@@ -123,5 +135,10 @@
             </a>
         </div>
     </div>
+
+    <footer>
+        <div class="footer-text">© 2026 CH-FLOWS</div>
+        <div class="quote">“以华文为桥，连接更广阔的世界。”</div>
+    </footer>
 </body>
 </html>
