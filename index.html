@@ -3,132 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CH-FLOWS | Learning Hub</title>
+    <title>CH-FLOWS | Chinese Learning Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
     <style>
         :root { 
-            /* 定义一套富有活力的色彩体系 */
-            --accent-blue: #004e7c; /* 品牌蓝 */
-            --icon-guide: #ff6b6b; /* 🧭 暖红：指引方向 */
-            --icon-interact: #ffc93c; /* ⚡ 金黄：互动能量 */
-            --icon-gallery: #4ecc71; /* ⭐ 翠绿：佳作生机 */
-            
+            --accent-blue: #004e7c;
             --text-main: #1e293b; 
-            --text-accent: #0f172a; /* 更深的颜色，作为 hover 后的文字色 */
             --text-sub: #475569; 
             --text-light: #94a3b8;
-            --soft-bg: #f8fafc; 
+            --bg-base: #fdfdfd;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body { 
             font-family: 'Noto Sans SC', sans-serif; 
-            background-color: var(--soft-bg);
+            /* 1. 背景流转感：加入极淡的径向渐变，打破死板 */
+            background: radial-gradient(circle at top right, #f1f5f9 0%, var(--bg-base) 40%);
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
         
-        header { padding: 80px 20px 40px; text-align: center; }
+        header {
+            padding: 90px 20px 40px; 
+            text-align: center;
+        }
         .brand {
-            font-family: 'Montserrat', sans-serif; font-size: 2.5rem; font-weight: 200;
-            letter-spacing: 16px; margin-bottom: 12px; text-transform: uppercase;
-            /* 品牌名保持优雅的渐变蓝 */
-            background: linear-gradient(to right, #004e7c, #0a81ab);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.8rem; /* 增大字号，增强气场 */
+            font-weight: 200;
+            letter-spacing: 20px; /* 极宽间距，体现高级感 */
+            background: linear-gradient(135deg, #004e7c 0%, #0a81ab 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            text-transform: uppercase;
         }
         .hub-title {
-            font-family: 'Montserrat', sans-serif; font-size: 0.75rem;
-            letter-spacing: 5px; color: var(--text-light); font-weight: 400;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 6px;
+            color: var(--text-light);
+            font-weight: 400;
         }
 
         .main-content {
             flex-grow: 1;
-            display: flex; flex-direction: column; justify-content: center;
-            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* 确保全屏下完全垂直居中 */
+            padding: 40px 0 80px;
         }
 
-        .container { max-width: 1080px; width: 90%; margin: 0 auto; padding: 0 20px; }
+        .container {
+            max-width: 1140px;
+            width: 90%;
+            margin: 0 auto;
+        }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 35px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
         }
 
-        /* 卡片优化：增加色彩层级 */
+        /* 2. 移除“盒子感”：使用超大柔和阴影，卡片像是浮在水面 */
         .card {
-            background: #ffffff;
-            border-radius: 6px; /* 稍微圆润一点，更亲切 */
-            padding: 55px 30px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px); /* 磨砂玻璃质感 */
+            border-radius: 20px;
+            padding: 65px 35px;
             text-align: center;
             text-decoration: none;
-            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex; flex-direction: column; align-items: center;
-            border: 1px solid rgba(0,0,0,0.01);
-            position: relative;
         }
         
-        /* 悬停时的底部光条，颜色与品牌蓝呼应 */
-        .card::after {
-            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px;
-            background: var(--accent-blue); transform: scaleX(0); transition: transform 0.5s ease;
-        }
         .card:hover { 
-            transform: translateY(-12px); 
-            box-shadow: 0 30px 60px -12px rgba(0,0,0,0.08);
-            border-color: rgba(0,78,124,0.1);
+            transform: translateY(-15px) scale(1.02);
+            background: #ffffff;
+            box-shadow: 0 40px 80px -15px rgba(0, 78, 124, 0.12);
         }
-        .card:hover::after { transform: scaleX(1); }
         
-        /* 1. 图标色彩：使用 3D 效果的全彩图标，并做了轻微的渐变和阴影 */
         .icon { 
-            font-size: 52px; margin-bottom: 30px; 
-            transition: 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-            /* 给图标加一个极淡的彩色光晕 */
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+            font-size: 56px; 
+            margin-bottom: 35px;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.05));
+            transition: 0.5s ease;
         }
-        .card:hover .icon { transform: scale(1.15) rotate(5deg); }
+        .card:hover .icon { transform: scale(1.2); }
         
-        /* 2. 标题文字色彩：深蓝，尽显专业和稳重 */
         .card h2 { 
-            font-size: 1.45rem; letter-spacing: 6px; 
-            color: var(--accent-blue); /* 核心调整 */
-            margin-bottom: 10px; font-weight: 500;
+            font-size: 1.5rem; letter-spacing: 6px; 
+            color: var(--accent-blue); 
+            margin-bottom: 12px; font-weight: 400;
         }
-        .card:hover h2 { color: var(--text-accent); } /* Hover 时加深 */
-        
         .card .subtitle { 
             font-family: 'Montserrat', sans-serif; font-size: 0.65rem; 
             color: var(--text-light); letter-spacing: 2px; text-transform: uppercase;
         }
 
+        /* 3. 底部整合区：解决“堆砌感”的关键 */
+        .vision-section {
+            margin-top: auto; /* 将名句推向底部 */
+            background: linear-gradient(to bottom, transparent, #f8fafc);
+            padding: 80px 20px 60px;
+            text-align: center;
+        }
         .vision-board {
-            text-align: center; padding: 60px 20px 40px;
-            max-width: 800px; margin: 0 auto;
+            max-width: 800px;
+            margin: 0 auto;
         }
         .vision-ch {
-            font-size: 1.1rem; color: var(--text-sub);
-            letter-spacing: 5px; margin-bottom: 15px; font-weight: 400;
+            font-size: 1.2rem;
+            color: var(--text-sub);
+            letter-spacing: 8px; /* 增加呼吸感 */
+            margin-bottom: 18px;
+            font-weight: 300;
+            position: relative;
+            display: inline-block;
         }
+        /* 修饰：名句两侧的微弱线条 */
+        .vision-ch::before, .vision-ch::after {
+            content: ''; position: absolute; top: 50%; width: 30px; height: 1px; background: #e2e8f0;
+        }
+        .vision-ch::before { right: 105%; }
+        .vision-ch::after { left: 105%; }
+
         .vision-en {
-            font-family: 'Montserrat', sans-serif; font-size: 0.8rem;
-            color: var(--text-light); letter-spacing: 0.5px; line-height: 1.8; font-weight: 300;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            letter-spacing: 0.8px;
+            line-height: 2;
+            font-weight: 300;
+            font-style: italic; /* 英文斜体增加人文气息 */
         }
 
         footer {
-            padding: 40px; text-align: center;
-            background: #ffffff; border-top: 1px solid #edf2f7;
+            padding-bottom: 40px;
+            text-align: center;
         }
-        .footer-text { font-size: 0.7rem; color: #cbd5e1; letter-spacing: 3px; }
+        .footer-text { font-size: 0.7rem; color: #cbd5e1; letter-spacing: 4px; }
 
         @media (max-width: 768px) {
-            header { padding-top: 50px; }
-            .brand { font-size: 1.7rem; letter-spacing: 8px; }
+            header { padding: 60px 20px 20px; }
+            .brand { font-size: 1.8rem; letter-spacing: 10px; }
             .grid { grid-template-columns: 1fr; }
-            .main-content { justify-content: flex-start; }
+            .vision-ch::before, .vision-ch::after { display: none; }
         }
     </style>
 </head>
@@ -158,15 +183,16 @@
                 </a>
             </div>
         </div>
+    </main>
 
+    <section class="vision-section">
         <div class="vision-board">
             <p class="vision-ch">学思并进，格物致知；灵感流转，佳作共赏</p>
             <p class="vision-en">Integrate learning with reflection to seek true knowledge.<br>Let inspiration flow and excellence be shared.</p>
         </div>
-    </main>
-
-    <footer>
-        <div class="footer-text">© 2026 CH-FLOWS · CONNECTING THE WORLD THROUGH CHINESE</div>
-    </footer>
+        <footer style="margin-top: 50px;">
+            <div class="footer-text">© 2026 CH-FLOWS · CONNECTING THE WORLD THROUGH CHINESE</div>
+        </footer>
+    </section>
 </body>
 </html>
