@@ -24,8 +24,8 @@
         body { 
             font-family: 'Noto Sans SC', sans-serif; 
             display: flex; justify-content: center; align-items: center;
-            /* 背景径向光晕 */
-            background: radial-gradient(circle at 50% 15%, rgba(10, 129, 171, 0.08) 0%, var(--bg-base) 45%);
+            /* 背景光影微调，让中心更明亮 */
+            background: radial-gradient(circle at 50% 50%, #ffffff 0%, var(--bg-base) 100%);
         }
 
         .stage {
@@ -33,91 +33,54 @@
             max-width: 1400px;
             display: flex; flex-direction: column;
             justify-content: space-between;
-            padding: 40px 0;
+            padding: 5vh 0;
         }
         
         header {
             text-align: center;
             flex-shrink: 0;
-            padding-top: 6vh; /* 位置下移 */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            padding-top: 10vh; /* 进一步下移，拉近与卡片的物理距离 */
         }
 
         .brand {
             font-family: 'Montserrat', sans-serif;
-            font-size: clamp(2.2rem, 6vh, 3rem);
+            font-size: clamp(2.4rem, 6vh, 3.2rem);
             font-weight: 200;
-            letter-spacing: 15px;
+            letter-spacing: 18px;
             background: linear-gradient(135deg, #004e7c 0%, #0a81ab 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
 
         .hub-title {
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.8rem;
-            letter-spacing: 4px;
+            font-size: 0.85rem;
+            letter-spacing: 5px;
             color: var(--text-english);
-            text-transform: none; /* 正常大小写 */
-            margin-bottom: 30px;
-        }
-
-        /* 横向装饰区域：填充空白 */
-        .h-divider-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .h-bg-text {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 3rem;
-            font-weight: 600;
-            color: var(--accent-blue);
-            opacity: 0.03; /* 极淡的水印感 */
-            letter-spacing: 25px;
-            position: absolute;
-            top: -25px;
-            pointer-events: none;
-            white-space: nowrap;
-        }
-
-        .h-line {
-            width: 260px; /* 横向长线 */
-            height: 1px;
-            background: linear-gradient(to right, 
-                transparent, 
-                rgba(0, 78, 124, 0.25) 20%, 
-                rgba(0, 78, 124, 0.25) 80%, 
-                transparent);
-            position: relative;
-        }
-
-        .h-sub-text {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.6rem;
-            letter-spacing: 6px;
-            color: var(--accent-blue);
-            opacity: 0.4;
-            position: absolute;
-            top: -6px;
-            background: var(--bg-base); /* 遮挡线段中心 */
-            padding: 0 15px;
+            text-transform: none;
+            opacity: 0.8;
         }
 
         .main-content {
             flex: 1;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             width: 100%;
             padding: 0 60px;
+        }
+
+        /* 移除装饰线，改用文字间隙作为逻辑连接 */
+        .content-hint {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.6rem;
+            letter-spacing: 8px;
+            color: var(--accent-blue);
+            opacity: 0.25; /* 极其微弱，像呼吸一样 */
+            margin-bottom: 40px;
+            text-transform: uppercase;
         }
 
         .grid {
@@ -129,21 +92,28 @@
 
         .card {
             background: #ffffff;
-            border-radius: 24px;
+            border-radius: 28px;
             padding: clamp(40px, 8vh, 80px) 20px;
             text-align: center;
             text-decoration: none;
-            box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.05);
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.04);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
             flex-direction: column;
             align-items: center;
-            border: 1px solid rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 1);
         }
         
+        /* 关键：中间卡片微调，起到视觉锚定作用 */
+        .card.active {
+            transform: scale(1.02);
+            box-shadow: 0 30px 60px -15px rgba(0, 78, 124, 0.1);
+        }
+
         .card:hover { 
-            transform: translateY(-10px);
-            box-shadow: 0 30px 60px -12px rgba(0, 78, 124, 0.12);
+            transform: translateY(-12px) scale(1.04);
+            box-shadow: 0 40px 80px -20px rgba(0, 78, 124, 0.15);
+            z-index: 2;
         }
         
         .icon-box { 
@@ -152,49 +122,49 @@
             margin-bottom: 3vh;
         }
 
-        /* 秀气的星号图标 */
         .star-svg {
-            width: 50px; height: 50px;
+            width: 52px; height: 52px;
             fill: #ffcf40;
-            filter: drop-shadow(0 4px 6px rgba(255, 180, 0, 0.2));
+            filter: drop-shadow(0 4px 8px rgba(255, 180, 0, 0.2));
         }
         
         .emoji-icon {
-            font-size: 50px;
-            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.05));
+            font-size: 52px;
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.06));
         }
         
         .card h2 { 
-            font-size: clamp(1.1rem, 2.2vh, 1.3rem); 
-            letter-spacing: 4px; color: var(--accent-blue); 
+            font-size: clamp(1.1rem, 2.2vh, 1.35rem); 
+            letter-spacing: 5px; color: var(--accent-blue); 
             margin-bottom: 12px; font-weight: 500;
         }
         .card .subtitle { 
             font-family: 'Montserrat', sans-serif; 
             font-size: 0.65rem; color: var(--text-english); 
             letter-spacing: 1px;
-            text-transform: none;
         }
 
         .vision-section {
             text-align: center;
             flex-shrink: 0;
-            padding-bottom: 35px;
+            padding-bottom: 6vh;
         }
         .vision-ch {
-            font-size: 1.05rem; color: var(--text-sub);
-            letter-spacing: 6px; margin-bottom: 15px;
+            font-size: 1.1rem; color: var(--text-sub);
+            letter-spacing: 8px; margin-bottom: 15px;
+            font-weight: 400;
         }
         .vision-en {
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.8rem; color: var(--text-english);
-            line-height: 1.6;
+            font-size: 0.85rem; color: var(--text-english);
+            line-height: 1.8;
+            opacity: 0.9;
         }
 
         @media (max-width: 900px) {
             .grid { gap: 20px; }
             .main-content { padding: 0 20px; }
-            .h-divider-container { transform: scale(0.8); }
+            .card.active { transform: scale(1); }
         }
     </style>
 </head>
@@ -203,22 +173,18 @@
         <header>
             <div class="brand">CH-FLOWS</div>
             <div class="hub-title">Chinese Learning Hub</div>
-            
-            <div class="h-divider-container">
-                <div class="h-bg-text">FLOWS</div>
-                <div class="h-line"></div>
-                <div class="h-sub-text">INSPIRE</div>
-            </div>
         </header>
 
         <main class="main-content">
+            <div class="content-hint">Selection</div>
+            
             <div class="grid">
                 <a href="./01-learning-guide/index.html" class="card">
                     <div class="icon-box"><span class="emoji-icon">🧭</span></div>
                     <h2>学法指引</h2>
                     <div class="subtitle">Learning Guide</div>
                 </a>
-                <a href="./02-interaction/index.html" class="card">
+                <a href="./02-interaction/index.html" class="card active">
                     <div class="icon-box"><span class="emoji-icon">⚡</span></div>
                     <h2>课堂互动</h2>
                     <div class="subtitle">Class Interaction</div>
