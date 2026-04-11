@@ -1,1 +1,50 @@
+/* 核心优化：兼顾质感与轻盈 */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 40px; /* 加大间距，更大气 */
+}
 
+.card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 50px 30px; /* 增加上下内边距 */
+    text-align: center;
+    text-decoration: none;
+    /* 关键：使用超柔和的多层阴影，营造高级感 */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 
+                0 10px 15px -3px rgba(0, 0, 0, 0.03);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); /* 优雅的过渡曲线 */
+    border: 1px solid #f1f5f9; /* 极淡的边框，定义边界 */
+}
+
+.card:hover {
+    transform: translateY(-8px); /* 向上微轻浮 */
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 
+                0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border-color: var(--primary-blue); /* 悬停时边框微亮 */
+}
+
+.icon {
+    font-size: 72px; /* 稍微加大图标 */
+    margin-bottom: 30px; /* 增加与标题的距离，拒绝拥挤 */
+    transition: transform 0.4s ease;
+}
+
+.card:hover .icon {
+    transform: scale(1.1); /* 图标微动，增加互动感 */
+}
+
+.card h2 {
+    font-size: 1.6rem;
+    letter-spacing: 4px; /* 核心：拉开中文字距，产生高级感 */
+    color: var(--text-main);
+    margin-bottom: 12px;
+}
+
+.card .subtitle {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    color: #94a3b8;
+    font-weight: 400;
+}
