@@ -6,68 +6,76 @@
     <title>佳作视界 | CH-FLOWS</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&family=Montserrat:wght@200;400;500&display=swap" rel="stylesheet">
     <style>
-        :root { --accent-blue: #004e7c; --text-english: #64748b; --bg-base: #f0f4f8; }
+        :root { --accent: #004e7c; --sub: #64748b; --bg: #f0f4f8; --line: #e2e8f0; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { min-height: 100%; background: var(--bg-base); font-family: 'Noto Sans SC', sans-serif; }
         body {
-            display: flex; justify-content: center;
-            background: radial-gradient(circle at 50% 15%, rgba(10, 129, 171, 0.12) 0%, var(--bg-base) 45%);
+            font-family: 'Noto Sans SC', sans-serif;
+            background: radial-gradient(circle at 50% 10%, rgba(10,129,171,0.10) 0%, var(--bg) 50%);
+            min-height: 100vh; color: #1e293b;
         }
-        .stage { width: 100%; max-width: 1200px; padding: 6vh 20px; display: flex; flex-direction: column; align-items: center; }
-        header { text-align: center; margin-bottom: 5vh; }
-        .back-link { font-family: 'Montserrat'; font-size: 0.75rem; color: var(--accent-blue); text-decoration: none; opacity: 0.5; letter-spacing: 3px; }
-        .page-title { font-size: 2.2rem; letter-spacing: 12px; color: var(--accent-blue); font-weight: 200; margin: 15px 0 5px; }
-        .page-sub { font-family: 'Montserrat'; font-size: 0.75rem; letter-spacing: 4px; color: var(--text-english); }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; width: 100%; }
-        .card {
-            background: #ffffff; border-radius: 16px; padding: 28px 22px;
-            text-decoration: none; box-shadow: 0 6px 20px rgba(0,0,0,0.04);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            display: flex; flex-direction: column; gap: 8px;
-            border: 1px solid rgba(255,255,255,0.9);
+        .wrap { max-width: 720px; margin: 0 auto; padding: 6vh 24px 8vh; }
+
+        /* 顶部导航 */
+        .nav { margin-bottom: 4vh; }
+        .back { font-family: 'Montserrat'; font-size: 0.72rem; letter-spacing: 3px;
+                color: var(--accent); text-decoration: none; opacity: 0.5; }
+        .back:hover { opacity: 1; }
+
+        /* 页头 */
+        header { margin-bottom: 4vh; border-bottom: 1px solid var(--line); padding-bottom: 2.5vh; }
+        .page-title { font-size: 1.6rem; letter-spacing: 8px; color: var(--accent); font-weight: 300; }
+        .page-sub { font-family: 'Montserrat'; font-size: 0.7rem; letter-spacing: 3px; color: var(--sub); margin-top: 5px; }
+
+        /* 目录列表 */
+        .article-list { list-style: none; }
+        .article-list li { border-bottom: 1px solid var(--line); }
+        .article-list li:first-child { border-top: 1px solid var(--line); }
+        .article-list a {
+            display: flex; align-items: baseline; justify-content: space-between;
+            gap: 16px; padding: 13px 4px;
+            text-decoration: none; color: inherit;
+            transition: background 0.15s;
         }
-        .card:hover { transform: translateY(-6px); box-shadow: 0 16px 36px rgba(0,78,124,0.10); }
-        .card-meta { font-family: 'Montserrat'; font-size: 0.65rem; letter-spacing: 2px; color: var(--text-english); text-transform: uppercase; }
-        .card-title { font-size: 1.05rem; color: var(--accent-blue); letter-spacing: 1px; font-weight: 500; line-height: 1.5; }
-        .card-class { font-size: 0.78rem; color: #94a3b8; margin-top: 2px; }
-        #empty { color: var(--accent-blue); opacity: 0.4; font-size: 0.9rem; margin-top: 60px; letter-spacing: 2px; }
+        .article-list a:hover { background: rgba(0,78,124,0.04); padding-left: 10px; }
+        .art-title { font-size: 0.97rem; color: var(--accent); flex: 1; min-width: 0;
+                     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .art-meta { font-family: 'Montserrat'; font-size: 0.68rem; letter-spacing: 1px;
+                    color: var(--sub); white-space: nowrap; flex-shrink: 0; }
+
+        #empty { color: var(--sub); font-size: 0.88rem; margin-top: 3vh; opacity: 0.6; }
     </style>
 </head>
 <body>
-    <div class="stage">
+    <div class="wrap">
+        <nav class="nav"><a href="../index.html" class="back">← BACK</a></nav>
         <header>
-            <a href="../index.html" class="back-link">← BACK</a>
-            <h1 class="page-title">佳 作 视 界</h1>
+            <div class="page-title">佳 作 视 界</div>
             <div class="page-sub">Excellence Gallery</div>
         </header>
-        <main class="grid" id="article-list"></main>
+        <ul class="article-list" id="article-list"></ul>
         <div id="empty" style="display:none;">暂无文章</div>
     </div>
 
     <script>
 // ── 文章清单（由学习单平台自动维护，请勿手动编辑此行以下至 ARTICLES_END）──
 // ARTICLES_START
-var ARTICLES = [
-  { file:"1g3-guamuxiangkan.html", title:"guamuxiangkan", cls:"1G3", date:"2026.04.11" },
-  { file:"1g3-qingjing-guamuxiangkan.html", title:"从看不起到刮目相看", cls:"1g3", date:"2026.04.11" }
-];
+var ARTICLES = [];
 // ARTICLES_END
 
 (function(){
-    var list = document.getElementById('article-list');
+    var list  = document.getElementById('article-list');
     var empty = document.getElementById('empty');
     if (!ARTICLES || ARTICLES.length === 0) { empty.style.display = ''; return; }
-    // 最新发布的排在最前
+    // 最新发布排最前
     var sorted = ARTICLES.slice().reverse();
     sorted.forEach(function(a) {
-        var card = document.createElement('a');
-        card.className = 'card';
-        card.href = a.file;
-        card.innerHTML =
-            '<div class="card-meta">✍️ ' + (a.date || '') + '</div>' +
-            '<div class="card-title">' + a.title + '</div>' +
-            '<div class="card-class">' + (a.cls || '') + '</div>';
-        list.appendChild(card);
+        var li = document.createElement('li');
+        var meta = a.date || '';
+        li.innerHTML = '<a href="' + a.file + '">'
+            + '<span class="art-title">' + a.title + '</span>'
+            + '<span class="art-meta">' + meta + '</span>'
+            + '</a>';
+        list.appendChild(li);
     });
 })();
     </script>
