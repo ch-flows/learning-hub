@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CH-FLOWS | Chinese Learning Hub</title>
+    <title>CH-FLOWS | Learning Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root { 
             --primary-blue: #004e7c; 
             --bg-gradient: linear-gradient(135deg, #004e7c 0%, #0a81ab 100%); 
             --text-main: #1e293b; 
-            --text-sub: #64748b; 
-            --text-light: #94a3b8;
+            --text-sub: #475569; /* 加深颜色，确保阅读不吃力 */
+            --text-light: #64748b;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -26,49 +26,46 @@
         
         header {
             background: var(--bg-gradient);
-            padding: 60px 20px 80px; 
+            padding: 70px 20px 100px; 
             text-align: center;
             color: white;
             flex-shrink: 0;
         }
         .brand {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 2.2rem;
-            font-weight: 600;
-            letter-spacing: 12px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif; font-size: 2.2rem; font-weight: 600;
+            letter-spacing: 12px; margin-bottom: 10px; text-transform: uppercase;
         }
         .hub-title {
             font-family: 'Montserrat', sans-serif; font-size: 0.8rem;
             letter-spacing: 5px; opacity: 0.8; font-weight: 300;
         }
 
+        /* 核心逻辑：让 main 占据剩余所有空间 */
         .main-content {
-            flex: 1;
+            flex-grow: 1; 
             display: flex;
             flex-direction: column;
-            justify-content: center; /* 在大屏下让内容居中分布 */
-            padding-bottom: 40px;
+            justify-content: center; /* 全屏时垂直居中分布 */
+            padding: 40px 0;
         }
 
         .container {
             max-width: 1060px;
             width: 92%;
-            margin: -35px auto 0; 
+            margin: -60px auto 0; /* 保持悬浮感 */
             padding: 0 20px;
         }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
         }
 
         .card {
             background: #ffffff;
             border-radius: 16px;
-            padding: 40px 25px;
+            padding: 45px 25px;
             text-align: center;
             text-decoration: none;
             box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.05);
@@ -77,53 +74,51 @@
             display: flex; flex-direction: column; align-items: center;
         }
         .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1); }
-        .icon { font-size: 48px; margin-bottom: 25px; }
-        .card h2 { font-size: 1.4rem; letter-spacing: 5px; color: var(--text-main); margin-bottom: 8px; font-weight: 400;}
-        .card .subtitle { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: var(--text-sub); letter-spacing: 2px; }
+        .icon { font-size: 52px; margin-bottom: 30px; }
+        .card h2 { font-size: 1.45rem; letter-spacing: 5px; color: var(--text-main); margin-bottom: 8px; font-weight: 400;}
+        .card .subtitle { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: var(--text-light); letter-spacing: 2px; }
 
-        /* 中英双语理念看板 */
+        /* 理念看板：加深颜色，优化全屏排版 */
         .vision-board {
             text-align: center;
-            padding: 50px 20px;
+            padding: 60px 20px;
             max-width: 800px;
-            margin: 20px auto 0;
+            margin: 0 auto;
         }
         .vision-ch {
-            font-size: 1.1rem;
-            color: var(--text-sub);
-            letter-spacing: 4px;
-            margin-bottom: 12px;
-            font-weight: 300;
+            font-size: 1.2rem;
+            color: var(--text-sub); /* 使用深色 */
+            letter-spacing: 6px;
+            margin-bottom: 15px;
+            font-weight: 400;
         }
         .vision-en {
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             color: var(--text-light);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-weight: 300;
+            letter-spacing: 1px;
+            font-weight: 400;
             line-height: 1.8;
         }
 
         footer {
-            padding: 25px 20px;
+            padding: 30px 20px;
             text-align: center;
             background: #ffffff;
             border-top: 1px solid rgba(0,0,0,0.03);
             flex-shrink: 0;
         }
-        .footer-text { font-size: 0.75rem; color: #cbd5e1; letter-spacing: 2px; font-weight: 300; }
+        .footer-text { font-size: 0.8rem; color: #94a3b8; letter-spacing: 2px; font-weight: 300; }
 
-        /* 针对小窗口/非全屏的优化 */
-        @media (max-height: 800px) {
-            header { padding: 40px 20px 60px; }
-            .vision-board { padding: 30px 20px; }
-            .main-content { justify-content: flex-start; } /* 窗口矮时向上对齐，防止底部被遮 */
+        /* 处理矮窗口：防止内容挤压 */
+        @media (max-height: 850px) {
+            .main-content { justify-content: flex-start; }
+            .vision-board { padding: 40px 20px; }
         }
 
         @media (max-width: 768px) {
             .brand { font-size: 1.7rem; letter-spacing: 8px; }
-            .grid { grid-template-columns: 1fr; gap: 20px; }
+            .grid { grid-template-columns: 1fr; }
             .container { margin-top: 20px; }
         }
     </style>
@@ -156,13 +151,13 @@
         </div>
 
         <div class="vision-board">
-            <p class="vision-ch">博观而约取，厚积而薄发</p>
-            <p class="vision-en">Broaden your vision to harvest the essence;<br>Accumulate deeply to flourish with brilliance.</p>
+            <p class="vision-ch">学思并进，格物致知；灵感流转，佳作共赏</p>
+            <p class="vision-en">Integrate learning with reflection to seek true knowledge.<br>Let inspiration flow and excellence be shared.</p>
         </div>
     </main>
 
     <footer>
-        <div class="footer-text">© 2026 CH-FLOWS · CONNECTING THE WORLD THROUGH CHINESE</div>
+        <div class="footer-text">© 2026 CH-FLOWS · Connecting the World through Chinese</div>
     </footer>
 </body>
 </html>
