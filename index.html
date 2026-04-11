@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
     
     <style>
-        /* 直接内嵌样式，防止路径丢失 */
+        /* 这里就是让你的网页变漂亮的“西装” */
         :root {
             --primary-blue: #004e7c;
             --bg-gradient: linear-gradient(135deg, #004e7c 0%, #0a81ab 100%);
@@ -24,10 +24,9 @@
             line-height: 1.6;
         }
 
-        /* Header 样式 */
         header {
             background: var(--bg-gradient);
-            padding: 70px 20px;
+            padding: 80px 20px;
             text-align: center;
             color: white;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -37,58 +36,54 @@
             font-family: 'Montserrat', sans-serif;
             font-size: 3.2rem;
             font-weight: 600;
-            letter-spacing: 6px;
+            letter-spacing: 8px; /* 加大字距，更显大气 */
             margin-bottom: 10px;
             text-transform: uppercase;
         }
 
         .hub-title {
             font-family: 'Montserrat', sans-serif;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 300;
-            letter-spacing: 3px;
-            opacity: 0.8;
+            letter-spacing: 4px;
+            opacity: 0.9;
         }
 
-        /* 容器布局 */
         .container {
             max-width: 1100px;
-            margin: -50px auto 60px;
+            margin: -60px auto 60px; /* 让卡片压在蓝色背景上 */
             padding: 0 25px;
         }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 40px;
         }
 
-        /* 优雅卡片设计 */
         .card {
             background: #ffffff;
             border-radius: 20px;
-            padding: 55px 30px;
+            padding: 60px 40px;
             text-align: center;
             text-decoration: none;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.05);
             transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
-            border: 1px solid #f1f5f9;
+            border: 1px solid rgba(0, 0, 0, 0.02);
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
         .card:hover {
-            transform: translateY(-12px);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-            border-color: var(--primary-blue);
+            transform: translateY(-15px);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.15);
         }
 
         .icon {
             font-size: 72px; 
             margin-bottom: 35px;
             transition: transform 0.4s ease;
-            display: block;
         }
 
         .card:hover .icon {
@@ -96,7 +91,7 @@
         }
 
         .card h2 {
-            font-size: 1.7rem;
+            font-size: 1.8rem;
             letter-spacing: 5px;
             color: var(--text-main);
             margin-bottom: 15px;
@@ -104,15 +99,14 @@
 
         .card .subtitle {
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-sub);
             letter-spacing: 2px;
             text-transform: uppercase;
         }
 
-        /* 移动端适配 */
         @media (max-width: 768px) {
-            .brand { font-size: 2.4rem; }
+            .brand { font-size: 2.2rem; letter-spacing: 4px; }
             .container { margin-top: 20px; }
             .grid { gap: 25px; }
         }
