@@ -3,59 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CH-FLOWS | Chinese Learning Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;400;500&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
+    <title>CH-FLOWS | Learning Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
     <style>
         :root { 
+            --accent-blue: #004e7c;
             --text-main: #1e293b; 
             --text-sub: #475569; 
             --text-light: #94a3b8;
-            --accent-blue: #004e7c;
+            --soft-bg: #f8fafc; /* 微弱的浅灰蓝背景，提升质感 */
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body { 
             font-family: 'Noto Sans SC', sans-serif; 
-            background-color: #ffffff; /* 纯白背景 */
+            background-color: var(--soft-bg);
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            -webkit-font-smoothing: antialiased;
         }
         
-        /* 移除蓝色块后的轻量化 Header */
         header {
-            padding: 100px 20px 60px; 
+            padding: 80px 20px 40px; 
             text-align: center;
         }
         .brand {
             font-family: 'Montserrat', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 200; /* 使用极细字体，更有高级感 */
-            letter-spacing: 18px;
-            color: var(--text-main);
-            margin-bottom: 15px;
+            font-size: 2.4rem;
+            font-weight: 200;
+            letter-spacing: 16px;
+            /* 渐变文字：让极简不再单调 */
+            background: linear-gradient(to right, #004e7c, #0a81ab);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
             text-transform: uppercase;
         }
         .hub-title {
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.8rem;
-            letter-spacing: 6px;
+            font-size: 0.75rem;
+            letter-spacing: 5px;
             color: var(--text-light);
             font-weight: 400;
         }
 
-        /* 核心内容区自适应屏幕居中 */
+        /* 核心内容区 */
         .main-content {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* 全屏时垂直居中 */
-            padding: 20px 0 60px;
+            justify-content: center;
+            padding: 20px 0;
         }
 
         .container {
-            max-width: 1100px;
+            max-width: 1080px;
             width: 90%;
             margin: 0 auto;
             padding: 0 20px;
@@ -64,50 +68,64 @@
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 40px;
+            gap: 35px;
         }
 
-        /* 卡片设计：去掉生硬阴影，改用极细边框和轻微浮动 */
+        /* 卡片优化：纯白卡片在浅灰蓝背景上会“弹”出来 */
         .card {
             background: #ffffff;
-            border-radius: 0px; /* 方形或微圆角更显干练 */
-            padding: 60px 30px;
+            border-radius: 4px; /* 极小圆角更显专业 */
+            padding: 55px 30px;
             text-align: center;
             text-decoration: none;
-            border: 1px solid #f1f5f9; /* 极细边框 */
-            transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
             display: flex; flex-direction: column; align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        /* 增加悬停时的底部光条 */
+        .card::after {
+            content: '';
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 2px;
+            background: var(--accent-blue);
+            transform: scaleX(0);
+            transition: transform 0.5s ease;
         }
         .card:hover { 
-            border-color: var(--accent-blue);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.03);
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px -12px rgba(0,0,0,0.08);
         }
-        .icon { font-size: 40px; margin-bottom: 30px; filter: grayscale(100%); opacity: 0.6; transition: 0.4s; }
-        .card:hover .icon { filter: grayscale(0%); opacity: 1; transform: scale(1.1); }
+        .card:hover::after { transform: scaleX(1); }
         
-        .card h2 { font-size: 1.4rem; letter-spacing: 6px; color: var(--text-main); margin-bottom: 10px; font-weight: 400;}
-        .card .subtitle { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: var(--text-light); letter-spacing: 2px; }
+        .icon { 
+            font-size: 42px; margin-bottom: 30px; 
+            filter: grayscale(100%); opacity: 0.5; 
+            transition: 0.5s cubic-bezier(0.22, 1, 0.36, 1); 
+        }
+        .card:hover .icon { filter: grayscale(0%); opacity: 1; transform: scale(1.15); }
+        
+        .card h2 { font-size: 1.4rem; letter-spacing: 5px; color: var(--text-main); margin-bottom: 8px; font-weight: 400;}
+        .card .subtitle { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; color: var(--text-light); letter-spacing: 2px; text-transform: uppercase;}
 
-        /* 理念看板：不再作为填补，而是作为设计的终点 */
+        /* 底部理念：更紧凑的排版 */
         .vision-board {
             text-align: center;
-            padding: 80px 20px 40px;
+            padding: 60px 20px 40px;
             max-width: 800px;
             margin: 0 auto;
         }
         .vision-ch {
             font-size: 1.1rem;
             color: var(--text-sub);
-            letter-spacing: 6px;
-            margin-bottom: 15px;
-            font-weight: 300;
+            letter-spacing: 5px;
+            margin-bottom: 12px;
+            font-weight: 400;
         }
         .vision-en {
             font-family: 'Montserrat', sans-serif;
             font-size: 0.8rem;
             color: var(--text-light);
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             line-height: 1.8;
             font-weight: 300;
         }
@@ -115,15 +133,16 @@
         footer {
             padding: 40px;
             text-align: center;
-            flex-shrink: 0;
+            background: #ffffff; /* 底部使用白色，形成视觉截断，不再感觉空洞 */
+            border-top: 1px solid #edf2f7;
         }
         .footer-text { font-size: 0.7rem; color: #cbd5e1; letter-spacing: 3px; }
 
         @media (max-width: 768px) {
-            header { padding-top: 60px; }
-            .brand { font-size: 1.8rem; letter-spacing: 10px; }
-            .grid { grid-template-columns: 1fr; gap: 20px; }
-            .vision-board { padding-top: 40px; }
+            header { padding-top: 50px; }
+            .brand { font-size: 1.7rem; letter-spacing: 8px; }
+            .grid { grid-template-columns: 1fr; }
+            .main-content { justify-content: flex-start; }
         }
     </style>
 </head>
