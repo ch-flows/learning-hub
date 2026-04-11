@@ -1,139 +1,146 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-Hans">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CH-FLOWS | My Oral Buddy</title>
+    <title>CH-FLOWS | Chinese Learning Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
     <style>
-        /* 1. 基础重置 */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --primary-blue: #004e7c;
+            --bg-gradient: linear-gradient(135deg, #004e7c 0%, #0a81ab 100%);
+            --text-main: #1e293b;
+            --text-sub: #64748b;
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #fcfcfc; /* 极轻的底色，衬托纯白卡片 */
-            color: #334155;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f8fafc;
+            color: var(--text-main);
+            line-height: 1.6;
         }
 
-        /* 2. 顶部品牌区 - 极致极简 */
+        /* Header 样式 - 大气渐变 */
         header {
-            padding: 100px 0 60px;
+            background: var(--bg-gradient);
+            padding: 60px 20px;
             text-align: center;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        .brand-logo {
-            font-size: 2.2rem;
-            font-weight: 200; /* 极细字体 */
-            letter-spacing: 12px; /* 超宽间距 */
-            color: #0c4a6e;
+        .brand {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3rem;
+            font-weight: 600;
+            letter-spacing: 4px;
+            margin-bottom: 8px;
             text-transform: uppercase;
-            margin-bottom: 12px;
         }
 
-        .brand-sub {
-            font-size: 0.75rem;
-            color: #94a3b8;
+        .hub-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 300;
             letter-spacing: 2px;
-            text-transform: uppercase;
+            opacity: 0.9;
         }
 
-        /* 3. 卡片容器布局 */
+        /* 容器布局 */
         .container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            width: 90%;
-            max-width: 1000px;
-            margin-bottom: 100px;
+            max-width: 1100px;
+            margin: -40px auto 60px;
+            padding: 0 20px;
         }
 
-        /* 4. 纯白极简卡片 */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        /* 卡片样式 */
         .card {
-            background: #ffffff;
-            border: 1px solid #f1f5f9;
-            border-radius: 24px;
-            padding: 50px 20px;
+            background: white;
+            border-radius: 16px;
+            padding: 40px 30px;
+            text-align: center;
             text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(255,255,255,0.1);
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
         }
 
         .card:hover {
-            transform: translateY(-8px);
-            border-color: #0369a1;
-            box-shadow: 0 20px 40px rgba(3, 105, 161, 0.08); /* 淡淡的蓝色光晕 */
-        }
-
-        .card h3 {
-            font-size: 1.1rem;
-            font-weight: 400;
-            color: #1e293b;
-            margin-bottom: 40px;
-            letter-spacing: 1px;
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
         /* 图标样式 */
-        .icon-box {
-            color: #0369a1;
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .icon {
+            font-size: 64px;
+            margin-bottom: 24px;
+            display: block;
+            /* 这里使用了 Emoji 暂代，你也可以替换为你的图片路径 */
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
         }
 
-        /* 5. 响应式处理 */
+        .card h2 {
+            font-size: 1.8rem;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+
+        .card .subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            letter-spacing: 1.5px;
+            font-weight: 300;
+        }
+
+        /* 移动端适配 */
         @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr; /* 手机端单列 */
-                gap: 20px;
-            }
-            header {
-                padding: 60px 0 40px;
-            }
+            .brand { font-size: 2.2rem; }
+            .container { margin-top: 20px; }
+            .grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand-logo">CH-FLOWS</div>
-        <div class="brand-sub">My Oral Buddy | Learning Hub</div>
+        <div class="brand">CH-FLOWS</div>
+        <div class="hub-title">Chinese Learning Hub</div>
     </header>
 
     <div class="container">
-        <a href="01-oral-practice/index.html" class="card">
-            <h3>朗读练习</h3>
-            <div class="icon-box">
-                <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
-            </div>
-        </a>
+        <div class="grid">
+            <a href="./01-learning-guide/index.html" class="card">
+                <span class="icon">🧭</span>
+                <h2>学法指引</h2>
+                <div class="subtitle">LEARNING GUIDE</div>
+            </a>
 
-        <a href="02-worksheets/index.html" class="card">
-            <h3>课堂互动</h3>
-            <div class="icon-box">
-                <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-            </div>
-        </a>
+            <a href="./02-interaction/index.html" class="card">
+                <span class="icon">⚡</span>
+                <h2>课堂互动</h2>
+                <div class="subtitle">CLASS INTERACTION</div>
+            </a>
 
-        <a href="03-composition/index.html" class="card">
-    <h3>佳作视界</h3>
-    <div class="icon-box">
-        <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-        </svg>
-    </div>
-</a>
+            <a href="./03-gallery/index.html" class="card">
+                <span class="icon">⭐</span>
+                <h2>佳作视界</h2>
+                <div class="subtitle">EXCELLENCE GALLERY</div>
+            </a>
+        </div>
     </div>
 
 </body>
