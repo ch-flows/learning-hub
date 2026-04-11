@@ -24,7 +24,7 @@
         body { 
             font-family: 'Noto Sans SC', sans-serif; 
             display: flex; justify-content: center; align-items: center;
-            /* 方案一：环境光晕，增加背景深度 */
+            /* 背景径向光晕 */
             background: radial-gradient(circle at 50% 15%, rgba(10, 129, 171, 0.08) 0%, var(--bg-base) 45%);
         }
 
@@ -39,7 +39,7 @@
         header {
             text-align: center;
             flex-shrink: 0;
-            padding-top: 5vh; /* 位置下移 */
+            padding-top: 6vh; /* 位置下移 */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -61,39 +61,54 @@
             font-size: 0.8rem;
             letter-spacing: 4px;
             color: var(--text-english);
-            text-transform: none; /* 取消全大写 */
-            margin-bottom: 20px;
+            text-transform: none; /* 正常大小写 */
+            margin-bottom: 30px;
         }
 
-        /* 方案二 & 三：兼顾纵向引导线条与文字填充 */
-        .v-guide {
+        /* 横向装饰区域：填充空白 */
+        .h-divider-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
-            opacity: 0.6;
+            width: 100%;
+            position: relative;
+            margin-bottom: 20px;
         }
 
-        .v-line {
-            width: 1px;
-            height: 40px;
-            background: linear-gradient(to bottom, var(--accent-blue), transparent);
-        }
-
-        .v-text {
+        .h-bg-text {
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.55rem;
+            font-size: 3rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+            opacity: 0.03; /* 极淡的水印感 */
+            letter-spacing: 25px;
+            position: absolute;
+            top: -25px;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .h-line {
+            width: 260px; /* 横向长线 */
+            height: 1px;
+            background: linear-gradient(to right, 
+                transparent, 
+                rgba(0, 78, 124, 0.25) 20%, 
+                rgba(0, 78, 124, 0.25) 80%, 
+                transparent);
+            position: relative;
+        }
+
+        .h-sub-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.6rem;
             letter-spacing: 6px;
             color: var(--accent-blue);
-            writing-mode: vertical-lr; /* 竖排英文，非常有设计感 */
-            text-transform: uppercase;
-            font-weight: 400;
-            animation: breathe 4s ease-in-out infinite;
-        }
-
-        @keyframes breathe {
-            0%, 100% { opacity: 0.3; transform: translateY(0); }
-            50% { opacity: 0.8; transform: translateY(5px); }
+            opacity: 0.4;
+            position: absolute;
+            top: -6px;
+            background: var(--bg-base); /* 遮挡线段中心 */
+            padding: 0 15px;
         }
 
         .main-content {
@@ -137,7 +152,7 @@
             margin-bottom: 3vh;
         }
 
-        /* 秀气的星星图标 */
+        /* 秀气的星号图标 */
         .star-svg {
             width: 50px; height: 50px;
             fill: #ffcf40;
@@ -150,23 +165,24 @@
         }
         
         .card h2 { 
-            font-size: clamp(1.2rem, 2.2vh, 1.4rem); 
+            font-size: clamp(1.1rem, 2.2vh, 1.3rem); 
             letter-spacing: 4px; color: var(--accent-blue); 
             margin-bottom: 12px; font-weight: 500;
         }
         .card .subtitle { 
             font-family: 'Montserrat', sans-serif; 
-            font-size: 0.7rem; color: var(--text-english); 
+            font-size: 0.65rem; color: var(--text-english); 
             letter-spacing: 1px;
+            text-transform: none;
         }
 
         .vision-section {
             text-align: center;
             flex-shrink: 0;
-            padding-bottom: 30px;
+            padding-bottom: 35px;
         }
         .vision-ch {
-            font-size: 1.1rem; color: var(--text-sub);
+            font-size: 1.05rem; color: var(--text-sub);
             letter-spacing: 6px; margin-bottom: 15px;
         }
         .vision-en {
@@ -178,7 +194,7 @@
         @media (max-width: 900px) {
             .grid { gap: 20px; }
             .main-content { padding: 0 20px; }
-            .v-guide { display: none; } /* 窄屏隐藏装饰线 */
+            .h-divider-container { transform: scale(0.8); }
         }
     </style>
 </head>
@@ -187,9 +203,11 @@
         <header>
             <div class="brand">CH-FLOWS</div>
             <div class="hub-title">Chinese Learning Hub</div>
-            <div class="v-guide">
-                <div class="v-line"></div>
-                <div class="v-text">FLOW</div>
+            
+            <div class="h-divider-container">
+                <div class="h-bg-text">FLOWS</div>
+                <div class="h-line"></div>
+                <div class="h-sub-text">INSPIRE</div>
             </div>
         </header>
 
