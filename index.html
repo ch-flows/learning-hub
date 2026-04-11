@@ -4,19 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CH-FLOWS | Chinese Learning Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&family=Montserrat:wght@200;400;500&display=swap" rel="stylesheet">
     <style>
         :root { 
             --accent-blue: #004e7c;
             --text-main: #1e293b; 
-            --text-sub: #334155; 
-            --text-english: #64748b; /* 调深了英文颜色，确保易读 */
+            --text-sub: #475569; 
+            --text-english: #64748b; 
             --bg-base: #f1f5f9;
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        /* 锁定视口，禁止滚动 */
         html, body { 
             height: 100%; width: 100%; overflow: hidden; 
             background: var(--bg-base);
@@ -27,39 +26,39 @@
             display: flex; justify-content: center; align-items: center;
         }
 
-        /* 关键：全屏保护容器。无论屏幕多大，内容只在这个区域内流动 */
         .stage {
             width: 100%;
             height: 100%;
-            max-width: 1400px; /* 限制超宽屏下的散开 */
-            max-height: 900px; /* 限制超高屏下的分离 */
+            max-width: 1400px;
+            max-height: 1000px; /* 稍微增加了上限，配合下移 */
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* 均匀分布 */
-            padding: 40px 0;
+            justify-content: space-between;
+            padding: 60px 0; /* 整体呼吸感增强 */
         }
         
         header {
             text-align: center;
             flex-shrink: 0;
-            padding-top: 20px;
+            padding-top: 5vh; /* 1. 大标题位置下移 */
         }
         .brand {
             font-family: 'Montserrat', sans-serif;
-            font-size: clamp(2rem, 5vh, 2.8rem);
+            font-size: clamp(2.2rem, 6vh, 3rem);
             font-weight: 200;
             letter-spacing: 15px;
             background: linear-gradient(135deg, #004e7c 0%, #0a81ab 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
-            text-transform: uppercase;
+            margin-bottom: 12px;
         }
         .hub-title {
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.75rem;
-            letter-spacing: 5px;
-            color: #94a3b8;
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            color: var(--text-english); /* 2. 颜色正常化 */
+            text-transform: none; /* 2. 英文取消全大写 */
+            font-weight: 400;
         }
 
         .main-content {
@@ -81,81 +80,87 @@
             gap: clamp(20px, 4vw, 50px);
         }
 
-        /* 再次强化卡片的“跳出感” */
         .card {
             background: #ffffff;
-            border-radius: 20px;
+            border-radius: 24px;
             padding: clamp(40px, 8vh, 80px) 20px;
             text-align: center;
             text-decoration: none;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.05);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
             flex-direction: column;
             align-items: center;
-            border: 1px solid rgba(255, 255, 255, 1);
+            border: 1px solid rgba(255, 255, 255, 0.8);
         }
         
         .card:hover { 
-            transform: translateY(-12px) scale(1.03);
-            box-shadow: 0 40px 80px -15px rgba(0, 78, 124, 0.2);
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px -12px rgba(0, 78, 124, 0.15);
         }
         
-        .icon { 
-            font-size: clamp(42px, 6vh, 60px); 
+        /* 图标容器控制 */
+        .icon-box { 
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             margin-bottom: 3vh;
+        }
+
+        /* 3. 针对第三张卡片的星星图标优化 */
+        .star-svg {
+            width: 54px;
+            height: 54px;
+            fill: #ffcf40;
+            filter: drop-shadow(0 4px 6px rgba(255, 180, 0, 0.3));
+        }
+        
+        .emoji-icon {
+            font-size: 54px;
             filter: drop-shadow(0 8px 10px rgba(0,0,0,0.08));
         }
         
         .card h2 { 
-            font-size: clamp(1.2rem, 2vh, 1.5rem); 
-            letter-spacing: 5px; 
+            font-size: clamp(1.2rem, 2.2vh, 1.4rem); 
+            letter-spacing: 4px; 
             color: var(--accent-blue); 
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             font-weight: 500;
         }
         .card .subtitle { 
             font-family: 'Montserrat', sans-serif; 
-            font-size: 0.65rem; 
-            color: #94a3b8; 
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            font-size: 0.75rem; 
+            color: var(--text-english); 
+            letter-spacing: 1px;
+            font-weight: 400;
         }
 
         .vision-section {
             text-align: center;
             flex-shrink: 0;
-            padding-bottom: 20px;
+            padding-bottom: 30px;
         }
         .vision-ch {
-            font-size: 1.15rem;
-            color: var(--text-sub); /* 深灰色，读起来不累 */
+            font-size: 1.1rem;
+            color: var(--text-sub);
             letter-spacing: 6px;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             font-weight: 400;
         }
         .vision-en {
             font-family: 'Montserrat', sans-serif;
             font-size: 0.85rem;
-            color: var(--text-english); /* 加深色值 */
-            letter-spacing: 0.5px;
+            color: var(--text-english);
+            letter-spacing: 0.3px;
             line-height: 1.6;
-            font-weight: 400;
         }
 
-        /* 窄屏适配 */
         @media (max-width: 900px) {
-            .grid { gap: 15px; }
+            .grid { gap: 20px; }
             .main-content { padding: 0 20px; }
             .brand { letter-spacing: 8px; }
             .vision-ch { font-size: 1rem; letter-spacing: 4px; }
-        }
-        
-        /* 极矮窗口适配：防止内容重叠 */
-        @media (max-height: 600px) {
-            .stage { padding: 10px 0; }
-            .card { padding: 20px 10px; }
-            .icon { margin-bottom: 10px; }
         }
     </style>
 </head>
@@ -163,24 +168,28 @@
     <div class="stage">
         <header>
             <div class="brand">CH-FLOWS</div>
-            <div class="hub-title">CHINESE LEARNING HUB</div>
+            <div class="hub-title">Chinese Learning Hub</div>
         </header>
 
         <main class="main-content">
             <div class="container">
                 <div class="grid">
                     <a href="./01-learning-guide/index.html" class="card">
-                        <span class="icon">🧭</span>
+                        <div class="icon-box"><span class="emoji-icon">🧭</span></div>
                         <h2>学法指引</h2>
                         <div class="subtitle">Learning Guide</div>
                     </a>
                     <a href="./02-interaction/index.html" class="card">
-                        <span class="icon">⚡</span>
+                        <div class="icon-box"><span class="emoji-icon">⚡</span></div>
                         <h2>课堂互动</h2>
                         <div class="subtitle">Class Interaction</div>
                     </a>
                     <a href="./03-gallery/index.html" class="card">
-                        <span class="icon">⭐</span>
+                        <div class="icon-box">
+                            <svg class="star-svg" viewBox="0 0 24 24">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="#eab308" stroke-width="0.5" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
                         <h2>佳作视界</h2>
                         <div class="subtitle">Excellence Gallery</div>
                     </a>
