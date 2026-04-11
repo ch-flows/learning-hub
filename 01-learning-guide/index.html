@@ -8,11 +8,14 @@
     <style>
         :root { --accent-blue: #004e7c; --text-english: #64748b; --bg-base: #f0f4f8; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { min-height: 100%; background: var(--bg-base); font-family: 'Noto Sans SC', sans-serif; }
-        body {
-            display: flex; justify-content: center;
-            background: radial-gradient(circle at 50% 0%, rgba(10, 129, 171, 0.13) 0%, var(--bg-base) 70%);
+        html, body {
+            min-height: 100vh;
+            font-family: 'Noto Sans SC', sans-serif;
+            background: radial-gradient(circle at 50% 0%, rgba(10, 129, 171, 0.15) 0%, var(--bg-base) 60%);
+            background-color: var(--bg-base);
+            background-attachment: fixed;
         }
+        body { display: flex; justify-content: center; }
         .stage { width: 100%; max-width: 1200px; padding: 6vh 20px; display: flex; flex-direction: column; align-items: center; }
         header { text-align: center; margin-bottom: 6vh; }
         .back-link { font-family: 'Montserrat'; font-size: 0.75rem; color: var(--accent-blue); text-decoration: none; opacity: 0.5; letter-spacing: 3px; }
@@ -48,7 +51,9 @@
     <script>
 // ── 文件清单（由学习单平台自动维护，请勿手动编辑此行以下至 ITEMS_END）──
 // ITEMS_START
-var ITEMS = [];
+var ITEMS = [
+  { file:"how-to-learn.html", title:"高效学法指南", cls:"", date:"" }
+];
 // ITEMS_END
 
 (function(){
