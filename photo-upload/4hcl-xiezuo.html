@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Photo Upload</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:#f0f4f8;min-height:100vh;padding:16px 16px 40px;}
+.wrap{max-width:480px;margin:0 auto;}
+.card{background:#fff;border-radius:12px;padding:16px 18px;margin-bottom:14px;box-shadow:0 1px 6px rgba(0,0,0,.08);}
+.card h2{font-size:10pt;font-weight:700;color:#1a2a3a;margin-bottom:12px;}
+.field{margin-bottom:12px;}
+.field label{display:block;font-size:8.5pt;color:#64748b;font-weight:600;margin-bottom:4px;}
+.field input{width:100%;padding:9px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:10.5pt;font-family:inherit;outline:none;}
+.field input:focus{border-color:#2563eb;}
+.upload-zone{border:1.5px dashed #c8d8f0;border-radius:8px;padding:28px 16px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;margin-bottom:12px;position:relative;background:#fff;}
+.upload-zone:hover{border-color:#2563eb;background:#f0f6ff;}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.upload-icon{font-size:28px;margin-bottom:8px;}
+.upload-lbl{font-size:10pt;font-weight:600;color:#2563eb;margin-bottom:3px;}
+.upload-hint{font-size:8pt;color:#64748b;}
+.count{font-size:8.5pt;color:#64748b;text-align:center;margin-bottom:8px;}
+.drag-hint{font-size:8pt;color:#94a3b8;text-align:center;margin-bottom:8px;display:none;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:12px;}
+.thumb{position:relative;border-radius:10px;background:#f8fafc;box-shadow:0 2px 8px rgba(0,0,0,.10);cursor:grab;user-select:none;}
+.thumb img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;display:block;pointer-events:none;}
+.thumb-num{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.55);color:#fff;font-size:7.5pt;font-weight:700;border-radius:20px;padding:2px 7px;pointer-events:none;}
+.thumb-del{position:absolute;top:5px;right:5px;width:26px;height:26px;border-radius:50%;background:#dc2626;color:#fff;border:none;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.3);z-index:2;}
+.thumb-retake{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.6);color:#fff;border:none;font-size:7.5pt;border-radius:20px;padding:3px 10px;cursor:pointer;white-space:nowrap;font-family:inherit;}
+.add-more{display:flex;align-items:center;justify-content:center;gap:7px;background:#f4f8ff;border:0.5px solid #c8d8f0;border-radius:8px;padding:10px;font-size:9.5pt;font-weight:600;color:#2563eb;cursor:pointer;font-family:inherit;width:100%;margin-bottom:12px;transition:background .15s;position:relative;}
+.add-more input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.submit-btn{width:100%;padding:14px;background:#1a4f8a;color:#fff;border:none;border-radius:10px;font-size:11pt;font-weight:700;font-family:inherit;cursor:pointer;}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed;}
+.status{font-size:8.5pt;text-align:center;padding:8px;border-radius:7px;margin-top:10px;display:none;}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;align-items:center;justify-content:center;flex-direction:column;gap:14px;color:#fff;}
+.overlay.show{display:flex;}
+.spinner{width:40px;height:40px;border:4px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.spinner-txt{font-size:11pt;font-weight:600;}
+</style>
+</head>
+<body>
+<div id="proc-overlay" class="overlay">
+  <div class="spinner"></div>
+  <div class="spinner-txt" id="proc-txt">Loading…</div>
+</div>
+<div class="wrap">
+  <div class="card">
+    <h2>Student Info</h2>
+    <div class="field"><label>Name</label><input type="text" id="s-name" placeholder="Your name" autocomplete="off"></div>
+    <div class="field"><label>Index No.</label><input type="text" id="s-num" placeholder="Index number" autocomplete="off" inputmode="numeric"></div>
+  </div>
+  <div class="card">
+    <h2>Upload Photos</h2>
+    <div class="upload-zone" id="upload-zone">
+      <input type="file" id="file-in" accept="image/*" capture="environment" multiple>
+      <div class="upload-icon">📷</div>
+      <div class="upload-lbl">Tap to take photo or select image</div>
+      <div class="upload-hint">You can select multiple photos at once</div>
+    </div>
+    <div class="count" id="p-count"></div>
+    <div class="drag-hint" id="drag-hint">Hold and drag thumbnails to reorder</div>
+    <div class="grid" id="p-grid"></div>
+    <button class="add-more" id="add-more" style="display:none">
+      <input type="file" id="add-in" accept="image/*" capture="environment" multiple>
+      + Add more photos
+    </button>
+    <button class="submit-btn" id="sub-btn">Submit</button>
+    <div class="status" id="sub-status"></div>
+  </div>
+</div>
+<script>
+var META = {"class":"4hcl","assignTitle":"xiezuo","scriptUrl":"https://script.google.com/macros/s/AKfycbxxAkcPQ3xFKhngphXLPdyIXzPX-d33kxMWNjuYrnJ9NksUQ1Cq3TFVJwi9wQhe15hQ/exec"};
+document.title = META.assignTitle;
+
+var photos = [], dragSrc = null;
+
+// ── Read file as dataUrl ──
+function readFile(file, cb) {
+  var r = new FileReader();
+  r.onload = function(e) { cb(e.target.result); };
+  r.readAsDataURL(file);
+}
+
+// ── Load multiple files ──
+function loadFiles(files) {
+  var arr = Array.from(files).filter(function(f){ return f.type.startsWith('image/'); });
+  if (!arr.length) return;
+  var overlay = document.getElementById('proc-overlay');
+  var txt = document.getElementById('proc-txt');
+  overlay.classList.add('show');
+  var idx = 0;
+  function next() {
+    if (idx >= arr.length) { overlay.classList.remove('show'); render(); return; }
+    txt.textContent = 'Loading ' + (idx+1) + ' of ' + arr.length + '…';
+    readFile(arr[idx], function(dataUrl) {
+      photos.push({ dataUrl: dataUrl });
+      idx++;
+      next();
+    });
+  }
+  next();
+}
+
+// ── Render grid ──
+function render() {
+  var grid = document.getElementById('p-grid');
+  var zone = document.getElementById('upload-zone');
+  var am   = document.getElementById('add-more');
+  var cnt  = document.getElementById('p-count');
+  var dh   = document.getElementById('drag-hint');
+  grid.innerHTML = '';
+  if (!photos.length) {
+    zone.style.display = ''; am.style.display = 'none';
+    cnt.textContent = ''; dh.style.display = 'none'; return;
+  }
+  zone.style.display = 'none'; am.style.display = '';
+  cnt.textContent = photos.length + ' photo' + (photos.length > 1 ? 's' : '');
+  dh.style.display = photos.length > 1 ? 'block' : 'none';
+
+  photos.forEach(function(p, i) {
+    var t   = document.createElement('div');
+    t.className = 'thumb'; t.draggable = true; t.dataset.idx = i;
+
+    var img = document.createElement('img'); img.src = p.dataUrl;
+    var num = document.createElement('div'); num.className = 'thumb-num'; num.textContent = i + 1;
+
+    var del = document.createElement('button'); del.className = 'thumb-del'; del.innerHTML = '✕';
+    del.onclick = function(e) { e.stopPropagation(); photos.splice(i, 1); render(); };
+
+    var ret = document.createElement('button'); ret.className = 'thumb-retake'; ret.textContent = '↺ Retake';
+    ret.onclick = function(e) { e.stopPropagation(); retake(i); };
+
+    t.appendChild(img); t.appendChild(num); t.appendChild(del); t.appendChild(ret);
+
+    // Drag to reorder
+    t.addEventListener('dragstart', function(ev) {
+      dragSrc = i; t.style.opacity = '.5'; ev.dataTransfer.effectAllowed = 'move';
+    });
+    t.addEventListener('dragend', function() {
+      t.style.opacity = '';
+      document.querySelectorAll('.thumb').forEach(function(el) { el.style.boxShadow = ''; });
+    });
+    t.addEventListener('dragover', function(ev) {
+      ev.preventDefault();
+      document.querySelectorAll('.thumb').forEach(function(el) { el.style.boxShadow = ''; });
+      t.style.boxShadow = '0 0 0 3px #2563eb';
+    });
+    t.addEventListener('drop', function(ev) {
+      ev.preventDefault();
+      if (dragSrc === null || dragSrc === i) return;
+      var mv = photos.splice(dragSrc, 1)[0];
+      photos.splice(i, 0, mv);
+      dragSrc = null; render();
+    });
+
+    grid.appendChild(t);
+  });
+}
+
+// ── Retake one photo ──
+function retake(idx) {
+  var inp = document.createElement('input');
+  inp.type = 'file'; inp.accept = 'image/*'; inp.capture = 'environment';
+  inp.onchange = function() {
+    if (!inp.files || !inp.files[0]) return;
+    readFile(inp.files[0], function(dataUrl) {
+      photos[idx] = { dataUrl: dataUrl }; render();
+    });
+  };
+  inp.click();
+}
+
+// ── File inputs ──
+document.getElementById('file-in').addEventListener('change', function() {
+  if (this.files && this.files.length) loadFiles(this.files);
+  this.value = '';
+});
+document.getElementById('add-in').addEventListener('change', function() {
+  if (this.files && this.files.length) loadFiles(this.files);
+  this.value = '';
+});
+
+// ── Submit ──
+document.getElementById('sub-btn').addEventListener('click', function() {
+  var name = document.getElementById('s-name').value.trim();
+  var num  = document.getElementById('s-num').value.trim();
+  var st   = document.getElementById('sub-status');
+
+  function showSt(msg, ok) {
+    st.style.display = 'block';
+    st.style.background = ok ? '#f0fdf4' : '#fef2f2';
+    st.style.color = ok ? '#15803d' : '#dc2626';
+    st.textContent = msg;
+  }
+
+  if (!name)          { showSt('Please enter your name.', false); return; }
+  if (!num)           { showSt('Please enter your index number.', false); return; }
+  if (!photos.length) { showSt('Please take at least one photo.', false); return; }
+
+  var btn = document.getElementById('sub-btn');
+  btn.disabled = true; btn.textContent = 'Submitting…'; st.style.display = 'none';
+
+  var fileKey = [META.class, META.assignTitle, name, num]
+    .map(function(s) { return String(s).replace(/[^\w\u4e00-\u9fff]/g, '_'); }).join('__');
+
+  var payload = {
+    type: 'worksheet', fileKey: fileKey, template: 'pazhao',
+    grade: 'worksheet_' + META.class, class: META.class,
+    assignTitle: META.assignTitle, studentName: name, studentNum: num,
+    submitTime: new Date().toLocaleString('zh-SG'),
+    inputs: {}, canvases: {},
+    pzPhotos: photos.map(function(p, i) { return { index: i + 1, dataUrl: p.dataUrl }; })
+  };
+
+  fetch(META.scriptUrl, {
+    method: 'POST', mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(payload)
+  }).then(function() {
+    btn.textContent = '✅ Submitted';
+    showSt('Submitted! Your teacher has received your work.', true);
+  }).catch(function() {
+    btn.disabled = false; btn.textContent = 'Submit';
+    showSt('Network error. Please check your connection and try again.', false);
+  });
+});
+</script>
+</body>
+</html>
