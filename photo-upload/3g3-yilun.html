@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>📸 拍照上传</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:#f0f4f8;min-height:100vh;padding:16px 16px 40px;}
+.wrap{max-width:480px;margin:0 auto;}
+
+.card{background:#fff;border-radius:12px;padding:16px 18px;margin-bottom:14px;box-shadow:0 1px 6px rgba(0,0,0,.08);}
+.card h2{font-size:10pt;font-weight:700;color:#1a2a3a;margin-bottom:12px;}
+.field{margin-bottom:12px;}
+.field label{display:block;font-size:8.5pt;color:#64748b;font-weight:600;margin-bottom:4px;}
+.field input{width:100%;padding:9px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:10.5pt;font-family:inherit;outline:none;}
+.field input:focus{border-color:#2563eb;}
+.scan-row{display:flex;align-items:center;gap:10px;background:#f4f8ff;border:0.5px solid #c8d8f0;border-radius:8px;padding:10px 14px;margin-bottom:12px;}
+.scan-label{flex:1;}
+.scan-label b{font-size:9.5pt;color:#1a2a3a;display:block;}
+.scan-label span{font-size:7.5pt;color:#64748b;}
+.toggle{position:relative;width:50px;height:28px;flex-shrink:0;display:inline-block;}
+.toggle input{position:absolute;opacity:0;width:0;height:0;}
+.slider{position:absolute;inset:0;background:#cbd5e1;border-radius:28px;cursor:pointer;transition:background .25s;}
+.slider::before{content:"";position:absolute;width:22px;height:22px;left:3px;top:3px;background:#fff;border-radius:50%;transition:transform .25s;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+.toggle input:checked ~ .slider{background:#2563eb;}
+.toggle input:checked ~ .slider::before{transform:translateX(22px);}
+.upload-zone{border:1.5px dashed #c8d8f0;border-radius:8px;padding:28px 16px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;margin-bottom:12px;position:relative;background:#fff;}
+.upload-zone:hover,.upload-zone.over{border-color:#2563eb;background:#f0f6ff;}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.upload-icon{font-size:28px;margin-bottom:8px;}
+.upload-lbl{font-size:10pt;font-weight:600;color:#2563eb;margin-bottom:3px;}
+.upload-hint{font-size:8pt;color:#64748b;}
+.count{font-size:8.5pt;color:#64748b;text-align:center;margin-bottom:8px;}
+.drag-hint{font-size:8pt;color:#94a3b8;text-align:center;margin-bottom:8px;display:none;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:12px;}
+.thumb{position:relative;border-radius:10px;background:#f8fafc;box-shadow:0 2px 8px rgba(0,0,0,.10);cursor:grab;user-select:none;}
+.thumb img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;display:block;pointer-events:none;}
+.thumb-num{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.55);color:#fff;font-size:7.5pt;font-weight:700;border-radius:20px;padding:2px 7px;pointer-events:none;}
+.thumb-del{position:absolute;top:5px;right:5px;width:26px;height:26px;border-radius:50%;background:#dc2626;color:#fff;border:none;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.3);z-index:2;}
+.thumb-retake{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.6);color:#fff;border:none;font-size:7.5pt;border-radius:20px;padding:3px 10px;cursor:pointer;white-space:nowrap;font-family:inherit;}
+.add-more{display:flex;align-items:center;justify-content:center;gap:7px;background:#f4f8ff;border:0.5px solid #c8d8f0;border-radius:8px;padding:10px;font-size:9.5pt;font-weight:600;color:#2563eb;cursor:pointer;font-family:inherit;width:100%;margin-bottom:12px;transition:background .15s;position:relative;}
+.add-more input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.submit-btn{width:100%;padding:14px;background:#1a4f8a;color:#fff;border:none;border-radius:10px;font-size:11pt;font-weight:700;font-family:inherit;cursor:pointer;transition:opacity .2s;}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed;}
+.status{font-size:8.5pt;text-align:center;padding:8px;border-radius:7px;margin-top:10px;display:none;}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:14px;color:#fff;}
+.overlay.show{display:flex;}
+.spinner{width:40px;height:40px;border:4px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.spinner-txt{font-size:11pt;font-weight:600;}
+</style>
+</head>
+<body>
+<div id="proc-overlay" class="overlay"><div class="spinner"></div><div class="spinner-txt" id="proc-txt">处理中…</div></div>
+<div class="wrap">
+
+  <div class="card">
+    <h2>学生信息</h2>
+    <div class="field"><label>姓名 Name</label><input type="text" id="s-name" placeholder="请填写姓名" autocomplete="off"></div>
+    <div class="field"><label>学号 Index No.</label><input type="text" id="s-num" placeholder="请填写学号" autocomplete="off" inputmode="numeric"></div>
+  </div>
+  <div class="card">
+    <h2>上传作业照片</h2>
+    <div class="scan-row">
+      <div class="scan-label"><b>🔬 自动扫描增强</b><span>自动矫正对比度，让照片更像扫描件</span></div>
+      <div class="toggle"><input type="checkbox" id="scan-on" checked><span class="slider"></span></div>
+    </div>
+    <div class="upload-zone" id="upload-zone">
+      <input type="file" id="file-in" accept="image/*" capture="environment" multiple>
+      <div class="upload-icon">📷</div>
+      <div class="upload-lbl">点击拍照或选取图片</div>
+      <div class="upload-hint">可同时选取多张照片</div>
+    </div>
+    <div class="count" id="p-count"></div>
+    <div class="drag-hint" id="drag-hint">☰ 长按可拖动排序</div>
+    <div class="grid" id="p-grid"></div>
+    <button class="add-more" id="add-more" style="display:none">
+      <input type="file" id="add-in" accept="image/*" capture="environment" multiple>
+      ＋ 继续添加照片
+    </button>
+    <button class="submit-btn" id="sub-btn">📤 提交</button>
+    <div class="status" id="sub-status"></div>
+  </div>
+</div>
+<script>
+var META = {"class":"3g3","assignTitle":"yilun","scriptUrl":"https://script.google.com/macros/s/AKfycbxxAkcPQ3xFKhngphXLPdyIXzPX-d33kxMWNjuYrnJ9NksUQ1Cq3TFVJwi9wQhe15hQ/exec"};
+document.title = META.assignTitle;
+
+var photos = [], scanOn = true, dragSrc = null;
+
+function enhanceScan(img) {
+  var c = document.createElement('canvas');
+  var W = img.naturalWidth || img.width, H = img.naturalHeight || img.height;
+  c.width = W; c.height = H;
+  var ctx = c.getContext('2d');
+  ctx.drawImage(img, 0, 0, W, H);
+  var id = ctx.getImageData(0, 0, W, H), d = id.data;
+  for (var i = 0; i < d.length; i += 4) {
+    var g = 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
+    d[i] = d[i+1] = d[i+2] = g;
+  }
+  var h = new Float32Array(256);
+  for (var i = 0; i < d.length; i += 4) h[d[i]]++;
+  var tot = W*H, lo = 0, hi = 255, cum = 0;
+  for (var v = 0; v < 256; v++) { cum += h[v]; if (cum/tot >= 0.04) { lo = v; break; } }
+  cum = 0;
+  for (var v = 255; v >= 0; v--) { cum += h[v]; if (cum/tot >= 0.04) { hi = v; break; } }
+  if (hi <= lo) { lo = 0; hi = 255; }
+  var sc = 255 / (hi - lo);
+  for (var i = 0; i < d.length; i += 4) {
+    var val = Math.round((d[i] - lo) * sc);
+    val = val < 0 ? 0 : val > 255 ? 255 : val;
+    d[i] = d[i+1] = d[i+2] = val;
+  }
+  var src = new Uint8ClampedArray(d), tmp = new Uint8ClampedArray(d.length);
+  for (var y = 0; y < H; y++) {
+    for (var x = 0; x < W; x++) {
+      var idx = (y*W+x)*4, sum = 0, cnt = 0;
+      for (var dx = -1; dx <= 1; dx++) {
+        var nx = x+dx; if (nx<0||nx>=W) continue;
+        sum += src[(y*W+nx)*4]; cnt++;
+      }
+      tmp[idx] = tmp[idx+1] = tmp[idx+2] = Math.round(sum/cnt); tmp[idx+3] = 255;
+    }
+  }
+  for (var i = 0; i < d.length; i += 4) {
+    var s = src[i] + 0.6*(src[i]-tmp[i]);
+    s = s<0?0:s>255?255:s;
+    d[i] = d[i+1] = d[i+2] = Math.round(s);
+  }
+  ctx.putImageData(id, 0, 0);
+  return c.toDataURL('image/jpeg', 0.92);
+}
+
+function procFile(file, cb) {
+  var r = new FileReader();
+  r.onload = function(e) {
+    var orig = e.target.result;
+    if (!scanOn) { cb({dataUrl:orig, orig:orig}); return; }
+    var img = new Image();
+    img.onload = function() { cb({dataUrl:enhanceScan(img), orig:orig}); };
+    img.src = orig;
+  };
+  r.readAsDataURL(file);
+}
+
+function procFiles(files) {
+  var arr = Array.from(files).filter(function(f){ return f.type.startsWith('image/'); });
+  if (!arr.length) return;
+  showOverlay(true);
+  var idx = 0, res = [];
+  function next() {
+    if (idx >= arr.length) {
+      arr.forEach(function(_, i){ photos.push(res[i]); });
+      showOverlay(false); render(); return;
+    }
+    document.getElementById('proc-txt').textContent = '处理第' + (idx+1) + '/' + arr.length + '张…';
+    procFile(arr[idx], function(p){ res[idx]=p; idx++; setTimeout(next,10); });
+  }
+  next();
+}
+
+function showOverlay(v) {
+  var el = document.getElementById('proc-overlay');
+  if (el) { if(v) el.classList.add('show'); else el.classList.remove('show'); }
+}
+
+function render() {
+  var grid = document.getElementById('p-grid');
+  var zone = document.getElementById('upload-zone');
+  var am   = document.getElementById('add-more');
+  var cnt  = document.getElementById('p-count');
+  var dh   = document.getElementById('drag-hint');
+  grid.innerHTML = '';
+  if (!photos.length) {
+    zone.style.display = ''; am.style.display = 'none';
+    cnt.textContent = ''; dh.style.display = 'none'; return;
+  }
+  zone.style.display = 'none'; am.style.display = '';
+  cnt.textContent = '共' + photos.length + '张照片';
+  dh.style.display = photos.length > 1 ? 'block' : 'none';
+  photos.forEach(function(p, i) {
+    var t = document.createElement('div'); t.className = 'thumb'; t.draggable = true; t.dataset.idx = i;
+    var img = document.createElement('img'); img.src = p.dataUrl;
+    var num = document.createElement('div'); num.className = 'thumb-num'; num.textContent = i+1;
+    var del = document.createElement('button'); del.className = 'thumb-del'; del.innerHTML = '✕';
+    del.onclick = function(e){ e.stopPropagation(); photos.splice(i,1); render(); };
+    var ret = document.createElement('button'); ret.className = 'thumb-retake'; ret.textContent = '🔄 重拍';
+    ret.onclick = function(e){ e.stopPropagation(); retake(i); };
+    t.appendChild(img); t.appendChild(num); t.appendChild(del); t.appendChild(ret);
+    t.addEventListener('dragstart', function(ev){ dragSrc=i; t.style.opacity='.5'; ev.dataTransfer.effectAllowed='move'; });
+    t.addEventListener('dragend',   function(){ t.style.opacity=''; document.querySelectorAll('.thumb').forEach(function(el){el.style.boxShadow='';}); });
+    t.addEventListener('dragover',  function(ev){ ev.preventDefault(); document.querySelectorAll('.thumb').forEach(function(el){el.style.boxShadow='';}); t.style.boxShadow='0 0 0 3px #2563eb'; });
+    t.addEventListener('drop',      function(ev){ ev.preventDefault(); if(dragSrc===null||dragSrc===i)return; var mv=photos.splice(dragSrc,1)[0]; photos.splice(i,0,mv); dragSrc=null; render(); });
+    grid.appendChild(t);
+  });
+}
+
+function retake(idx) {
+  var inp = document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.capture='environment';
+  inp.onchange = function(){ if(!inp.files||!inp.files[0])return; showOverlay(true); procFile(inp.files[0],function(p){ photos[idx]=p; showOverlay(false); render(); }); };
+  inp.click();
+}
+
+function reprocess() {
+  if (!photos.length) return;
+  showOverlay(true);
+  var idx = 0;
+  function next() {
+    if (idx >= photos.length) { showOverlay(false); render(); return; }
+    document.getElementById('proc-txt').textContent = '重新处理第'+(idx+1)+'/'+photos.length+'张…';
+    var orig = photos[idx].orig;
+    if (!scanOn) { photos[idx].dataUrl = orig; idx++; setTimeout(next,10); return; }
+    var img = new Image();
+    img.onload = function(){ photos[idx].dataUrl = enhanceScan(img); idx++; setTimeout(next,10); };
+    img.src = orig;
+  }
+  next();
+}
+
+document.getElementById('file-in').addEventListener('change', function(){ if(this.files&&this.files.length) procFiles(this.files); this.value=''; });
+document.getElementById('add-in').addEventListener('change',  function(){ if(this.files&&this.files.length) procFiles(this.files); this.value=''; });
+document.getElementById('scan-on').addEventListener('change', function(){ scanOn=this.checked; reprocess(); });
+document.querySelector('.slider').addEventListener('click', function(){ document.getElementById('scan-on').click(); });
+
+document.getElementById('sub-btn').addEventListener('click', function() {
+  var name = document.getElementById('s-name').value.trim();
+  var num  = document.getElementById('s-num').value.trim();
+  var st   = document.getElementById('sub-status');
+  function showSt(msg, ok) {
+    st.style.display='block'; st.style.background=ok?'#f0fdf4':'#fef2f2';
+    st.style.color=ok?'#15803d':'#dc2626'; st.textContent=msg;
+  }
+  if (!name)          { showSt('❗ 请填写姓名', false); return; }
+  if (!num)           { showSt('❗ 请填写学号', false); return; }
+  if (!photos.length) { showSt('❗ 请至少拍一张照片', false); return; }
+  var btn = document.getElementById('sub-btn');
+  btn.disabled = true; btn.textContent = '提交中…'; st.style.display = 'none';
+  var fileKey = [META.class, META.assignTitle, name, num]
+    .map(function(s){ return String(s).replace(/[^\w\u4e00-\u9fff]/g,'_'); }).join('__');
+  var payload = {
+    type:'worksheet', fileKey:fileKey, template:'pazhao',
+    grade:'worksheet_'+META.class, class:META.class, assignTitle:META.assignTitle,
+    studentName:name, studentNum:num, submitTime:new Date().toLocaleString('zh-SG'),
+    inputs:{}, canvases:{},
+    pzPhotos: photos.map(function(p,i){ return {index:i+1, dataUrl:p.dataUrl}; })
+  };
+  fetch(META.scriptUrl, {
+    method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:JSON.stringify(payload)
+  }).then(function(){
+    btn.textContent = '✅ 已提交';
+    showSt('✅ 提交成功！老师已收到你的作业。', true);
+  }).catch(function(){
+    btn.disabled = false; btn.textContent = '📤 提交';
+    showSt('❌ 网络错误，请检查连接后重试。', false);
+  });
+});
+</script>
+</body>
+</html>
