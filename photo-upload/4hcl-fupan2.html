@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>📸 Photo Upload</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:#f0f4f8;min-height:100vh;padding:16px 16px 40px;}
+.wrap{max-width:480px;margin:0 auto;}
+.card{background:#fff;border-radius:12px;padding:16px 18px;margin-bottom:14px;box-shadow:0 1px 6px rgba(0,0,0,.08);}
+.card h2{font-size:10pt;font-weight:700;color:#1a2a3a;margin-bottom:12px;}
+.field{margin-bottom:12px;}
+.field label{display:block;font-size:8.5pt;color:#64748b;font-weight:600;margin-bottom:4px;}
+.field input{width:100%;padding:9px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:10.5pt;font-family:inherit;outline:none;}
+.field input:focus{border-color:#2563eb;}
+.scan-row{display:flex;align-items:center;gap:10px;background:#f4f8ff;border:0.5px solid #c8d8f0;border-radius:8px;padding:10px 14px;margin-bottom:12px;}
+.scan-label{flex:1;}
+.scan-label b{font-size:9.5pt;color:#1a2a3a;display:block;}
+.scan-label span{font-size:7.5pt;color:#64748b;}
+.scan-badge{font-size:7pt;padding:1px 6px;border-radius:10px;margin-left:5px;font-weight:600;vertical-align:middle;}
+.scan-badge.loading{background:#fef3c7;color:#92400e;}
+.scan-badge.ready{background:#d1fae5;color:#065f46;}
+.scan-badge.fallback{background:#e0e7ff;color:#3730a3;}
+.toggle{position:relative;width:50px;height:28px;flex-shrink:0;display:inline-block;}
+.toggle input{position:absolute;opacity:0;width:0;height:0;}
+.slider{position:absolute;inset:0;background:#cbd5e1;border-radius:28px;cursor:pointer;transition:background .25s;}
+.slider::before{content:"";position:absolute;width:22px;height:22px;left:3px;top:3px;background:#fff;border-radius:50%;transition:transform .25s;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+.toggle input:checked ~ .slider{background:#2563eb;}
+.toggle input:checked ~ .slider::before{transform:translateX(22px);}
+.upload-zone{border:1.5px dashed #c8d8f0;border-radius:8px;padding:28px 16px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;margin-bottom:12px;position:relative;background:#fff;}
+.upload-zone:hover,.upload-zone.over{border-color:#2563eb;background:#f0f6ff;}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.upload-icon{font-size:28px;margin-bottom:8px;}
+.upload-lbl{font-size:10pt;font-weight:600;color:#2563eb;margin-bottom:3px;}
+.upload-hint{font-size:8pt;color:#64748b;}
+.count{font-size:8.5pt;color:#64748b;text-align:center;margin-bottom:8px;}
+.drag-hint{font-size:8pt;color:#94a3b8;text-align:center;margin-bottom:8px;display:none;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:12px;}
+.thumb{position:relative;border-radius:10px;background:#f8fafc;box-shadow:0 2px 8px rgba(0,0,0,.10);cursor:grab;user-select:none;}
+.thumb img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;display:block;pointer-events:none;}
+.thumb-num{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.55);color:#fff;font-size:7.5pt;font-weight:700;border-radius:20px;padding:2px 7px;pointer-events:none;}
+.thumb-del{position:absolute;top:5px;right:5px;width:26px;height:26px;border-radius:50%;background:#dc2626;color:#fff;border:none;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.3);z-index:2;}
+.thumb-retake{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.6);color:#fff;border:none;font-size:7.5pt;border-radius:20px;padding:3px 10px;cursor:pointer;white-space:nowrap;font-family:inherit;}
+.add-more{display:flex;align-items:center;justify-content:center;gap:7px;background:#f4f8ff;border:0.5px solid #c8d8f0;border-radius:8px;padding:10px;font-size:9.5pt;font-weight:600;color:#2563eb;cursor:pointer;font-family:inherit;width:100%;margin-bottom:12px;transition:background .15s;position:relative;}
+.add-more input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.submit-btn{width:100%;padding:14px;background:#1a4f8a;color:#fff;border:none;border-radius:10px;font-size:11pt;font-weight:700;font-family:inherit;cursor:pointer;transition:opacity .2s;}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed;}
+.status{font-size:8.5pt;text-align:center;padding:8px;border-radius:7px;margin-top:10px;display:none;}
+/* Processing overlay */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9000;align-items:center;justify-content:center;flex-direction:column;gap:14px;color:#fff;}
+.overlay.show{display:flex;}
+.spinner{width:40px;height:40px;border:4px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.spinner-txt{font-size:11pt;font-weight:600;}
+/* ── Crop overlay ── */
+#crop-overlay{display:none;position:fixed;inset:0;z-index:9500;background:#000;flex-direction:column;}
+#crop-overlay.show{display:flex;}
+#crop-header{flex-shrink:0;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,.6);}
+#crop-header .crop-title{color:#fff;font-size:10.5pt;font-weight:700;}
+#crop-header .crop-hint{color:#94a3b8;font-size:8pt;margin-top:1px;}
+#crop-canvas-wrap{flex:1;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+#crop-canvas{display:block;touch-action:none;}
+#crop-footer{flex-shrink:0;padding:14px 16px;display:flex;gap:10px;background:rgba(0,0,0,.6);}
+.crop-btn{flex:1;padding:13px;border:none;border-radius:10px;font-size:10.5pt;font-weight:700;font-family:inherit;cursor:pointer;}
+.crop-btn.cancel{background:rgba(255,255,255,.12);color:#fff;}
+.crop-btn.confirm{background:#2563eb;color:#fff;}
+/* corner handle */
+.crop-handle{position:absolute;width:28px;height:28px;border-radius:50%;background:#2563eb;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.5);cursor:grab;touch-action:none;transform:translate(-50%,-50%);z-index:10;}
+</style>
+</head>
+<body>
+
+<!-- Processing overlay -->
+<div id="proc-overlay" class="overlay">
+  <div class="spinner"></div>
+  <div class="spinner-txt" id="proc-txt">Processing…</div>
+</div>
+
+<!-- Crop overlay -->
+<div id="crop-overlay">
+  <div id="crop-header">
+    <div>
+      <div class="crop-title">Drag the corners to the edges of the paper</div>
+      <div class="crop-hint">Blue dots = corners · drag to align · then tap Confirm</div>
+    </div>
+  </div>
+  <div id="crop-canvas-wrap">
+    <canvas id="crop-canvas"></canvas>
+    <!-- 4 corner handles injected by JS -->
+  </div>
+  <div id="crop-footer">
+    <button class="crop-btn cancel" id="crop-cancel">Cancel</button>
+    <button class="crop-btn confirm" id="crop-confirm">✓ Confirm</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="card">
+    <h2>Student Info</h2>
+    <div class="field"><label>Name</label><input type="text" id="s-name" placeholder="Your name" autocomplete="off"></div>
+    <div class="field"><label>Index No.</label><input type="text" id="s-num" placeholder="Index number" autocomplete="off" inputmode="numeric"></div>
+  </div>
+  <div class="card">
+    <h2>Upload Photos</h2>
+    <div class="scan-row">
+      <div class="scan-label">
+        <b>Scan Enhancement<span class="scan-badge loading" id="cv-badge">Loading…</span></b>
+        <span id="cv-desc">Loading scan engine…</span>
+      </div>
+      <div class="toggle"><input type="checkbox" id="scan-on" checked><span class="slider"></span></div>
+    </div>
+    <div class="upload-zone" id="upload-zone">
+      <input type="file" id="file-in" accept="image/*" capture="environment" multiple>
+      <div class="upload-icon">📷</div>
+      <div class="upload-lbl">Tap to take photo or select image</div>
+      <div class="upload-hint">You can select multiple photos at once</div>
+    </div>
+    <div class="count" id="p-count"></div>
+    <div class="drag-hint" id="drag-hint">Hold and drag to reorder</div>
+    <div class="grid" id="p-grid"></div>
+    <button class="add-more" id="add-more" style="display:none">
+      <input type="file" id="add-in" accept="image/*" capture="environment" multiple>
+      + Add more photos
+    </button>
+    <button class="submit-btn" id="sub-btn">Submit</button>
+    <div class="status" id="sub-status"></div>
+  </div>
+</div>
+
+<script>
+var META = {"class":"4hcl","assignTitle":"fupan2","scriptUrl":"https://script.google.com/macros/s/AKfycbxxAkcPQ3xFKhngphXLPdyIXzPX-d33kxMWNjuYrnJ9NksUQ1Cq3TFVJwi9wQhe15hQ/exec"};
+document.title = META.assignTitle;
+
+var photos  = [];   // [{dataUrl, orig}]
+var scanOn  = true;
+var dragSrc = null;
+var cvReady = false;
+var cvFailed= false;
+
+// ══════════════════════════════════════════════
+//  OpenCV loader
+// ══════════════════════════════════════════════
+function onOpenCvReady() {
+  cv.onRuntimeInitialized = function() {
+    cvReady = true;
+    var b = document.getElementById('cv-badge');
+    var d = document.getElementById('cv-desc');
+    if (b) { b.textContent = 'HD Scan'; b.className = 'scan-badge ready'; }
+    if (d)  d.textContent = 'Perspective correction + adaptive threshold';
+  };
+}
+(function loadCV() {
+  var s = document.createElement('script'); s.async = true;
+  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/opencv.js/4.8.0/opencv.js';
+  s.onload = onOpenCvReady;
+  s.onerror = function() {
+    var s2 = document.createElement('script'); s2.async = true;
+    s2.src = 'https://docs.opencv.org/4.8.0/opencv.js';
+    s2.onload = onOpenCvReady;
+    s2.onerror = function() {
+      cvFailed = true;
+      var b = document.getElementById('cv-badge');
+      var d = document.getElementById('cv-desc');
+      if (b) { b.textContent = 'Basic'; b.className = 'scan-badge fallback'; }
+      if (d)  d.textContent = 'Scan engine unavailable – using basic enhancement';
+    };
+    document.head.appendChild(s2);
+  };
+  document.head.appendChild(s);
+  setTimeout(function() {
+    if (!cvReady) {
+      cvFailed = true;
+      var b = document.getElementById('cv-badge');
+      if (b) { b.textContent = 'Basic'; b.className = 'scan-badge fallback'; }
+      var d = document.getElementById('cv-desc');
+      if (d) d.textContent = 'Load timeout – using basic enhancement';
+    }
+  }, 12000);
+})();
+
+// ══════════════════════════════════════════════
+//  CROP UI — manual corner selection
+// ══════════════════════════════════════════════
+var _cropImg    = null;   // HTMLImageElement being cropped
+var _cropCb     = null;   // callback(dataUrl)
+var _cropCorners= [];     // [{x,y}] in canvas coords, TL TR BR BL
+var _cropScale  = 1;      // naturalWidth / displayWidth
+var _handles    = [];     // DOM elements
+
+function showCrop(img, cb) {
+  _cropImg = img;
+  _cropCb  = cb;
+
+  var wrap   = document.getElementById('crop-canvas-wrap');
+  var canvas = document.getElementById('crop-canvas');
+  var W      = img.naturalWidth;
+  var H      = img.naturalHeight;
+
+  // Fit into screen
+  var maxW = window.innerWidth;
+  var maxH = window.innerHeight - 120; // header+footer ~120px
+  var scaleW = maxW / W, scaleH = maxH / H;
+  var s = Math.min(scaleW, scaleH, 1);
+  var dispW = Math.round(W * s), dispH = Math.round(H * s);
+
+  canvas.width  = dispW;
+  canvas.height = dispH;
+  canvas.style.width  = dispW + 'px';
+  canvas.style.height = dispH + 'px';
+  _cropScale = W / dispW;
+
+  // Draw image on canvas
+  var ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0, dispW, dispH);
+
+  // Initial corners: inset 12% from edges
+  var inX = dispW * 0.12, inY = dispH * 0.12;
+  _cropCorners = [
+    { x: inX,        y: inY },         // TL
+    { x: dispW-inX,  y: inY },         // TR
+    { x: dispW-inX,  y: dispH-inY },   // BR
+    { x: inX,        y: dispH-inY }    // BL
+  ];
+
+  // Remove old handles
+  _handles.forEach(function(h){ h.remove(); });
+  _handles = [];
+
+  // Create handle elements
+  _cropCorners.forEach(function(pt, idx) {
+    var h = document.createElement('div');
+    h.className = 'crop-handle';
+    h.dataset.idx = idx;
+    wrap.appendChild(h);
+    _handles.push(h);
+    _positionHandle(h, pt, canvas);
+    _bindHandle(h, canvas);
+  });
+
+  drawCropOverlay();
+  document.getElementById('crop-overlay').classList.add('show');
+}
+
+function _positionHandle(h, pt, canvas) {
+  var rect = canvas.getBoundingClientRect();
+  // position relative to wrap
+  var wrap = document.getElementById('crop-canvas-wrap');
+  var wr   = wrap.getBoundingClientRect();
+  h.style.left = (rect.left - wr.left + pt.x) + 'px';
+  h.style.top  = (rect.top  - wr.top  + pt.y) + 'px';
+}
+
+function _bindHandle(h, canvas) {
+  var idx = parseInt(h.dataset.idx);
+  var active = false, startX, startY, startPtX, startPtY;
+
+  function onStart(cx, cy) {
+    active = true;
+    startX = cx; startY = cy;
+    startPtX = _cropCorners[idx].x;
+    startPtY = _cropCorners[idx].y;
+  }
+  function onMove(cx, cy) {
+    if (!active) return;
+    var dx = cx - startX, dy = cy - startY;
+    var wrap = document.getElementById('crop-canvas-wrap');
+    var wr   = wrap.getBoundingClientRect();
+    var rect = canvas.getBoundingClientRect();
+    var nx = Math.max(0, Math.min(canvas.width,  startPtX + dx));
+    var ny = Math.max(0, Math.min(canvas.height, startPtY + dy));
+    _cropCorners[idx] = { x: nx, y: ny };
+    _positionHandle(h, _cropCorners[idx], canvas);
+    drawCropOverlay();
+  }
+  function onEnd() { active = false; }
+
+  // Mouse
+  h.addEventListener('mousedown',  function(e){ e.preventDefault(); onStart(e.clientX, e.clientY); });
+  document.addEventListener('mousemove', function(e){ onMove(e.clientX, e.clientY); });
+  document.addEventListener('mouseup',   onEnd);
+
+  // Touch
+  h.addEventListener('touchstart', function(e){ e.preventDefault(); var t=e.touches[0]; onStart(t.clientX, t.clientY); }, {passive:false});
+  h.addEventListener('touchmove',  function(e){ e.preventDefault(); var t=e.touches[0]; onMove(t.clientX, t.clientY); },  {passive:false});
+  h.addEventListener('touchend',   onEnd);
+}
+
+function drawCropOverlay() {
+  var canvas = document.getElementById('crop-canvas');
+  var ctx    = canvas.getContext('2d');
+  // Redraw image
+  ctx.drawImage(_cropImg, 0, 0, canvas.width, canvas.height);
+
+  var pts = _cropCorners;
+
+  // Darken outside the quad
+  ctx.save();
+  ctx.fillStyle = 'rgba(0,0,0,0.5)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // Cut out quad
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x, pts[0].y);
+  ctx.lineTo(pts[1].x, pts[1].y);
+  ctx.lineTo(pts[2].x, pts[2].y);
+  ctx.lineTo(pts[3].x, pts[3].y);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+
+  // Draw border
+  ctx.save();
+  ctx.strokeStyle = '#2563eb';
+  ctx.lineWidth   = 2;
+  ctx.setLineDash([6, 3]);
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x, pts[0].y);
+  ctx.lineTo(pts[1].x, pts[1].y);
+  ctx.lineTo(pts[2].x, pts[2].y);
+  ctx.lineTo(pts[3].x, pts[3].y);
+  ctx.closePath();
+  ctx.stroke();
+  ctx.restore();
+}
+
+function applyCrop() {
+  var pts = _cropCorners.map(function(p) {
+    return { x: p.x * _cropScale, y: p.y * _cropScale };
+  });
+  var tl = pts[0], tr = pts[1], br = pts[2], bl = pts[3];
+
+  var dw = Math.round(Math.max(
+    Math.hypot(tr.x-tl.x, tr.y-tl.y),
+    Math.hypot(br.x-bl.x, br.y-bl.y)
+  ));
+  var dh = Math.round(Math.max(
+    Math.hypot(bl.x-tl.x, bl.y-tl.y),
+    Math.hypot(br.x-tr.x, br.y-tr.y)
+  ));
+
+  // Fallback if too small
+  if (dw < 50 || dh < 50) {
+    return basicEnhance(_cropImg);
+  }
+
+  if (cvReady && !cvFailed) {
+    try {
+      // Draw original image to a temp canvas
+      var tmp = document.createElement('canvas');
+      tmp.width  = _cropImg.naturalWidth;
+      tmp.height = _cropImg.naturalHeight;
+      tmp.getContext('2d').drawImage(_cropImg, 0, 0);
+
+      var src   = cv.imread(tmp);
+      var srcP  = cv.matFromArray(4,1,cv.CV_32FC2, [tl.x,tl.y, tr.x,tr.y, br.x,br.y, bl.x,bl.y]);
+      var dstP  = cv.matFromArray(4,1,cv.CV_32FC2, [0,0, dw,0, dw,dh, 0,dh]);
+      var M     = cv.getPerspectiveTransform(srcP, dstP);
+      var warped= new cv.Mat();
+      cv.warpPerspective(src, warped, M, new cv.Size(dw, dh));
+
+      // Adaptive threshold (clean B&W)
+      var gray  = new cv.Mat();
+      cv.cvtColor(warped, gray, cv.COLOR_RGBA2GRAY);
+      var thresh= new cv.Mat();
+      cv.adaptiveThreshold(gray, thresh, 255,
+        cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 21, 10);
+
+      var out   = document.createElement('canvas');
+      out.width = dw; out.height = dh;
+      cv.imshow(out, thresh);
+      var result = out.toDataURL('image/jpeg', 0.92);
+
+      [src, srcP, dstP, M, warped, gray, thresh].forEach(function(m){ m.delete(); });
+      return result;
+    } catch(e) { /* fall through to basic */ }
+  }
+
+  // No OpenCV: do manual warp with canvas
+  return canvasWarp(_cropImg, tl, tr, br, bl, dw, dh);
+}
+
+// Simple canvas-based perspective warp (no OpenCV fallback)
+function canvasWarp(img, tl, tr, br, bl, dw, dh) {
+  // Just do a basic crop by bounding box + contrast enhance
+  var minX = Math.min(tl.x, bl.x);
+  var minY = Math.min(tl.y, tr.y);
+  var maxX = Math.max(tr.x, br.x);
+  var maxY = Math.max(bl.y, br.y);
+  var cw = maxX - minX, ch = maxY - minY;
+  var tmp = document.createElement('canvas');
+  tmp.width = cw; tmp.height = ch;
+  tmp.getContext('2d').drawImage(img, minX, minY, cw, ch, 0, 0, cw, ch);
+  var tmpImg = new Image();
+  tmpImg.src = tmp.toDataURL();
+  return basicEnhance(tmpImg);
+}
+
+document.getElementById('crop-cancel').addEventListener('click', function() {
+  document.getElementById('crop-overlay').classList.remove('show');
+  _handles.forEach(function(h){ h.remove(); });
+  _handles = [];
+  if (_cropCb) _cropCb(null); // null = user cancelled
+  _cropImg = null; _cropCb = null;
+});
+
+document.getElementById('crop-confirm').addEventListener('click', function() {
+  document.getElementById('crop-overlay').classList.remove('show');
+  _handles.forEach(function(h){ h.remove(); });
+  _handles = [];
+  showOverlay(true);
+  document.getElementById('proc-txt').textContent = 'Applying crop…';
+  setTimeout(function() {
+    var result = applyCrop();
+    showOverlay(false);
+    if (_cropCb) _cropCb(result);
+    _cropImg = null; _cropCb = null;
+  }, 30);
+});
+
+// ══════════════════════════════════════════════
+//  Basic enhance (fallback, no perspective)
+// ══════════════════════════════════════════════
+function basicEnhance(img) {
+  var c = document.createElement('canvas');
+  var W = img.naturalWidth||img.width, H = img.naturalHeight||img.height;
+  c.width=W; c.height=H;
+  var ctx=c.getContext('2d'); ctx.drawImage(img,0,0,W,H);
+  var id=ctx.getImageData(0,0,W,H), d=id.data;
+  for (var i=0;i<d.length;i+=4){ var g=0.299*d[i]+0.587*d[i+1]+0.114*d[i+2]; d[i]=d[i+1]=d[i+2]=g; }
+  var h=new Float32Array(256),tot=W*H,lo=0,hi=255,cum=0;
+  for (var i=0;i<d.length;i+=4) h[d[i]]++;
+  for (var v=0;v<256;v++){cum+=h[v];if(cum/tot>=0.04){lo=v;break;}} cum=0;
+  for (var v=255;v>=0;v--){cum+=h[v];if(cum/tot>=0.04){hi=v;break;}}
+  if(hi<=lo){lo=0;hi=255;}
+  var sc=255/(hi-lo);
+  for(var i=0;i<d.length;i+=4){var val=Math.round((d[i]-lo)*sc);val=val<0?0:val>255?255:val;d[i]=d[i+1]=d[i+2]=val;}
+  ctx.putImageData(id,0,0);
+  return c.toDataURL('image/jpeg',0.92);
+}
+
+// ══════════════════════════════════════════════
+//  File processing — shows crop UI first
+// ══════════════════════════════════════════════
+function procFile(file, cb) {
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var orig = e.target.result;
+    var img  = new Image();
+    img.onload = function() {
+      if (!scanOn) {
+        cb({ dataUrl: orig, orig: orig });
+        return;
+      }
+      // Show crop UI — user adjusts corners, then we apply perspective
+      showCrop(img, function(result) {
+        if (result === null) {
+          // User cancelled — keep original
+          cb({ dataUrl: orig, orig: orig });
+        } else {
+          cb({ dataUrl: result, orig: orig });
+        }
+      });
+    };
+    img.src = orig;
+  };
+  reader.readAsDataURL(file);
+}
+
+function procFiles(files) {
+  var arr = Array.from(files).filter(function(f){ return f.type.startsWith('image/'); });
+  if (!arr.length) return;
+  var idx = 0;
+  var results = new Array(arr.length);
+
+  function next() {
+    if (idx >= arr.length) {
+      results.forEach(function(r){ if(r) photos.push(r); });
+      render();
+      return;
+    }
+    var i = idx++;
+    document.getElementById('proc-txt').textContent = 'Photo ' + (i+1) + ' of ' + arr.length;
+    procFile(arr[i], function(p) {
+      results[i] = p;
+      next();
+    });
+  }
+  next();
+}
+
+function showOverlay(v) {
+  var el = document.getElementById('proc-overlay');
+  if (el) { if(v) el.classList.add('show'); else el.classList.remove('show'); }
+}
+
+// ══════════════════════════════════════════════
+//  Reprocess (toggle scan on/off)
+// ══════════════════════════════════════════════
+function reprocess() {
+  if (!photos.length) return;
+  if (!scanOn) {
+    // Just restore originals
+    photos.forEach(function(p){ p.dataUrl = p.orig; });
+    render(); return;
+  }
+  // Re-show crop for each photo
+  var idx = 0;
+  function next() {
+    if (idx >= photos.length) { render(); return; }
+    var i = idx++;
+    var img = new Image();
+    img.onload = function() {
+      showCrop(img, function(result) {
+        if (result !== null) photos[i].dataUrl = result;
+        next();
+      });
+    };
+    img.src = photos[i].orig;
+  }
+  next();
+}
+
+// ══════════════════════════════════════════════
+//  Render photo grid
+// ══════════════════════════════════════════════
+function render() {
+  var grid=document.getElementById('p-grid');
+  var zone=document.getElementById('upload-zone');
+  var am=document.getElementById('add-more');
+  var cnt=document.getElementById('p-count');
+  var dh=document.getElementById('drag-hint');
+  grid.innerHTML='';
+  if (!photos.length) {
+    zone.style.display=''; am.style.display='none';
+    cnt.textContent=''; dh.style.display='none'; return;
+  }
+  zone.style.display='none'; am.style.display='';
+  cnt.textContent = photos.length + ' photo' + (photos.length>1?'s':'');
+  dh.style.display = photos.length>1 ? 'block' : 'none';
+  photos.forEach(function(p, i) {
+    var t=document.createElement('div'); t.className='thumb'; t.draggable=true; t.dataset.idx=i;
+    var img=document.createElement('img'); img.src=p.dataUrl;
+    var num=document.createElement('div'); num.className='thumb-num'; num.textContent=i+1;
+    var del=document.createElement('button'); del.className='thumb-del'; del.innerHTML='✕';
+    del.onclick=function(e){e.stopPropagation();photos.splice(i,1);render();};
+    var ret=document.createElement('button'); ret.className='thumb-retake'; ret.textContent='↺ Retake';
+    ret.onclick=function(e){e.stopPropagation();retake(i);};
+    t.appendChild(img);t.appendChild(num);t.appendChild(del);t.appendChild(ret);
+    t.addEventListener('dragstart',function(ev){dragSrc=i;t.style.opacity='.5';ev.dataTransfer.effectAllowed='move';});
+    t.addEventListener('dragend',function(){t.style.opacity='';document.querySelectorAll('.thumb').forEach(function(el){el.style.boxShadow='';});});
+    t.addEventListener('dragover',function(ev){ev.preventDefault();document.querySelectorAll('.thumb').forEach(function(el){el.style.boxShadow='';});t.style.boxShadow='0 0 0 3px #2563eb';});
+    t.addEventListener('drop',function(ev){ev.preventDefault();if(dragSrc===null||dragSrc===i)return;var mv=photos.splice(dragSrc,1)[0];photos.splice(i,0,mv);dragSrc=null;render();});
+    grid.appendChild(t);
+  });
+}
+
+function retake(idx) {
+  var inp=document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.capture='environment';
+  inp.onchange=function(){
+    if(!inp.files||!inp.files[0]) return;
+    procFile(inp.files[0], function(p){
+      if(p){ photos[idx]=p; render(); }
+    });
+  };
+  inp.click();
+}
+
+// ══════════════════════════════════════════════
+//  Event listeners
+// ══════════════════════════════════════════════
+document.getElementById('file-in').addEventListener('change', function(){
+  if(this.files&&this.files.length) procFiles(Array.from(this.files));
+  this.value='';
+});
+document.getElementById('add-in').addEventListener('change', function(){
+  if(this.files&&this.files.length) procFiles(Array.from(this.files));
+  this.value='';
+});
+document.getElementById('scan-on').addEventListener('change', function(){
+  scanOn=this.checked; reprocess();
+});
+document.querySelector('.slider').addEventListener('click', function(){
+  document.getElementById('scan-on').click();
+});
+
+// ══════════════════════════════════════════════
+//  Submit
+// ══════════════════════════════════════════════
+document.getElementById('sub-btn').addEventListener('click', function() {
+  var name=document.getElementById('s-name').value.trim();
+  var num =document.getElementById('s-num').value.trim();
+  var st  =document.getElementById('sub-status');
+  function showSt(msg,ok){
+    st.style.display='block';
+    st.style.background=ok?'#f0fdf4':'#fef2f2';
+    st.style.color=ok?'#15803d':'#dc2626';
+    st.textContent=msg;
+  }
+  if(!name)         {showSt('Please enter your name.',false);return;}
+  if(!num)          {showSt('Please enter your index number.',false);return;}
+  if(!photos.length){showSt('Please take at least one photo.',false);return;}
+  var btn=document.getElementById('sub-btn');
+  btn.disabled=true; btn.textContent='Submitting…'; st.style.display='none';
+  var fileKey=[META.class,META.assignTitle,name,num]
+    .map(function(s){return String(s).replace(/[^\w\u4e00-\u9fff]/g,'_');}).join('__');
+  var payload={
+    type:'worksheet',fileKey:fileKey,template:'pazhao',
+    grade:'worksheet_'+META.class,class:META.class,assignTitle:META.assignTitle,
+    studentName:name,studentNum:num,
+    submitTime:new Date().toLocaleString('zh-SG'),
+    inputs:{},canvases:{},
+    pzPhotos:photos.map(function(p,i){return{index:i+1,dataUrl:p.dataUrl};})
+  };
+  fetch(META.scriptUrl,{
+    method:'POST',mode:'no-cors',
+    headers:{'Content-Type':'text/plain'},
+    body:JSON.stringify(payload)
+  }).then(function(){
+    btn.textContent='✅ Submitted';
+    showSt('Submitted! Your teacher has received your work.',true);
+  }).catch(function(){
+    btn.disabled=false; btn.textContent='Submit';
+    showSt('Network error. Please check your connection and try again.',false);
+  });
+});
+</script>
+</body>
+</html>
