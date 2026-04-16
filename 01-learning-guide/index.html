@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学法指引 | CH-FLOWS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&family=Montserrat:wght@200;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent-blue: #004e7c; --text-english: #64748b; --bg-base: #f0f4f8; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            min-height: 100vh;
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--bg-base);
+            background-image: radial-gradient(circle at 50% 0%, rgba(10, 129, 171, 0.15) 0%, var(--bg-base) 60%);
+            background-attachment: fixed;
+        }
+        body { display: flex; justify-content: center; }
+        .stage { width: 100%; max-width: 1200px; padding: 6vh 20px; display: flex; flex-direction: column; align-items: center; }
+        header { text-align: center; margin-bottom: 6vh; }
+        .back-link { font-family: 'Montserrat'; font-size: 0.75rem; color: var(--accent-blue); text-decoration: none; opacity: 0.5; letter-spacing: 3px; }
+        .back-link:hover { opacity: 1; }
+        .page-title { font-size: 2.2rem; letter-spacing: 12px; color: var(--accent-blue); font-weight: 200; margin: 15px 0 5px; }
+        .page-subtitle { font-family: 'Montserrat'; font-size: 0.75rem; letter-spacing: 4px; color: var(--text-english); margin-top: 6px; }
+        .article-list { list-style: none; width: 100%; max-width: 680px; }
+        .article-list li { border-bottom: 1px solid rgba(0,78,124,0.1); }
+        .article-list li:first-child { border-top: 1px solid rgba(0,78,124,0.1); }
+        .article-list a {
+            display: flex; align-items: baseline; justify-content: space-between;
+            gap: 16px; padding: 14px 6px;
+            text-decoration: none; color: inherit;
+            transition: padding-left 0.2s;
+        }
+        .article-list a:hover { padding-left: 14px; }
+        .art-title { font-size: 0.97rem; color: var(--accent-blue); flex: 1; font-weight: 400; }
+        .art-date { font-family: 'Montserrat'; font-size: 0.68rem; letter-spacing: 1px; color: var(--text-english); white-space: nowrap; flex-shrink: 0; }
+        #empty { color: var(--accent-blue); opacity: 0.4; font-size: 0.9rem; margin-top: 50px; letter-spacing: 2px; }
+    </style>
+</head>
+<body>
+    <div class="stage">
+        <header>
+            <a href="../index.html" class="back-link">← RETURN HUB</a>
+            <h1 class="page-title">学法指引</h1>
+            <div class="page-subtitle">Learning Guide</div>
+        </header>
+        <ul class="article-list" id="article-list"></ul>
+        <div id="empty" style="display:none;">暂无内容</div>
+    </div>
+
+    <script>
+// ── 文件清单 ──
+// ITEMS_START
+var ITEMS = [];
+// ITEMS_END
+
+(function(){
+    var list  = document.getElementById('article-list');
+    var empty = document.getElementById('empty');
+    if (!ITEMS || ITEMS.length === 0) { empty.style.display = ''; return; }
+    var sorted = ITEMS.slice().reverse();
+    sorted.forEach(function(a) {
+        var li = document.createElement('li');
+        var dateId = 'date-' + a.file.replace(/[^a-z0-9]/gi,'_');
+        li.innerHTML = '<a href="' + a.file + '">'
+            + '<span class="art-title">' + a.title + '</span>'
+            + '<span class="art-date" id="' + dateId + '">' + (a.date || '') + '</span>'
+            + '</a>';
+        list.appendChild(li);
+    });
+})();
+    </script>
+</body>
+</html>
