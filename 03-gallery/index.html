@@ -19,8 +19,6 @@
         header { text-align: center; margin-bottom: 6vh; }
         .back-link { font-family: 'Montserrat'; font-size: 0.75rem; color: var(--accent-blue); text-decoration: none; opacity: 0.5; letter-spacing: 3px; }
         .page-title { font-size: 2.2rem; letter-spacing: 12px; color: var(--accent-blue); font-weight: 200; margin: 15px 0 5px; }
-
-        /* 目录列表 */
         .article-list { list-style: none; width: 100%; max-width: 680px; }
         .article-list li { border-bottom: 1px solid rgba(0,78,124,0.1); }
         .article-list li:first-child { border-top: 1px solid rgba(0,78,124,0.1); }
@@ -33,8 +31,7 @@
         .article-list a:hover { padding-left: 14px; }
         .art-title { font-size: 0.97rem; color: var(--accent-blue); flex: 1; font-weight: 400; }
         .art-date { font-family: 'Montserrat'; font-size: 0.68rem; letter-spacing: 1px; color: var(--text-english); white-space: nowrap; flex-shrink: 0; }
-
-        #loading { color: var(--accent-blue); opacity: 0.5; font-size: 0.9rem; margin-top: 50px; }
+        #empty { color: var(--accent-blue); opacity: 0.4; font-size: 0.9rem; margin-top: 50px; letter-spacing: 2px; }
     </style>
 </head>
 <body>
@@ -44,25 +41,20 @@
             <h1 class="page-title">佳作视界</h1>
             <div style="font-family:'Montserrat';font-size:0.75rem;letter-spacing:4px;color:var(--text-english);margin-top:6px;">Excellence Gallery</div>
         </header>
-
-        <div id="loading" style="display:none;"></div>
         <ul class="article-list" id="article-list"></ul>
+        <div id="empty" style="display:none;">暂无内容</div>
     </div>
 
     <script>
-// ── 文章清单（由学习单平台自动维护，请勿手动编辑此行以下至 ARTICLES_END）──
 // ARTICLES_START
-var ARTICLES = [
-  { file:"1g3-情境作文.html", title:"从看不起到刮目相看", cls:"1G3", date:"" }
-];
+var ARTICLES = [];
 // ARTICLES_END
 
 (function(){
-    var list = document.getElementById('article-list');
-    if (!ARTICLES || ARTICLES.length === 0) return;
+    var list  = document.getElementById('article-list');
+    var empty = document.getElementById('empty');
+    if (!ARTICLES || ARTICLES.length === 0) { empty.style.display = ''; return; }
     var sorted = ARTICLES.slice().reverse();
-
-    // 先渲染条目，日期异步填入
     sorted.forEach(function(a) {
         var li = document.createElement('li');
         li.innerHTML = '<a href="' + a.file + '">'
@@ -70,23 +62,6 @@ var ARTICLES = [
             + '<span class="art-date" id="date-' + a.file.replace(/[^a-z0-9]/gi,'_') + '">' + (a.date || '') + '</span>'
             + '</a>';
         list.appendChild(li);
-
-        // 如果已有日期就不用再查
-        if (a.date) return;
-
-        // 从 GitHub API 取上传日期
-        fetch('https://api.github.com/repos/ch-flows/learning-hub/commits?path=03-gallery/' + encodeURIComponent(a.file) + '&per_page=1')
-        .then(function(r){ return r.json(); })
-        .then(function(data){
-            if (!data || !data[0]) return;
-            var d = new Date(data[0].commit.committer.date);
-            var str = d.getFullYear() + '.'
-                    + String(d.getMonth()+1).padStart(2,'0') + '.'
-                    + String(d.getDate()).padStart(2,'0');
-            var el = document.getElementById('date-' + a.file.replace(/[^a-z0-9]/gi,'_'));
-            if (el) el.textContent = str;
-        })
-        .catch(function(){});
     });
 })();
     </script>
