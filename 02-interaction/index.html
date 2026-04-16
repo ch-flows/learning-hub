@@ -49,12 +49,8 @@
     </div>
 
     <script>
-// ── 文件清单（由学习单平台自动维护）──
 // ITEMS_START
-var ITEMS = [
-  { file:"4hcl-yuedu1.html", title:"2022年试卷二复盘", cls:"4hcl", date:"2026.04.11" },
-  { file:"4hcl-yuedu1.html", title:"2022年试卷二复盘", cls:"4hcl", date:"2026.04.11" }
-];
+var ITEMS = [];
 // ITEMS_END
 
 (function(){
@@ -70,17 +66,6 @@ var ITEMS = [
             + '<span class="art-date" id="' + dateId + '">' + (a.date || '') + '</span>'
             + '</a>';
         list.appendChild(li);
-        if (a.date) return;
-        fetch('https://api.github.com/repos/ch-flows/learning-hub/commits?path=02-interaction/' + encodeURIComponent(a.file) + '&per_page=1')
-        .then(function(r){ return r.json(); })
-        .then(function(data){
-            if (!data || !data[0]) return;
-            var d = new Date(data[0].commit.committer.date);
-            var str = d.getFullYear() + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + String(d.getDate()).padStart(2,'0');
-            var el = document.getElementById(dateId);
-            if (el) el.textContent = str;
-        })
-        .catch(function(){});
     });
 })();
     </script>
