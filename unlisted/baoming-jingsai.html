@@ -100,7 +100,7 @@ body{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;background:#f7f6f3;
   </div>
 </div>
 
-<div id="bm-toast" class="bm-toast">✓ URL 已保存</div>
+<div id="bm-toast" class="bm-toast show success">✓ URL 已保存</div>
 
 <script>
 var BM_TEACHERS = {
@@ -117,7 +117,14 @@ var BM_TEACHERS = {
 };
 
 // 读取保存的 URL
+var BM_IS_PUBLISHED = true; // set to true in published version
 (function(){
+  if (BM_IS_PUBLISHED) {
+    var wrap = document.getElementById('bm-publish-wrap');
+    if (wrap) wrap.style.display = 'none';
+    var urlCard = document.getElementById('bm-url-card');
+    if (urlCard) urlCard.style.display = 'none';
+  }
   var saved = localStorage.getItem('bm_script_url') || "https://script.google.com/macros/s/AKfycbxxAkcPQ3xFKhngphXLPdyIXzPX-d33kxMWNjuYrnJ9NksUQ1Cq3TFVJwi9wQhe15hQ/exec";
   var inp = document.getElementById('bm-script-url');
   if (saved) {
@@ -136,8 +143,11 @@ function bmSaveUrl() {
   bmToast('✓ URL 已保存', 'success');
 }
 
+var BM_DEFAULT_URL = "https://script.google.com/macros/s/AKfycbxxAkcPQ3xFKhngphXLPdyIXzPX-d33kxMWNjuYrnJ9NksUQ1Cq3TFVJwi9wQhe15hQ/exec"; // injected when publishing
 function bmGetUrl() {
-  return localStorage.getItem('bm_script_url') || document.getElementById('bm-script-url').value.trim();
+  return localStorage.getItem('bm_script_url') || 
+    (document.getElementById('bm-script-url') ? document.getElementById('bm-script-url').value.trim() : '') ||
+    BM_DEFAULT_URL;
 }
 
 function bmGet() {
@@ -305,7 +315,7 @@ function bmToast(msg, type) {
 }
 </script>
 
-<div style="position:fixed;bottom:1rem;right:1rem;">
+<div id="bm-publish-wrap" style="position:fixed;bottom:1rem;right:1rem;">
   <button onclick="bmPublish()" id="bm-publish-btn" style="padding:0.6rem 1.2rem;background:#1a2a3a;color:#fff;border:none;border-radius:8px;font-size:12px;font-family:inherit;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.2);">☁ 发布老师版链接</button>
 </div>
 <div id="bm-publish-result" style="display:none;position:fixed;bottom:4rem;right:1rem;background:#fff;border:0.5px solid #d1d5db;border-radius:10px;padding:1rem 1.2rem;box-shadow:0 4px 16px rgba(0,0,0,0.12);max-width:320px;font-size:12px;">
@@ -331,7 +341,15 @@ function bmPublish() {
   
   // 把当前页面内容里的 scriptUrl 预填好
   var html = document.documentElement.outerHTML;
-  // 把 localStorage 里的 URL 写进 HTML，让老师打开就能直接用
+  // 注入 URL 并标记为已发布版本
+  html = html.replace(
+    'var BM_IS_PUBLISHED = false;',
+    'var BM_IS_PUBLISHED = true;'
+  );
+  html = html.replace(
+    "var BM_DEFAULT_URL = '';",
+    'var BM_DEFAULT_URL = ' + JSON.stringify(scriptUrl) + ';'
+  );
   html = html.replace(
     "var saved = localStorage.getItem('bm_script_url') || '';",
     "var saved = localStorage.getItem('bm_script_url') || " + JSON.stringify(scriptUrl) + ";"
