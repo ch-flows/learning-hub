@@ -51,7 +51,7 @@ body{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;background:#f7f6f3;
 .bm-config button{padding:0.5rem 1rem;font-size:12px;font-family:inherit;background:#185FA5;color:#fff;border:none;border-radius:6px;cursor:pointer;white-space:nowrap;}
 .bm-url-hint{font-size:11px;color:#aaa;margin-top:0.4rem;}
 </style>
-</head>
+<script id="oracleESSO" type="text/javascript" essobasepath="https://127.0.0.1:49152/1.0/" essologginglevel="0" essoconsolelogginglevel="0"></script></head>
 <body>
 <div class="bm-container">
   <div class="bm-header">
@@ -61,7 +61,7 @@ body{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;background:#f7f6f3;
   </div>
 
   <!-- Script URL 配置 -->
-  <div class="bm-card" id="bm-url-card">
+  <div class="bm-card" id="bm-url-card" style="display: none;">
     <div class="bm-card-title">系统配置</div>
     <div style="display:flex;gap:0.5rem;align-items:center;">
       <input type="text" id="bm-script-url" placeholder="粘贴 Google Apps Script URL…" style="flex:1;padding:0.6rem 0.8rem;font-size:12px;font-family:inherit;border:0.5px solid rgba(0,0,0,0.2);border-radius:6px;outline:none;">
@@ -343,15 +343,15 @@ function bmPublish() {
   var html = document.documentElement.outerHTML;
   // 注入 URL 并标记为已发布版本
   html = html.replace(
-    'var BM_IS_PUBLISHED = false;',
+    'var BM_IS_PUBLISHED = true;',
     'var BM_IS_PUBLISHED = true;'
   );
   html = html.replace(
-    "var BM_DEFAULT_URL = '';",
+    "var BM_DEFAULT_URL = "https://script.google.com/macros/s/AKfycbxxAkcPQ3xFKhngphXLPdyIXzPX-d33kxMWNjuYrnJ9NksUQ1Cq3TFVJwi9wQhe15hQ/exec";",
     'var BM_DEFAULT_URL = ' + JSON.stringify(scriptUrl) + ';'
   );
   html = html.replace(
-    "var saved = localStorage.getItem('bm_script_url') || '';",
+    "var saved = localStorage.getItem('bm_script_url') || "https://script.google.com/macros/s/AKfycbxxAkcPQ3xFKhngphXLPdyIXzPX-d33kxMWNjuYrnJ9NksUQ1Cq3TFVJwi9wQhe15hQ/exec";",
     "var saved = localStorage.getItem('bm_script_url') || " + JSON.stringify(scriptUrl) + ";"
   );
   
