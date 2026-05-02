@@ -1254,7 +1254,7 @@
             #page-langdu { display: none !important; }
 
             /* 3. 格子块：每块独占一页 */
-            #jingsai-pages-container { gap: 0 !important; display: block !important; }
+            #jingsai-pages-container, #yuedu-jingsai-pages-container, #yj-extra-container { gap: 0 !important; display: block !important; }
             .jingsai-page-block { 
                 page-break-after: always !important; 
                 break-after: page !important;
@@ -1269,6 +1269,22 @@
             }
             .jingsai-page-block:last-child { page-break-after: auto !important; break-after: auto !important; }
             .jingsai-page-num { display: none !important; }
+
+            /* yuedu-jingsai: blocks flow naturally, don't force page breaks */
+            #yuedu-jingsai-pages-container .jingsai-page-block,
+            #yj-extra-container .jingsai-page-block,
+            #yj-extra-container .yj-extra-unit {
+                page-break-after: auto !important;
+                break-after: auto !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                margin-top: 0 !important;
+            }
+            /* Remove margin-top override for yuedu-jingsai blocks */
+            #yuedu-jingsai-pages-container .jingsai-page-block:not(:first-child),
+            #yj-extra-container .jingsai-page-block:not(:first-child) {
+                margin-top: 8mm !important;
+            }
 
             /* 4. canvas 和文字层：保持容器固定高度，让绝对定位文字正确显示 */
             .jingsai-page-block > div:first-child { 
@@ -1758,7 +1774,7 @@
       <span id="yuedu-jingsai-wordcount" style="font-size:8pt;color:#388e3c;">字数：0</span>
       <span id="jingsai-save-clock" style="font-size:7.5pt;color:#9e9e9e;margin-left:8px;"></span>
     </div>
-    <div id="yuedu-jingsai-pages-container" style="display:flex;flex-direction:column;gap:40px;">
+    <div id="yuedu-jingsai-pages-container" style="display:flex;flex-direction:column;gap:40px;" onclick="if(typeof yjActivateQ1==='function')yjActivateQ1()">
       <div class="jingsai-page-block" data-page="0">
         <div style="display: block; width: 100%; box-sizing: border-box; background: rgb(255, 255, 255); line-height: 0; font-size: 0px; position: relative; overflow: visible !important; height: 414px;">
           <div class="jingsai-grid-wrap" style="position: relative; background: rgb(255, 255, 255); cursor: text; overflow: visible !important; height: 410px;">
@@ -1773,7 +1789,7 @@
   </div>
 
   <!-- 额外题目（由JS动态添加，每题有独立的题目框+CSS格子） -->
-  <div id="yj-extra-container" style="margin-top:32px;"><div class="yj-extra-unit" data-uid="yje_1" style="margin-bottom: 32px;"><div style="background: rgb(238, 244, 251); border-radius: 8px; padding: 10px 16px; margin-bottom: 10px; position: relative;"><div contenteditable="false" style="font-size: 8.5pt; font-weight: 600; color: rgb(26, 64, 112); margin-bottom: 6px;">📌 题目：</div><div class="yj-extra-question" contenteditable="false" spellcheck="false" style="font-size: 9.5pt; color: rgb(26, 42, 58); line-height: 1.8; min-height: 44px; outline: none; font-family: inherit; white-space: pre-wrap;">（老师在此输入题目）</div><button class="yj-del-btn" style="position: absolute; top: 8px; right: 10px; background: none; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; color: rgb(192, 57, 43); font-size: 10pt; cursor: pointer; padding: 2px 6px; display: none;">🗑</button></div><div class="yj-extra-grid-wrap" style="width: 100%;"><div class="jingsai-grid-wrap" style="position: relative; background: rgb(255, 255, 255); overflow: visible; cursor: default; width: 100%; height: 410px;"><canvas class="jingsai-grid-canvas" width="1" height="1" style="display: block; width: 688px; height: 410px;"></canvas></div></div></div><div class="yj-extra-unit" data-uid="yje_2" style="margin-bottom: 32px;"><div style="background: rgb(238, 244, 251); border-radius: 8px; padding: 10px 16px; margin-bottom: 10px; position: relative;"><div contenteditable="false" style="font-size: 8.5pt; font-weight: 600; color: rgb(26, 64, 112); margin-bottom: 6px;">📌 题目：</div><div class="yj-extra-question" contenteditable="false" spellcheck="false" style="font-size: 9.5pt; color: rgb(26, 42, 58); line-height: 1.8; min-height: 44px; outline: none; font-family: inherit; white-space: pre-wrap;">（老师在此输入题目）</div><button class="yj-del-btn" style="position: absolute; top: 8px; right: 10px; background: none; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; color: rgb(192, 57, 43); font-size: 10pt; cursor: pointer; padding: 2px 6px; display: none;">🗑</button></div><div class="yj-extra-grid-wrap" style="width: 100%;"><div class="jingsai-grid-wrap" style="position: relative; background: rgb(255, 255, 255); overflow: visible; cursor: default; width: 100%; height: 410px;"><canvas class="jingsai-grid-canvas" width="1" height="1" style="display: block; width: 688px; height: 410px;"></canvas></div></div></div><div class="yj-extra-unit" data-uid="yje_3" style="margin-bottom: 32px;"><div style="background: rgb(238, 244, 251); border-radius: 8px; padding: 10px 16px; margin-bottom: 10px; position: relative;"><div contenteditable="false" style="font-size: 8.5pt; font-weight: 600; color: rgb(26, 64, 112); margin-bottom: 6px;">📌 题目：</div><div class="yj-extra-question" contenteditable="false" spellcheck="false" style="font-size: 9.5pt; color: rgb(26, 42, 58); line-height: 1.8; min-height: 44px; outline: none; font-family: inherit; white-space: pre-wrap;">（老师在此输入题目）</div><button class="yj-del-btn" style="position: absolute; top: 8px; right: 10px; background: none; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; color: rgb(192, 57, 43); font-size: 10pt; cursor: pointer; padding: 2px 6px; display: none;">🗑</button></div><div class="yj-extra-grid-wrap" style="width: 100%;"><div class="jingsai-grid-wrap" style="position: relative; background: rgb(255, 255, 255); overflow: visible; cursor: default; width: 100%; height: 410px;"><canvas class="jingsai-grid-canvas" width="1" height="1" style="display: block; width: 688px; height: 410px;"></canvas></div></div></div><div class="yj-extra-unit" data-uid="yje_4" style="margin-bottom: 32px;"><div style="background: rgb(238, 244, 251); border-radius: 8px; padding: 10px 16px; margin-bottom: 10px; position: relative;"><div contenteditable="false" style="font-size: 8.5pt; font-weight: 600; color: rgb(26, 64, 112); margin-bottom: 6px;">📌 题目：</div><div class="yj-extra-question" contenteditable="false" spellcheck="false" style="font-size: 9.5pt; color: rgb(26, 42, 58); line-height: 1.8; min-height: 44px; outline: none; font-family: inherit; white-space: pre-wrap;">（老师在此输入题目）</div><button class="yj-del-btn" style="position: absolute; top: 8px; right: 10px; background: none; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; color: rgb(192, 57, 43); font-size: 10pt; cursor: pointer; padding: 2px 6px; display: none;">🗑</button></div><div class="yj-extra-grid-wrap" style="width: 100%;"><div class="jingsai-grid-wrap" style="position: relative; background: rgb(255, 255, 255); overflow: visible; cursor: default; width: 100%; height: 410px;"><canvas class="jingsai-grid-canvas" width="1" height="1" style="display: block; width: 688px; height: 410px;"></canvas></div></div></div><div class="yj-extra-unit" data-uid="yje_5" style="margin-bottom: 32px;"><div style="background: rgb(238, 244, 251); border-radius: 8px; padding: 10px 16px; margin-bottom: 10px; position: relative;"><div contenteditable="false" style="font-size: 8.5pt; font-weight: 600; color: rgb(26, 64, 112); margin-bottom: 6px;">📌 题目：</div><div class="yj-extra-question" contenteditable="false" spellcheck="false" style="font-size: 9.5pt; color: rgb(26, 42, 58); line-height: 1.8; min-height: 44px; outline: none; font-family: inherit; white-space: pre-wrap;">（老师在此输入题目）</div><button class="yj-del-btn" style="position: absolute; top: 8px; right: 10px; background: none; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; color: rgb(192, 57, 43); font-size: 10pt; cursor: pointer; padding: 2px 6px; display: none;">🗑</button></div><div class="yj-extra-grid-wrap" style="width: 100%;"><div class="jingsai-grid-wrap" style="position: relative; background: rgb(255, 255, 255); overflow: visible; cursor: default; width: 100%; height: 410px;"><canvas class="jingsai-grid-canvas" width="1" height="1" style="display: block; width: 688px; height: 410px;"></canvas></div></div></div></div>
+  <div id="yj-extra-container" style="margin-top:32px;"><div class="yj-extra-unit" data-uid="yje_1" style="margin-bottom: 32px;"><div style="background: rgb(238, 244, 251); border-radius: 8px; padding: 10px 16px; margin-bottom: 10px; position: relative;"><div contenteditable="false" style="font-size: 8.5pt; font-weight: 600; color: rgb(26, 64, 112); margin-bottom: 6px;">📌 题目：</div><div class="yj-extra-question" contenteditable="false" spellcheck="false" style="font-size: 9.5pt; color: rgb(26, 42, 58); line-height: 1.8; min-height: 44px; outline: none; font-family: inherit; white-space: pre-wrap;">（老师在此输入题目）</div><button class="yj-del-btn" style="position: absolute; top: 8px; right: 10px; background: none; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; color: rgb(192, 57, 43); font-size: 10pt; cursor: pointer; padding: 2px 6px; display: none;">🗑</button></div><div class="yj-extra-grid-wrap" style="display: flex; flex-direction: column; gap: 40px; width: 100%;"><div class="jingsai-page-block" data-page="0"><div style="display: block; width: 100%; box-sizing: border-box; background: rgb(255, 255, 255); line-height: 0; font-size: 0px; position: relative; overflow: visible; height: 414px;"><div class="jingsai-grid-wrap" style="position: relative; background: rgb(255, 255, 255); overflow: visible; cursor: text; width: 100%; height: 410px;"><canvas class="jingsai-grid-canvas" width="1" height="1" style="display: block; width: 688px; height: 410px;"></canvas><div class="jingsai-text-canvas" style="position: absolute; top: 0px; left: 0px; pointer-events: none; overflow: hidden; width: 688px; height: 408px;"><span style="position: absolute; left: 0px; top: 6px; width: 34.4px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 100; line-height: 1; color: rgb(26, 42, 58); font-family: SimSun, 宋体, STSong, serif; box-sizing: border-box; -webkit-font-smoothing: antialiased; transform: translateY(-1px);">　</span><span style="position: absolute; left: 34.4px; top: 6px; width: 34.4px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 100; line-height: 1; color: rgb(26, 42, 58); font-family: SimSun, 宋体, STSong, serif; box-sizing: border-box; -webkit-font-smoothing: antialiased; transform: translateY(-1px);">　</span></div><div class="jingsai-cursor" style="position: absolute; width: 1.5px; background: rgb(46, 125, 50); pointer-events: none; display: block; animation: 1s step-end 0s infinite normal none running jc-blink; z-index: 4; left: 69.8px; top: 6px; height: 18px;"></div></div></div><div class="jingsai-page-num" style="font-size: 8pt; color: rgb(153, 153, 153); text-align: right; padding-right: 4px; margin-top: 5px; line-height: 1;">第 1 页</div></div></div></div></div>
 
   <!-- Edit模式下的添加按钮 -->
   <div id="yj-add-btn-wrap" style="display: none; text-align: center; margin: 16px 0px 8px;">
@@ -1800,7 +1816,7 @@
 </div>
 <div id="kt-tooltip"></div>
 <script>window.onerror=function(msg,src,line,col,err){console.warn("[student]",msg,src+":"+line);return true;};</script>
-<script id="studentMeta">window.STUDENT_META={class:"4hcl",assignTitle:"002",scriptUrl:"https://script.google.com/macros/s/AKfycbxxAkcPQ3xFKhngphXLPdyIXzPX-d33kxMWNjuYrnJ9NksUQ1Cq3TFVJwi9wQhe15hQ/exec",timerCfg:{"enabled":true,"t1":20,"t2":0,"t3":0,"te":5,"n1":"","n2":"","n3":"","ne":"延时"},submitEnabled:true,fileToken:"monyk03a",noPaste:true,jingsaiTopics:{"高华 · 高年级组（中三&中四）":[],"高华 · 低年级组（中一&中二）":[],"G3华文 · 高年级组（中三&中四）":[],"G3华文 · 低年级组（中一&中二）":[]}};var INITIAL_TEMPLATE="yuedu-jingsai";var YJ_UNITS_DATA=[{"index":0,"question":"（老师在此输入题目，学生作答时只读）","text":"　　","cur":2,"rows":10},{"index":1,"question":"（老师在此输入题目）","text":"　　","cur":2,"rows":10},{"index":2,"question":"（老师在此输入题目）","text":"　　","cur":2,"rows":10},{"index":3,"question":"（老师在此输入题目）","text":"　　","cur":2,"rows":10},{"index":4,"question":"（老师在此输入题目）","text":"　　","cur":2,"rows":10},{"index":5,"question":"（老师在此输入题目）","text":"　　","cur":2,"rows":10}];</script>
+<script id="studentMeta">window.STUDENT_META={class:"4hcl",assignTitle:"002",scriptUrl:"https://script.google.com/macros/s/AKfycbxxAkcPQ3xFKhngphXLPdyIXzPX-d33kxMWNjuYrnJ9NksUQ1Cq3TFVJwi9wQhe15hQ/exec",timerCfg:{"enabled":true,"t1":20,"t2":0,"t3":0,"te":5,"n1":"","n2":"","n3":"","ne":"延时"},submitEnabled:true,fileToken:"moo7r0ln",noPaste:true,jingsaiTopics:{"高华 · 高年级组（中三&中四）":[],"高华 · 低年级组（中一&中二）":[],"G3华文 · 高年级组（中三&中四）":[],"G3华文 · 低年级组（中一&中二）":[]}};var INITIAL_TEMPLATE="yuedu-jingsai";var YJ_UNITS_DATA=[{"index":0,"question":"（老师在此输入题目，学生作答时只读）","text":"　　","cur":2,"rows":10},{"index":1,"question":"（老师在此输入题目）","text":"　　","cur":2,"rows":10}];</script>
 <script>
 (function(){
 // ── Themes ──
@@ -6016,7 +6032,7 @@ var dqb=document.querySelector('#langdu-fb-student-desk button');
 
     function timerLockAllInputs(tpl) {
         // 稿纸模式：设全局锁定标志，阻止 canvas 输入
-        if(tpl === 'jingsai') { window._jingsaiInputLocked = true; }
+        if(tpl === 'jingsai' || tpl === 'yuedu-jingsai') { window._jingsaiInputLocked = true; }
         var page = document.getElementById('page-'+tpl); if(!page) return;
         var exemptZones = [];
         var header = page.querySelector('.page-header, .bd-page-header');
@@ -6037,7 +6053,7 @@ var dqb=document.querySelector('#langdu-fb-student-desk button');
 
     function timerUnlockAllInputs(tpl) {
         // 稿纸模式：清除全局锁定标志
-        if(tpl === 'jingsai') { window._jingsaiInputLocked = false; }
+        if(tpl === 'jingsai' || tpl === 'yuedu-jingsai') { window._jingsaiInputLocked = false; }
         var page = document.getElementById('page-'+tpl); if(!page) return;
         page.querySelectorAll('.phase-locked').forEach(function(el){ el.classList.remove('phase-locked'); });
     }
@@ -9457,6 +9473,46 @@ var dqb=document.querySelector('#langdu-fb-student-desk button');
             }
         })();
 
+        // yuedu-jingsai 专用格子图（10行）
+        var _yjGridDataUrl = '';
+        var _yjGridW = 688, _yjGridH = 0;
+        (function(){
+            // 从 yuedu-jingsai-pages-container 取第一页canvas
+            var _yjOb = document.querySelector('#yuedu-jingsai-pages-container .jingsai-page-block');
+            var _yjOc = _yjOb ? _yjOb.querySelector('.jingsai-grid-canvas') : null;
+            if (_yjOc && _yjOc.width > 0) {
+                try {
+                    _yjGridDataUrl = _yjOc.toDataURL('image/png');
+                    _yjGridW = _yjOc.offsetWidth || _yjOc.width || 688;
+                    _yjGridH = _yjOc.offsetHeight || _yjOc.height || 0;
+                } catch(e) {}
+            }
+            // 如果取不到，用JS重新画一个10行格子
+            if (!_yjGridDataUrl || _yjGridH < 10) {
+                var _cv = document.createElement('canvas');
+                var COLS=20, ROWS=10, G='#4caf50';
+                var dpr = window.devicePixelRatio||1;
+                var W = _sharedGridW || 688;
+                var cW=W/COLS, maxCH=Math.floor(957/31.8);
+                var cH=Math.min(cW,maxCH), auxH=Math.round(cH*0.4), gH=cH+auxH;
+                var TH=(ROWS-1)*gH+cH, BOT=2;
+                _cv.width=Math.round(W*dpr); _cv.height=Math.round((TH+BOT)*dpr);
+                _cv.style.width=W+'px'; _cv.style.height=(TH+BOT)+'px';
+                var ctx=_cv.getContext('2d');
+                ctx.scale(dpr,dpr); ctx.clearRect(0,0,W,TH+BOT);
+                ctx.strokeStyle=G; ctx.lineWidth=0.7;
+                for(var ri=0;ri<ROWS;ri++){
+                    var base=ri*gH,wb=base+cH,ab=wb+auxH;
+                    if(ri<ROWS-1){ctx.beginPath();ctx.moveTo(0,wb);ctx.lineTo(W,wb);ctx.stroke();}
+                    if(ri<ROWS-1){ctx.beginPath();ctx.moveTo(0,ab);ctx.lineTo(W,ab);ctx.stroke();}
+                    for(var ci=1;ci<COLS;ci++){ctx.beginPath();ctx.moveTo(ci*cW,base);ctx.lineTo(ci*cW,wb);ctx.stroke();}
+                }
+                ctx.lineWidth=1.5; ctx.strokeRect(0.75,0.75,W-1.5,TH+BOT-1.5);
+                _yjGridDataUrl = _cv.toDataURL('image/png');
+                _yjGridW = W; _yjGridH = TH+BOT;
+            }
+        })();
+
         // 提取head里所有<style>内容（保留CSS，去掉JS，避免JS重新初始化页面）
         var _headCSS = '';
         document.querySelectorAll('head style').forEach(function(s) {
@@ -9599,14 +9655,25 @@ var dqb=document.querySelector('#langdu-fb-student-desk button');
             // jingsai：把格子 canvas 像素从原页面复制过来，文字也同步
             if (tpl === 'jingsai' || tpl === 'yuedu-jingsai') {
                 var _bpIsAnon = _batchIsAnon;
+                var _isYJ = (tpl === 'yuedu-jingsai');
+                // For jingsai, use shared grid. For yuedu-jingsai, generate fresh grid per record.
+                var _gridW = _sharedGridW;
+                var _gridH = _sharedGridH;
+                var _gridUrl = _sharedGridDataUrl;
 
-                // ── 格子图共用（已在函数顶部提取一次）──
-                var _gridW = _sharedGridW, _gridH = _sharedGridH;
-
-                // ── 把全文按行切割成每页文字数组（每页最多22行）──
-                var _COLS_B = 20, _ROWS_B = 22;
-                var _allText = (r.inputs && r.inputs['jingsai_text'] !== undefined) ? r.inputs['jingsai_text'] : '';
-                // 先把全文拆成"行"数组（自动换行 + \n 换行都算）
+                // ── 把全文按行切割成每页文字数组 ──
+                var _COLS_B = 20;
+                                // yuedu-jingsai: 先取文字，再根据实际行数决定格子高度
+                var _allText = '';
+                if (tpl === 'yuedu-jingsai' && r.inputs && r.inputs['yj_units']) {
+                    try {
+                        var _yjU = JSON.parse(r.inputs['yj_units']);
+                        if (_yjU && _yjU[0]) _allText = _yjU[0].text || '';
+                    } catch(e) {}
+                } else if (r.inputs && r.inputs['jingsai_text'] !== undefined) {
+                    _allText = r.inputs['jingsai_text'];
+                }
+                // 先把全文拆成"行"数组
                 var _allLines = [];
                 var _lineChars = [];
                 var _lc = 0;
@@ -9628,6 +9695,44 @@ var dqb=document.querySelector('#langdu-fb-student-desk button');
                 }
                 if (_lineChars.length > 0) _allLines.push(_lineChars);
                 if (_allLines.length === 0) _allLines.push([]);
+                // yuedu-jingsai: _ROWS_B = 实际行数（最少10，最多22）
+                // 这样格子高度和文字行数完全匹配，不会出现空行或内容丢失
+                var _ROWS_B = 22;
+                if (_isYJ) {
+                    _ROWS_B = Math.min(22, Math.max(10, _allLines.length));
+                    // 重新生成对应行数的格子图
+                    (function(){
+                        var _cv2 = document.createElement('canvas');
+                        var _COLS2=20, _G2='#4caf50', _dpr2=window.devicePixelRatio||1;
+                        var _W2 = _yjGridW || _sharedGridW || 688;
+                        var _cW2=_W2/_COLS2, _cH2=Math.min(_cW2,Math.floor(957/31.8));
+                        var _auxH2=Math.round(_cH2*0.4), _gH2=_cH2+_auxH2;
+                        var _TH2=(_ROWS_B-1)*_gH2+_cH2, _BOT2=2;
+                        _cv2.width=Math.round(_W2*_dpr2); _cv2.height=Math.round((_TH2+_BOT2)*_dpr2);
+                        var _ctx2=_cv2.getContext('2d');
+                        _ctx2.scale(_dpr2,_dpr2); _ctx2.clearRect(0,0,_W2,_TH2+_BOT2);
+                        _ctx2.strokeStyle=_G2; _ctx2.lineWidth=0.7;
+                        for(var _ri2=0;_ri2<_ROWS_B;_ri2++){
+                            var _base2=_ri2*_gH2,_wb2=_base2+_cH2,_ab2=_wb2+_auxH2;
+                            if(_ri2<_ROWS_B-1){_ctx2.beginPath();_ctx2.moveTo(0,_wb2);_ctx2.lineTo(_W2,_wb2);_ctx2.stroke();}
+                            if(_ri2<_ROWS_B-1){_ctx2.beginPath();_ctx2.moveTo(0,_ab2);_ctx2.lineTo(_W2,_ab2);_ctx2.stroke();}
+                            for(var _ci2=1;_ci2<_COLS2;_ci2++){_ctx2.beginPath();_ctx2.moveTo(_ci2*_cW2,_base2);_ctx2.lineTo(_ci2*_cW2,_wb2);_ctx2.stroke();}
+                        }
+                        _ctx2.lineWidth=1.5; _ctx2.strokeRect(0.75,0.75,_W2-1.5,_TH2+_BOT2-1.5);
+                        _yjGridDataUrl = _cv2.toDataURL('image/png');
+                        _yjGridW = _W2; _yjGridH = _TH2+_BOT2;
+                    })();
+                    // 更新所有格子变量
+                    _gridW = _yjGridW;
+                    _gridH = _yjGridH;
+                    _gridUrl = _yjGridDataUrl;
+                }
+                // 安全检查：确保 _gridUrl 是有效的 data URL
+                if (!_gridUrl || _gridUrl.indexOf('data:') !== 0) {
+                    _gridUrl = _sharedGridDataUrl;
+                    _gridW = _sharedGridW;
+                    _gridH = _sharedGridH;
+                }
                 var _totalPages = Math.max(1, Math.ceil(_allLines.length / _ROWS_B));
 
                 // ── 计算格子尺寸参数 ──
@@ -9641,7 +9746,10 @@ var dqb=document.querySelector('#langdu-fb-student-desk button');
                 var _yShift = Math.round(_fsb * 0.08);
 
                 // ── 在 clone 里确保有足够的页块 ──
-                var _cloneContainer = clone.querySelector('#jingsai-pages-container');
+                // yuedu-jingsai 用不同的容器
+                var _cloneContainer = clone.querySelector(
+                    tpl === 'yuedu-jingsai' ? '#yuedu-jingsai-pages-container' : '#jingsai-pages-container'
+                );
                 if (_cloneContainer) {
                     var _existCount = _cloneContainer.querySelectorAll('.jingsai-page-block').length;
                     for (var _pi = _existCount; _pi < _totalPages; _pi++) {
@@ -9650,7 +9758,7 @@ var dqb=document.querySelector('#langdu-fb-student-desk button');
                         _nb.setAttribute('data-page', _pi);
                         _nb.innerHTML = '<div style="display:block;width:100%;box-sizing:border-box;background:#fff;line-height:0;font-size:0;position:relative;height:' + (_gridH+4) + 'px;">'
                             + '<div class="jingsai-grid-wrap" style="position:relative;background:#fff;overflow:visible;height:' + _gridH + 'px;">'
-                            + '<img src="' + _sharedGridDataUrl + '" style="display:block;width:' + _gridW + 'px;height:' + _gridH + 'px;position:absolute;top:0;left:0;" />'
+                            + '<img src="' + _gridUrl + '" style="display:block;width:' + _gridW + 'px;height:' + _gridH + 'px;position:absolute;top:0;left:0;" />'
                             + '<div class="jingsai-text-canvas" style="position:absolute;top:0;left:0;pointer-events:none;overflow:visible;width:' + _gridW + 'px;height:' + _gridH + 'px;"></div>'
                             + '<div class="jingsai-cursor" style="display:none;"></div>'
                             + '</div></div>'
@@ -9660,7 +9768,10 @@ var dqb=document.querySelector('#langdu-fb-student-desk button');
                 }
 
                 // ── 处理每一页：替换格子canvas为img，填入文字 ──
-                var _cloneBlocks = clone.querySelectorAll('.jingsai-page-block');
+                // 只处理当前模板容器的 page-block（避免处理错误容器）
+                var _targetContainerSel = _isYJ ? '#yuedu-jingsai-pages-container' : '#jingsai-pages-container';
+                var _targetCont = clone.querySelector(_targetContainerSel);
+                var _cloneBlocks = _targetCont ? _targetCont.querySelectorAll('.jingsai-page-block') : clone.querySelectorAll('.jingsai-page-block');
                 _cloneBlocks.forEach(function(cloneBlock, bi) {
                     // 格子：用第1页的图片替换所有页的canvas
                     var _cloneGC = cloneBlock.querySelector('.jingsai-grid-canvas');
@@ -9669,7 +9780,7 @@ var dqb=document.querySelector('#langdu-fb-student-desk button');
                         var _gridDiv = document.createElement('div');
                         // 改用 <img> 正确还原格子，src由页面JS统一赋值
                         var _gridImg = document.createElement('img');
-                        _gridImg.src = _sharedGridDataUrl;
+                        _gridImg.src = _gridUrl;
                         _gridImg.style.cssText = 'display:block;width:' + _gridW + 'px;height:' + _gridH + 'px;position:absolute;top:0;left:0;';
                         if (_cloneGC.parentNode) _cloneGC.parentNode.replaceChild(_gridImg, _cloneGC);
                     }
@@ -9694,6 +9805,64 @@ var dqb=document.querySelector('#langdu-fb-student-desk button');
                     var _cur = cloneBlock.querySelector('.jingsai-cursor');
                     if (_cur) _cur.style.display = 'none';
                 });
+                // yuedu-jingsai: 渲染额外题目（用稿纸格子，与第一题一样）
+                if (tpl === 'yuedu-jingsai' && r.inputs && r.inputs['yj_units']) {
+                    try {
+                        var _yjUnitsB = JSON.parse(r.inputs['yj_units']);
+                        var _extraContainer = clone.querySelector('#yj-extra-container');
+                        if (_extraContainer && _yjUnitsB && _yjUnitsB.length > 1) {
+                            _extraContainer.innerHTML = '';
+                            _yjUnitsB.slice(1).forEach(function(u) {
+                                var _extraDiv = document.createElement('div');
+                                _extraDiv.style.cssText = 'margin-top:32px;page-break-inside:avoid;';
+                                // 题目框
+                                var _qDiv = document.createElement('div');
+                                _qDiv.style.cssText = 'background:#eef4fb;border-radius:8px;padding:10px 16px;margin-bottom:10px;';
+                                _qDiv.innerHTML = '<div style="font-size:8.5pt;font-weight:600;color:#1a4070;margin-bottom:6px;">📌 题目：</div>'
+                                    + '<div style="font-size:9.5pt;color:#1a2a3a;line-height:1.8;white-space:pre-wrap;">' + (u.question||'') + '</div>';
+                                _extraDiv.appendChild(_qDiv);
+                                // 用与第一题完全相同的方式渲染稿纸+文字
+                                var _uText = u.text || '';
+                                var _uLines = [];
+                                var _ulc = 0, _ulchars = [];
+                                for (var _uci=0; _uci<_uText.length; _uci++) {
+                                    var _uch = _uText[_uci];
+                                    if (_uch === '\n') { _uLines.push(_ulchars); _ulchars=[]; _ulc=0; }
+                                    else { _ulchars.push(_uch); _ulc++; if (_ulc>=_COLS_B){_uLines.push(_ulchars);_ulchars=[];_ulc=0;} }
+                                }
+                                if (_ulchars.length>0) _uLines.push(_ulchars);
+                                if (_uLines.length===0) _uLines.push([]);
+                                var _uPages = Math.max(1, Math.ceil(_uLines.length / _ROWS_B));
+                                for (var _upi=0; _upi<_uPages; _upi++) {
+                                    var _uBlock = document.createElement('div');
+                                    _uBlock.style.cssText = 'margin-bottom:8px;';
+                                    _uBlock.innerHTML = '<div style="position:relative;height:'+(_gridH+4)+'px;">'
+                                        + '<div style="position:relative;background:#fff;overflow:visible;height:'+_gridH+'px;">'
+                                        + '<img src="'+_gridUrl+'" style="display:block;width:'+_gridW+'px;height:'+_gridH+'px;position:absolute;top:0;left:0;" />'
+                                        + '<div class="yj-extra-text" style="position:absolute;top:0;left:0;pointer-events:none;overflow:visible;width:'+_gridW+'px;height:'+_gridH+'px;"></div>'
+                                        + '</div></div>'
+                                        + '<div style="font-size:8pt;color:#999;text-align:right;padding-right:4px;margin-top:2px;">第 '+(_upi+1)+' 页</div>';
+                                    var _uTB = _uBlock.querySelector('.yj-extra-text');
+                                    if (_uTB) {
+                                        var _uPageLines = _uLines.slice(_upi*_ROWS_B, (_upi+1)*_ROWS_B);
+                                        for (var _uri=0; _uri<_uPageLines.length; _uri++) {
+                                            var _uLine = _uPageLines[_uri];
+                                            for (var _uci2=0; _uci2<_uLine.length; _uci2++) {
+                                                var _uSp = document.createElement('span');
+                                                _uSp.textContent = _uLine[_uci2];
+                                                _uSp.style.cssText = 'position:absolute;left:'+(_uci2*_cWb)+'px;top:'+(_uri*_gHb+_topOff-_yShift)+'px;width:'+_cWb+'px;height:'+_fsb+'px;display:flex;align-items:center;justify-content:center;font-size:'+_fsb+'px;font-weight:100;line-height:1;color:#1a2a3a;font-family:"SimSun","宋体","STSong",serif;box-sizing:border-box;';
+                                                _uTB.appendChild(_uSp);
+                                            }
+                                        }
+                                    }
+                                    _extraDiv.appendChild(_uBlock);
+                                }
+                                _extraContainer.appendChild(_extraDiv);
+                            });
+                        }
+                    } catch(e) {}
+                }
+
                 // 隐藏字数统计、hi input、计时设定栏、计时进度条
                 var wc = clone.querySelector('#jingsai-wordcount');
                 if (wc) wc.style.display = 'none';
@@ -9884,11 +10053,25 @@ var dqb=document.querySelector('#langdu-fb-student-desk button');
                 if ((tpl === 'jingsai' || tpl === 'yuedu-jingsai') && r.inputs['jingsai_text'] !== undefined && typeof window._jingsaiSetState === 'function') {
                     window._jingsaiSetState(r.inputs['jingsai_text'], r.inputs['jingsai_cur'] || 0);
                 }
-                // yuedu-jingsai：还原题目
+                // yuedu-jingsai：还原题目和额外题目
                 if (tpl === 'yuedu-jingsai') {
-                    var _yjQEl = document.getElementById('yuedu-jingsai-question');
-                    if (_yjQEl && r.inputs['yuedu_jingsai_question'] !== undefined) {
-                        _yjQEl.innerText = r.inputs['yuedu_jingsai_question'];
+                    if (r.inputs['yj_units']) {
+                        try {
+                            var _yjRestoreU = JSON.parse(r.inputs['yj_units']);
+                            // 恢复第一题题目
+                            if (_yjRestoreU[0]) {
+                                var _yjQEl2 = document.getElementById('yuedu-jingsai-question');
+                                if (_yjQEl2 && _yjRestoreU[0].question) _yjQEl2.innerText = _yjRestoreU[0].question;
+                                if (_yjRestoreU[0].text && typeof window._jingsaiSetState === 'function') {
+                                    window._jingsaiSetState(_yjRestoreU[0].text, _yjRestoreU[0].cur || 2);
+                                }
+                            }
+                            // 恢复额外题目
+                            if (typeof window.yjInit === 'function') window.yjInit(_yjRestoreU);
+                        } catch(e) {}
+                    } else if (r.inputs['yuedu_jingsai_question'] !== undefined) {
+                        var _yjQEl = document.getElementById('yuedu-jingsai-question');
+                        if (_yjQEl) _yjQEl.innerText = r.inputs['yuedu_jingsai_question'];
                     }
                 }
                 // jingsai：还原参赛组别和作文题目 select
@@ -10638,41 +10821,59 @@ function saveWsScriptUrl() {
 var _yjExtraUnits = []; // {id, question, rows}
 var _yjExtraCounter = 0;
 
-// 额外题目格子：用独立canvas画，与第一题完全一致
+// 额外题目格子：创建完整结构并自己画格子
 function _drawCSSGrid(containerEl, rows) {
     var r = rows || 10;
     var COLS = 20, G = '#4caf50';
     var dpr = window.devicePixelRatio || 1;
-    // 创建与jingsai一样的DOM结构
-    var existing = containerEl.querySelector('.jingsai-grid-wrap');
-    if (existing) existing.remove();
+    containerEl.innerHTML = '';
+    containerEl.style.cssText = 'display:flex;flex-direction:column;gap:40px;width:100%;';
+    // 第一页 page-block 完整结构
+    var block = document.createElement('div');
+    block.className = 'jingsai-page-block';
+    block.dataset.page = '0';
+    var outerDiv = document.createElement('div');
+    outerDiv.style.cssText = 'display:block;width:100%;box-sizing:border-box;background:#fff;line-height:0;font-size:0;position:relative;overflow:visible;';
     var wrap = document.createElement('div');
     wrap.className = 'jingsai-grid-wrap';
-    wrap.style.cssText = 'position:relative;background:#fff;overflow:visible;cursor:default;width:100%;';
+    wrap.style.cssText = 'position:relative;background:#fff;overflow:visible;cursor:text;width:100%;';
     var cv = document.createElement('canvas');
     cv.className = 'jingsai-grid-canvas';
     cv.style.cssText = 'display:block;width:100%;';
-    wrap.appendChild(cv);
-    containerEl.appendChild(wrap);
-    // 画格子（用setTimeout等待layout）
+    var textDiv = document.createElement('div');
+    textDiv.className = 'jingsai-text-canvas';
+    textDiv.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none;overflow:hidden;';
+    var cursor = document.createElement('div');
+    cursor.className = 'jingsai-cursor';
+    cursor.style.cssText = 'position:absolute;width:1.5px;background:#2e7d32;pointer-events:none;display:none;animation:jc-blink 1s step-end infinite;z-index:4;';
+    wrap.appendChild(cv); wrap.appendChild(textDiv); wrap.appendChild(cursor);
+    outerDiv.appendChild(wrap);
+    block.appendChild(outerDiv);
+    var pageNum = document.createElement('div');
+    pageNum.className = 'jingsai-page-num';
+    pageNum.style.cssText = 'font-size:8pt;color:#999;text-align:right;padding-right:4px;margin-top:5px;line-height:1;';
+    pageNum.textContent = '第 1 页';
+    block.appendChild(pageNum);
+    containerEl.appendChild(block);
+    // 自己画格子，带重试
     function tryDraw(n) {
         var W = wrap.clientWidth;
         if (W < 10) {
             if (n > 0) setTimeout(function(){ tryDraw(n-1); }, 80);
             return;
         }
-        var cW = W/COLS, maxCH = Math.floor(957/31.8);
-        var cH = Math.min(cW, maxCH);
-        var auxH = Math.round(cH*0.4), gH = cH+auxH;
-        var TH = (r-1)*gH+cH, BOT = 2;
-        cv.width = Math.round(W*dpr); cv.height = Math.round((TH+BOT)*dpr);
-        cv.style.width = W+'px'; cv.style.height = (TH+BOT)+'px';
-        wrap.style.height = (TH+BOT)+'px';
-        var ctx = cv.getContext('2d');
+        var cW=W/COLS, cH=Math.min(cW,Math.floor(957/31.8));
+        var auxH=Math.round(cH*0.4), gH=cH+auxH;
+        var TH=(r-1)*gH+cH, BOT=2;
+        cv.width=Math.round(W*dpr); cv.height=Math.round((TH+BOT)*dpr);
+        cv.style.width=W+'px'; cv.style.height=(TH+BOT)+'px';
+        wrap.style.height=(TH+BOT)+'px';
+        outerDiv.style.height=(TH+BOT+4)+'px';
+        var ctx=cv.getContext('2d');
         ctx.scale(dpr,dpr); ctx.clearRect(0,0,W,TH+BOT);
         ctx.strokeStyle=G; ctx.lineWidth=0.7;
-        for (var ri=0; ri<r; ri++) {
-            var base=ri*gH, wb=base+cH, ab=wb+auxH;
+        for(var ri=0;ri<r;ri++){
+            var base=ri*gH,wb=base+cH,ab=wb+auxH;
             if(ri<r-1){ctx.beginPath();ctx.moveTo(0,wb);ctx.lineTo(W,wb);ctx.stroke();}
             if(ri<r-1){ctx.beginPath();ctx.moveTo(0,ab);ctx.lineTo(W,ab);ctx.stroke();}
             for(var ci=1;ci<COLS;ci++){ctx.beginPath();ctx.moveTo(ci*cW,base);ctx.lineTo(ci*cW,wb);ctx.stroke();}
@@ -10719,19 +10920,70 @@ function _makeExtraUnit(uid, qText, isEdit) {
     gridWrap.style.cssText = 'width:100%;';
     _drawCSSGrid(gridWrap, 10);
 
+    // 点击额外题目格子时，切换jingsai引擎到此容器
+    gridWrap.addEventListener('click', function(ev) {
+        ev.stopPropagation();
+        yjActivateExtra(uid);
+    });
+
     unit.appendChild(qWrap);
     unit.appendChild(gridWrap);
     return unit;
 }
 
+// 激活额外题目（切换jingsai引擎容器）
+window.yjActivateExtra = function(uid) {
+    var state = _yjExtraUnits.find(function(u){ return u.id === uid; });
+    if (!state) return;
+    // 保存当前活跃的状态
+    if (window._yjCurrentExtra && window._jingsaiGetState) {
+        var oldState = _yjExtraUnits.find(function(u){ return u.id === window._yjCurrentExtra; });
+        if (oldState) { var st = window._jingsaiGetState(); oldState.text = st.text; oldState.cur = st.cur; }
+    } else if (!window._yjCurrentExtra && window._jingsaiGetState) {
+        // 保存第一题状态
+        window._yjQ1State = window._jingsaiGetState();
+    }
+    window._yjCurrentExtra = uid;
+    var unitEl = document.querySelector('.yj-extra-unit[data-uid="' + uid + '"]');
+    var gridWrap2 = unitEl ? unitEl.querySelector('.yj-extra-grid-wrap') : null;
+    if (!gridWrap2) return;
+    if (typeof window._jingsaiSetContainer === 'function') window._jingsaiSetContainer(gridWrap2);
+    if (typeof window._jingsaiSetRows === 'function') window._jingsaiSetRows(state.rows || 10);
+    if (typeof window._jingsaiSetState === 'function') window._jingsaiSetState(state.text || '　　', state.cur || 2);
+    // 用 jingsaiInitExtra：画格子+绑定事件，不恢复存档
+    if (typeof window.jingsaiInitExtra === 'function') window.jingsaiInitExtra();
+    setTimeout(function(){
+        var hi = document.getElementById('jingsai-hi');
+        if (hi && !window._jingsaiInputLocked) hi.focus();
+    }, 150);
+};
+
+// 恢复第一题（点击第一题时）
+window.yjActivateQ1 = function() {
+    if (window._yjCurrentExtra && window._jingsaiGetState) {
+        var oldState = _yjExtraUnits.find(function(u){ return u.id === window._yjCurrentExtra; });
+        if (oldState) { var st = window._jingsaiGetState(); oldState.text = st.text; oldState.cur = st.cur; }
+    }
+    window._yjCurrentExtra = null;
+    var container = document.getElementById('yuedu-jingsai-pages-container');
+    if (typeof window._jingsaiSetContainer === 'function') window._jingsaiSetContainer(container);
+    if (typeof window._jingsaiSetRows === 'function') window._jingsaiSetRows(window._jingsaiGetRows ? window._jingsaiGetRows() : 10);
+    if (window._yjQ1State && typeof window._jingsaiSetState === 'function') {
+        window._jingsaiSetState(window._yjQ1State.text, window._yjQ1State.cur);
+    }
+    if (typeof window.jingsaiInit === 'function') window.jingsaiInit();
+};
+
 window.yjAddExtraUnit = function(qText, opts) {
     var uid = 'yje_' + (++_yjExtraCounter);
-    _yjExtraUnits.push({id: uid, question: qText || '', rows: 10});
+    _yjExtraUnits.push({id: uid, question: qText || '', rows: 10, text: '　　', cur: 2});
     var container = document.getElementById('yj-extra-container');
     if (!container) return uid;
     var isEdit = document.body.classList.contains('edit-mode-on');
     var dom = _makeExtraUnit(uid, qText, isEdit);
     container.appendChild(dom);
+    // 加入DOM后立即激活（画格子）
+    setTimeout(function(){ window.yjActivateExtra(uid); }, 100);
     return uid;
 };
 
@@ -10763,7 +11015,12 @@ window.yjGetAllUnits = function() {
     var q1Text = q1El ? (q1El.innerText || q1El.textContent || '') : '';
     var q1Answer = (typeof window._jingsaiGetState === 'function') ? window._jingsaiGetState().text : '　　';
     var units = [{index:0, question:q1Text, text:q1Answer, cur:2, rows:10}];
-    // Extra questions
+    // Extra questions - save current active state first
+    if (window._yjCurrentExtra && typeof window._jingsaiGetState === 'function') {
+        var _curSt = window._jingsaiGetState();
+        var _curEx = _yjExtraUnits.find(function(u){ return u.id === window._yjCurrentExtra; });
+        if (_curEx) { _curEx.text = _curSt.text; _curEx.cur = _curSt.cur; }
+    }
     document.querySelectorAll('.yj-extra-unit').forEach(function(unitEl, i) {
         var qBox = unitEl.querySelector('.yj-extra-question');
         var uid = unitEl.dataset.uid;
@@ -10772,7 +11029,7 @@ window.yjGetAllUnits = function() {
             index: i+1,
             question: qBox ? (qBox.innerText||qBox.textContent||'') : '',
             text: state.text || '　　',
-            cur: 2,
+            cur: state.cur || 2,
             rows: state.rows || 10
         });
     });
@@ -10795,7 +11052,8 @@ window.yjInit = function(savedUnits) {
     var isEdit = document.body.classList.contains('edit-mode-on');
     savedUnits.slice(1).forEach(function(u) {
         var uid = 'yje_' + (++_yjExtraCounter);
-        _yjExtraUnits.push({id: uid, question: u.question || '', rows: u.rows || 10, text: u.text || '　　'});
+        var rows = u.rows || 10;
+        _yjExtraUnits.push({id: uid, question: u.question || '', rows: rows, text: u.text || '　　', cur: u.cur || 2});
         var dom = _makeExtraUnit(uid, u.question, isEdit);
         container.appendChild(dom);
     });
@@ -10862,9 +11120,19 @@ window._yjDrawAllGrids = function() {};
           '</div>'+
         '</div>'+
         '<div class="jingsai-page-num" style="font-size:8pt;color:#999;text-align:right;padding-right:4px;margin-top:5px;line-height:1;">第 '+pageNum+' 页</div>';
+      // 新页：阅读精练从10行开始，普通稿纸22行
+      var _yjCheck = document.getElementById('page-yuedu-jingsai');
+      var _isYJNP = _yjCheck && _yjCheck.style.display !== 'none';
       container.appendChild(block);
-      // 立即绘制格子
-      _drawGridForPage(i);
+      if (_isYJNP) {
+        var _savedAR4 = _activeRows, _savedTH4 = TH;
+        _activeRows = 10; TH = (_activeRows-1)*gH+cH;
+        _drawGridForPage(i);
+        _activeRows = _savedAR4; TH = _savedTH4;
+      } else {
+        _drawGridForPage(i);
+      }
+      if (typeof _bindPageClick === 'function') _bindPageClick(i);
     }
   }
 
@@ -10885,10 +11153,10 @@ window._yjDrawAllGrids = function() {};
       var maxCH=Math.floor(957/31.8);
       cH=Math.min(cW,maxCH);
       auxH=Math.round(cH*0.4);gH=cH+auxH;
-      // TH = 精确到最后一行字格底边，外框底边与最后一行字格底线重合由外框负责
-      TH=(ROWS-1)*gH+cH;
+      TH=(_activeRows-1)*gH+cH;
     }
-    var BOT=2; // 外框底边低于最后一行2px，确保底部边框可见
+    var pageRows=_activeRows;
+    var BOT=2;
     cv.width=Math.round(TW*dpr);cv.height=Math.round((TH+BOT)*dpr);
     cv.style.width=TW+'px';cv.style.height=(TH+BOT)+'px';
     wrap.style.height=(TH+BOT)+'px';
@@ -10897,15 +11165,10 @@ window._yjDrawAllGrids = function() {};
     var ctx=cv.getContext('2d');
     ctx.scale(dpr,dpr);ctx.clearRect(0,0,TW,TH+BOT);
     ctx.strokeStyle=G;ctx.lineWidth=0.7;
-    for(var r=0;r<ROWS;r++){
+    for(var r=0;r<pageRows;r++){
       var base=r*gH,wb=base+cH,ab=wb+auxH;
-      // 每行字格底线（最后一行不画，由外框底边代替）
-      if(r<ROWS-1){ctx.beginPath();ctx.moveTo(0,wb);ctx.lineTo(TW,wb);ctx.stroke();}
-      // 辅助线：最后一行不画
-      if(r<ROWS-1){
-        ctx.beginPath();ctx.moveTo(0,ab);ctx.lineTo(TW,ab);ctx.stroke();
-      }
-      // 竖分隔线
+      if(r<pageRows-1){ctx.beginPath();ctx.moveTo(0,wb);ctx.lineTo(TW,wb);ctx.stroke();}
+      if(r<pageRows-1){ctx.beginPath();ctx.moveTo(0,ab);ctx.lineTo(TW,ab);ctx.stroke();}
       for(var c=1;c<COLS;c++){ctx.beginPath();ctx.moveTo(c*cW,base);ctx.lineTo(c*cW,wb);ctx.stroke();}
     }
     // 外框：lineWidth=1.5最后绘制，确保四边清晰可见
@@ -10953,22 +11216,24 @@ window._yjDrawAllGrids = function() {};
 
     // ── 计算需要多少页，阅读精练模式下先尝试扩展行数再扩展页数 ──
     var _yjPg = document.getElementById('page-yuedu-jingsai');
-    var _isYjMode = _yjPg && _yjPg.style.display !== 'none' && _yjOverrideContainer;
-    if (_isYjMode) {
-      // 先计算文本需要多少行
-      var _totalRows = 0, _c2 = 0;
-      for (var _i2 = 0; _i2 < _text.length; _i2++) {
-        var _ch2 = _text[_i2];
-        if (_ch2 === '\n') { _totalRows++; _c2 = 0; }
-        else { _c2++; if (_c2 >= COLS) { _totalRows++; _c2 = 0; } }
+    var _isYjMode = _yjPg && _yjPg.style.display !== 'none'; // 阅读精练模式（包括Q1和额外题）
+
+    // 阅读精练：逐行扩展（最简版本）
+    var _yjPg2 = document.getElementById('page-yuedu-jingsai');
+    if (_yjPg2 && _yjPg2.style.display !== 'none' && _activeRows < ROWS) {
+      // 计算文字当前占用的总行数
+      var _totalR = 0, _totalC = 0;
+      for (var _ri = 0; _ri < _text.length; _ri++) {
+        var _rch = _text[_ri];
+        if (_rch === '\n') { _totalR++; _totalC = 0; }
+        else { _totalC++; if (_totalC >= COLS) { _totalR++; _totalC = 0; } }
       }
-      _totalRows = _totalRows + 1;
-      // 如果超出当前行数，扩展到22行
-      if (_totalRows > _activeRows && _activeRows < ROWS) {
-        _activeRows = ROWS;
+      _totalR++; // +1 = 当前行
+      // 当前在第一页的行数（_activeRows < ROWS 说明还在第一页扩展阶段）
+      if (_totalR > _activeRows) {
+        _activeRows++;
         TH = (_activeRows-1)*gH+cH;
-        var _allBlocks = (_yjContainer()||document).querySelectorAll('.jingsai-page-block');
-        for (var _bi2=0;_bi2<_allBlocks.length;_bi2++) { _drawGridForPage(_bi2); }
+        _drawGridForPage(0); // 只重画第一页
       }
     }
     var needed=_calcPageCount(_text);
@@ -11083,11 +11348,53 @@ window._yjDrawAllGrids = function() {};
     wc.style.color='#388e3c';
   };
   window.jingsaiRender=function(){renderChars();};
+  // 仅画格子+绑定事件，不恢复存档（用于额外题目激活）
+  window.jingsaiInitExtra=function(){
+    drawGrid();
+    renderChars();
+    var wrap=getWrap();if(!wrap)return;
+    function _bindExtra(pageIdx){
+      var e=_getPageEls(pageIdx);if(!e||!e.wrap)return;
+      e.wrap.style.cursor='text';
+      if(e.wrap._yjBound)return; // 防止重复绑定
+      e.wrap._yjBound=true;
+      e.wrap.addEventListener('click',function(ev){
+        var rect=e.wrap.getBoundingClientRect();
+        var x=ev.clientX-rect.left,y=ev.clientY-rect.top;
+        var clickCol=Math.max(0,Math.min(Math.floor(x/cW),COLS-1));
+        var clickRow=Math.max(0,Math.min(Math.floor(y/gH),ROWS-1));
+        var globalRow=pageIdx*(_activeRows||ROWS)+clickRow;
+        _cur=rcToPos(globalRow,clickCol);
+        renderChars();
+        moveHiToCurrentCell();
+        var hi=document.getElementById('jingsai-hi');
+        if(hi&&!window._jingsaiInputLocked)hi.focus();
+      });
+    }
+    var blocks=(_yjContainer()||document).querySelectorAll('.jingsai-page-block');
+    for(var bi=0;bi<blocks.length;bi++){_bindExtra(bi);}
+    var _cont=_yjContainer();
+    if(_cont&&window.MutationObserver){
+      var _mo2=new MutationObserver(function(ms){
+        ms.forEach(function(m){
+          m.addedNodes.forEach(function(node){
+            if(node.classList&&node.classList.contains('jingsai-page-block')){
+              _bindExtra(parseInt(node.getAttribute('data-page')||'0'));
+            }
+          });
+        });
+      });
+      _mo2.observe(_cont,{childList:true});
+    }
+    var hi=document.getElementById('jingsai-hi');
+    if(hi&&!window._jingsaiInputLocked)hi.focus();
+  };
+
   window.jingsaiInit=function(retries){
     var r = (retries===undefined)?20:retries;
     var container=_yjContainer();
     var wrap=container?container.querySelector('.jingsai-grid-wrap'):null;
-    if(wrap && wrap.clientWidth>10){ init(); }
+    if(wrap && wrap.clientWidth>10){ if(typeof window._jingsaiSetRows==='function')window._jingsaiSetRows(10); TW=0;cW=0;cH=0; init(); }
     else if(r>0){ setTimeout(function(){ window.jingsaiInit(r-1); },80); }
   };
 
@@ -11138,10 +11445,15 @@ window._yjDrawAllGrids = function() {};
   window._jingsaiCOLS=COLS;window._jingsaiROWS=ROWS;
   // 阅读精练复用同一套稿纸引擎，但操作各自的容器
   // 根据哪个稿纸页面当前可见来决定操作哪个容器
-  // （阅读精练多题模式通过 _yjOverrideContainer 覆盖）
   var _yjOverrideContainer = null;
   function _yjContainer() {
     if (_yjOverrideContainer) return _yjOverrideContainer;
+    // 阅读精练：如果有活跃的额外题目，返回其容器
+    if (typeof window._yjCurrentExtra !== 'undefined' && window._yjCurrentExtra) {
+      var _extraEl = document.querySelector('.yj-extra-unit[data-uid="' + window._yjCurrentExtra + '"]');
+      var _extraWrap = _extraEl ? _extraEl.querySelector('.yj-extra-grid-wrap') : null;
+      if (_extraWrap) return _extraWrap;
+    }
     var yjPg = document.getElementById('page-yuedu-jingsai');
     if (yjPg && yjPg.style.display !== 'none') {
       return document.getElementById('yuedu-jingsai-pages-container');
@@ -11215,6 +11527,7 @@ window._yjDrawAllGrids = function() {};
 
   // 存档接口
   window._jingsaiGetState=function(){return {text:_text,cur:_cur};};
+  window._jingsaiResetSize=function(){TW=0;cW=0;cH=0;};  // 强制 drawGrid 重新测量
   window._jingsaiSetState=function(text,cur){_text=text||'　　';_cur=cur||2;_history=[];renderChars();window.jingsaiCount&&window.jingsaiCount();};
 
   // 动态容器切换（阅读精练多题模式使用）
@@ -11464,9 +11777,10 @@ window._yjDrawAllGrids = function() {};
     var _os=window.switchTemplate;
   window.switchTemplate=function(name){
     if(_os)_os(name);
-    if(name==='jingsai'){if(typeof window._jingsaiSetRows==='function')window._jingsaiSetRows(22);setTimeout(init,80);}
+    if(name==='jingsai'){window._jingsaiResetSize&&window._jingsaiResetSize();if(typeof window._jingsaiSetRows==='function')window._jingsaiSetRows(22);setTimeout(init,80);}
     if(name==='yuedu-jingsai'){
         if(typeof window._jingsaiSetRows==='function') window._jingsaiSetRows(10);
+        window._jingsaiResetSize && window._jingsaiResetSize();
         setTimeout(init,80);
         setTimeout(function(){
             if(typeof window.yjSyncEditMode==='function') window.yjSyncEditMode(typeof isEditMode!=='undefined'&&isEditMode);
@@ -11497,6 +11811,7 @@ window._yjDrawAllGrids = function() {};
         var wrap=container?container.querySelector('.jingsai-grid-wrap'):null;
         if(wrap && wrap.clientWidth>10){
           if(typeof window._jingsaiSetRows==='function') window._jingsaiSetRows(10);
+          TW=0;cW=0;cH=0;
           init();
         }
         else if(n>0){setTimeout(function(){tryInitYJ(n-1);},100);}
