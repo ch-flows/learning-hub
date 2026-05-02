@@ -1783,7 +1783,7 @@
     </div>
 </div>
 <div id="kt-tooltip"></div>
-<script id="studentMeta">window.STUDENT_META={class:"4hcl",assignTitle:"05",scriptUrl:"https://script.google.com/macros/s/AKfycbxxAkcPQ3xFKhngphXLPdyIXzPX-d33kxMWNjuYrnJ9NksUQ1Cq3TFVJwi9wQhe15hQ/exec",timerCfg:{"enabled":true,"t1":20,"t2":0,"t3":0,"te":5,"n1":"","n2":"","n3":"","ne":"延时"},submitEnabled:true,fileToken:"monwc2w3",noPaste:true,jingsaiTopics:{"高华 · 高年级组（中三&中四）":[],"高华 · 低年级组（中一&中二）":[],"G3华文 · 高年级组（中三&中四）":[],"G3华文 · 低年级组（中一&中二）":[]}};var INITIAL_TEMPLATE="yuedu-jingsai";var YJ_UNITS_DATA=[{"index":0,"question":"（老师在此输入题目，学生作答时只读）","text":"　　","cur":2,"rows":10},{"index":1,"question":"（老师在此输入题目，学生作答时只读）","text":"　　","cur":2,"rows":10},{"index":2,"question":"（老师在此输入题目，学生作答时只读）","text":"　　","cur":2,"rows":10},{"index":3,"question":"（老师在此输入题目，学生作答时只读）","text":"　　","cur":2,"rows":10},{"index":4,"question":"（老师在此输入题目，学生作答时只读）","text":"　　","cur":2,"rows":10}];</script>
+<script id="studentMeta">window.STUDENT_META={class:"4hcl",assignTitle:"05",scriptUrl:"https://script.google.com/macros/s/AKfycbxxAkcPQ3xFKhngphXLPdyIXzPX-d33kxMWNjuYrnJ9NksUQ1Cq3TFVJwi9wQhe15hQ/exec",timerCfg:{"enabled":true,"t1":20,"t2":0,"t3":0,"te":5,"n1":"","n2":"","n3":"","ne":"延时"},submitEnabled:true,fileToken:"monwlhgm",noPaste:true,jingsaiTopics:{"高华 · 高年级组（中三&中四）":[],"高华 · 低年级组（中一&中二）":[],"G3华文 · 高年级组（中三&中四）":[],"G3华文 · 低年级组（中一&中二）":[]}};var INITIAL_TEMPLATE="yuedu-jingsai";var YJ_UNITS_DATA=[{"index":0,"question":"（老师在此输入题目，学生作答时只读）","text":"　　","cur":2,"rows":10},{"index":1,"question":"（老师在此输入题目，学生作答时只读）","text":"　　","cur":2,"rows":10},{"index":2,"question":"（老师在此输入题目，学生作答时只读）","text":"　　","cur":2,"rows":10},{"index":3,"question":"（老师在此输入题目，学生作答时只读）","text":"　　","cur":2,"rows":10},{"index":4,"question":"（老师在此输入题目，学生作答时只读）","text":"　　","cur":2,"rows":10}];</script>
 <script>
 (function(){
 // ── Themes ──
@@ -10692,7 +10692,21 @@ function _yjDrawGrid(containerEl, rows) {
     var cv = wrap ? wrap.querySelector('.jingsai-grid-canvas') : null;
     if (!wrap || !cv) return false;
     var W = wrap.clientWidth;
-    if (W < 10) return false;
+    // 如果 wrap 没有宽度，从页面宽度和 padding 推算
+    if (W < 10) {
+        var pg = document.getElementById('page-yuedu-jingsai');
+        if (pg && pg.clientWidth > 10) {
+            // page padding: 10mm + 14mm = 24mm ≈ 91px each side
+            var pgPad = parseFloat(window.getComputedStyle(pg).paddingLeft) || 53;
+            W = pg.clientWidth - pgPad * 2;
+            if (W < 10) return false;
+            // 强制设置宽度让后续 layout 正确
+            wrap.style.width = W + 'px';
+            containerEl.style.width = W + 'px';
+        } else {
+            return false;
+        }
+    }
     var activeRows = rows || 10;
     var cW = W / COLS;
     var maxCH = Math.floor(957 / 31.8);
@@ -11733,12 +11747,14 @@ window.addEventListener('load', function(){ setTimeout(_hookJingsaiCount, 500); 
       }
       tryInitJ(20);
     } else if(isYJ){
-      // 阅读精练模式：等页面宽度就绪后画格子（与 jingsai 的 tryInitJ 相同策略）
+      // 阅读精练模式：等页面宽度就绪且 yjInit 执行后画格子
       function tryInitYJ(n){
         var pgYJ2=document.getElementById('page-yuedu-jingsai');
         if(pgYJ2 && pgYJ2.clientWidth>10){
-          // 页面已有宽度，现在画格子
-          if(typeof window._yjDrawAllGrids==='function') window._yjDrawAllGrids();
+          // 等 yjInit（150ms延迟）执行完毕后再画
+          setTimeout(function(){
+            if(typeof window._yjDrawAllGrids==='function') window._yjDrawAllGrids();
+          }, 200);
         } else if(n>0){
           setTimeout(function(){tryInitYJ(n-1);},100);
         }
