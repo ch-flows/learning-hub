@@ -1736,7 +1736,7 @@
 </head>
 <body style="padding-top:44px;">
 <script>\n(function(){\n  var _isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(/Macintosh/.test(navigator.userAgent)&&'ontouchend' in document);\n  if(!_isIOS)return;\n  var _tx=0,_ty=0,_moved=false;\n  document.addEventListener('touchstart',function(e){\n    _tx=e.touches[0].clientX;_ty=e.touches[0].clientY;_moved=false;\n  },{passive:true});\n  document.addEventListener('touchmove',function(e){\n    if(Math.abs(e.touches[0].clientX-_tx)>8||Math.abs(e.touches[0].clientY-_ty)>8)_moved=true;\n  },{passive:true});\n  document.addEventListener('touchend',function(e){\n    if(_moved)return;\n    var t=document.elementFromPoint(_tx,_ty);\n    if(!t)return;\n    var el=t;\n    for(var i=0;i<4;i++){\n      if(el.tagName==='INPUT'||el.tagName==='TEXTAREA')break;\n      el=el.parentElement;if(!el)break;\n    }\n    if(!el||(el.tagName!=='INPUT'&&el.tagName!=='TEXTAREA'))return;\n    if(el.readOnly||el.disabled)return;\n    var wasLocked=el.classList.contains('phase-locked');\n    if(wasLocked)el.classList.remove('phase-locked');\n    requestAnimationFrame(function(){\n      el.focus();\n      if(wasLocked)el.classList.add('phase-locked');\n    });\n  },{passive:true});\n  // iOS键盘消失时恢复滚动位置，防止点击坐标错位\n  var _savedScrollY=0,_kbVisible=false;\n  if(window.visualViewport){\n    window.visualViewport.addEventListener('resize',function(){\n      var vvH=window.visualViewport.height;\n      var kbH=window.innerHeight-vvH;\n      if(kbH<100)return;\n      var grid=document.querySelector('.jingsai-grid-wrap');\n      if(!grid)return;\n      var r=grid.getBoundingClientRect();\n      if(r.bottom>vvH-20){\n        window.scrollBy({top:r.bottom-(vvH-20),behavior:'smooth'});\n        // After scroll, reposition ta over grid\n        setTimeout(function(){\n          var ta=document.querySelector('textarea[data-jingsai-ta]');\n          if(ta&&ta._reposition)ta._reposition();\n        },350);\n      }\n    });\n  }\n})();\n</script>\n<div id="student-toolbar" style="position:fixed;top:0;left:0;right:0;background:#fff;border-bottom:0.5px solid #d4dae3;padding:0 14px;display:flex;align-items:center;justify-content:center;z-index:1000;box-sizing:border-box;min-height:44px;">
-<button id="toolbar-start-btn" onclick="timerStartWithCountdown(&quot;pazhao&quot;)" style="background:transparent;border:none;color:#1D9E75;border-radius:8px;padding:7px 36px;font-size:17px;font-family:Georgia,serif;font-weight:700;letter-spacing:1px;cursor:pointer;background:radial-gradient(ellipse at center, #d4f0e8 0%, #edf8f4 55%, transparent 100%);">Let&#39;s Go</button>
+<button id="toolbar-start-btn" onclick="timerStartWithCountdown(&quot;yuedu-jinglian&quot;)" style="background:transparent;border:none;color:#1D9E75;border-radius:8px;padding:7px 36px;font-size:17px;font-family:Georgia,serif;font-weight:700;letter-spacing:1px;cursor:pointer;background:radial-gradient(ellipse at center, #d4f0e8 0%, #edf8f4 55%, transparent 100%);">Start</button>
 <div id="timer-float" style="display:none;align-items:center;gap:12px;">
 <div class="tf-phase" id="tf-phase"></div>
 <div id="tf-divider" style="width:1.5px;height:24px;background:#d1d5db;flex-shrink:0;"></div>
@@ -1746,331 +1746,62 @@
 <div class="tf-done" id="tf-done" style="font-size:7.5pt;color:#0f6e56;display:none;white-space:nowrap;"></div>
 <div class="tf-count" id="tf-count" style="font-size:7.5pt;color:#94a3b8;display:none;white-space:nowrap;"></div>
 </div></div></div>
-<div class="page" id="page-pazhao" style="flex-direction: column;">
-  <style>
-    #page-pazhao {
-      --pz-accent: #2563eb;
-      --pz-bg: #f0f6ff;
-      --pz-card: #ffffff;
-      --pz-border: #bfdbfe;
-      --pz-text: #1e3a5f;
-      --pz-muted: #64748b;
-      --pz-green: #16a34a;
-      --pz-red: #dc2626;
-      font-family: inherit;
-    }
-    #page-pazhao .pz-header {
-      background: transparent;
-      margin-bottom: 0;
-    }
-    #page-pazhao .pz-header-title {
-      display: none;
-    }
-    #page-pazhao .pz-name-row {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      font-size: 10pt;
-      color: #444;
-      white-space: nowrap;
-      margin-bottom: 7px;
-    }
-    #page-pazhao .pz-field {
-      display: flex;
-      align-items: center;
-      gap: 0;
-    }
-    #page-pazhao .pz-field label {
-      font-size: 10pt;
-      color: #444;
-      font-weight: 400;
-      white-space: nowrap;
-      text-transform: none;
-      letter-spacing: 0;
-    }
-    #page-pazhao .pz-field input {
-      display: inline-block;
-      min-width: 80px;
-      border: none;
-      border-bottom: 0.5px solid #888;
-      border-radius: 0;
-      background: transparent;
-      font-family: inherit;
-      font-size: 10pt;
-      color: inherit;
-      padding: 0 2px 1px;
-      margin-left: 3px;
-      outline: none;
-    }
-    #page-pazhao .pz-field input::placeholder { color: #bbb; }
-    /* Upload zone */
-    #page-pazhao .pz-upload-zone {
-      background: #fff;
-      border: 1.5px dashed #c8d8f0;
-      border-radius: 8px;
-      padding: 28px 16px;
-      text-align: center;
-      cursor: pointer;
-      transition: border-color .2s, background .2s;
-      margin-bottom: 12px;
-      position: relative;
-    }
-    #page-pazhao .pz-upload-zone:hover,
-    #page-pazhao .pz-upload-zone.dragover {
-      border-color: #2563eb;
-      background: #f0f6ff;
-    }
-    #page-pazhao .pz-upload-icon { font-size: 30px; margin-bottom: 8px; }
-    #page-pazhao .pz-upload-label {
-      font-size: 10.5pt;
-      font-weight: 600;
-      color: #2563eb;
-      margin-bottom: 4px;
-    }
-    #page-pazhao .pz-upload-hint {
-      font-size: 8pt;
-      color: #64748b;
-    }
-    #page-pazhao #pz-file-input {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-      width: 100%;
-      height: 100%;
-    }
-    /* Photo grid */
-    #page-pazhao .pz-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-    #page-pazhao .pz-thumb {
-      position: relative;
-      border-radius: 10px;
-      overflow: visible;
-      background: var(--pz-card);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-      cursor: grab;
-      transition: transform .15s, box-shadow .15s;
-      user-select: none;
-    }
-    #page-pazhao .pz-thumb.dragging {
-      opacity: 0.5;
-      transform: scale(0.96);
-      cursor: grabbing;
-    }
-    #page-pazhao .pz-thumb.drag-over {
-      box-shadow: 0 0 0 3px var(--pz-accent);
-    }
-    #page-pazhao .pz-thumb img {
-      width: 100%;
-      aspect-ratio: 3/4;
-      object-fit: cover;
-      border-radius: 10px;
-      display: block;
-      pointer-events: none;
-    }
-    #page-pazhao .pz-thumb-num {
-      position: absolute;
-      top: 6px;
-      left: 6px;
-      background: rgba(0,0,0,0.55);
-      color: #fff;
-      font-size: 8pt;
-      font-weight: 700;
-      border-radius: 20px;
-      padding: 2px 7px;
-      pointer-events: none;
-    }
-    #page-pazhao .pz-thumb-del {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: var(--pz-red);
-      color: #fff;
-      border: none;
-      font-size: 13px;
-      line-height: 1;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
-      z-index: 2;
-      transition: transform .15s;
-    }
-    #page-pazhao .pz-thumb-del:active { transform: scale(0.9); }
-    #page-pazhao .pz-thumb-retake {
-      position: absolute;
-      bottom: 6px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,0.60);
-      color: #fff;
-      border: none;
-      font-size: 8pt;
-      border-radius: 20px;
-      padding: 3px 10px;
-      cursor: pointer;
-      white-space: nowrap;
-      font-family: inherit;
-    }
-    #page-pazhao .pz-thumb-retake:active { background: rgba(0,0,0,0.85); }
-    /* Scan toggle */
+<div class="page" id="page-yuedu-jinglian" style="">
 
-    /* toggle switch */
-    #page-pazhao .pz-toggle {
-      position: relative;
-      width: 50px;
-      height: 28px;
-      flex-shrink: 0;
-      display: inline-block;
-    }
-    #page-pazhao .pz-toggle input {
-      position: absolute;
-      opacity: 0;
-      width: 0;
-      height: 0;
-      margin: 0;
-    }
-    #page-pazhao .pz-toggle-slider {
-      position: absolute;
-      inset: 0;
-      background: #cbd5e1;
-      border-radius: 28px;
-      transition: background .25s;
-      cursor: pointer;
-    }
-    #page-pazhao .pz-toggle-slider::before {
-      content: '';
-      position: absolute;
-      width: 22px; height: 22px;
-      left: 3px; top: 3px;
-      background: #fff;
-      border-radius: 50%;
-      transition: transform .25s;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.25);
-    }
-    #page-pazhao .pz-toggle input:checked ~ .pz-toggle-slider { background: var(--pz-accent); }
-    #page-pazhao .pz-toggle input:checked ~ .pz-toggle-slider::before { transform: translateX(22px); }
-    /* Processing overlay */
-    #page-pazhao .pz-processing {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.7);
-      z-index: 9999;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 14px;
-      color: #fff;
-    }
-    #page-pazhao .pz-processing.show { display: flex; }
-    #page-pazhao .pz-spinner {
-      width: 44px; height: 44px;
-      border: 4px solid rgba(255,255,255,0.3);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: pz-spin .8s linear infinite;
-    }
-    @keyframes pz-spin { to { transform: rotate(360deg); } }
-    #page-pazhao .pz-processing-text { font-size: 12pt; font-weight: 600; }
-    /* Count badge */
-    #page-pazhao .pz-count {
-      font-size: 9pt;
-      color: var(--pz-muted);
-      margin-bottom: 8px;
-      text-align: center;
-    }
-    /* Add more button */
-    #page-pazhao .pz-add-more {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      background: #f4f8ff;
-      border: 0.5px solid #c8d8f0;
-      border-radius: 8px;
-      padding: 10px;
-      font-size: 9.5pt;
-      font-weight: 600;
-      color: #2563eb;
-      cursor: pointer;
-      font-family: inherit;
-      width: 100%;
-      margin-bottom: 12px;
-      transition: background .15s;
-      position: relative;
-      box-sizing: border-box;
-    }
-    #page-pazhao .pz-add-more:hover { background: #dbeafe; }
-    #page-pazhao #pz-add-input {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-      width: 100%;
-      height: 100%;
-    }
-    /* drag hint */
-    #page-pazhao .pz-drag-hint {
-      text-align: center;
-      font-size: 8pt;
-      color: var(--pz-muted);
-      margin-bottom: 10px;
-      display: none;
-    }
-    #page-pazhao .pz-drag-hint.show { display: block; }
-  </style>
-
-  <!-- Processing overlay -->
-  <div class="pz-processing" id="pz-processing-overlay">
-    <div class="pz-spinner"></div>
-    <div class="pz-processing-text" id="pz-processing-text">处理中…</div>
+  <div class="timer-setup-bar" style="display:none;" id="timer-setup-yuedu-jingsai">
+    <span style="font-weight:600;color:#1e293b;" contenteditable="false">⏱ 计时设定</span>
+    <label>作答时长 <input type="number" min="1" max="120" value="20" id="t1-yuedu-jingsai"> 分钟</label>
+    <label>延时时长 <input type="number" min="1" max="15" value="5" id="te-yuedu-jingsai"> 分钟</label>
   </div>
+  <div class="timer-progress" id="timer-progress-yuedu-jingsai" style="display:none;"><div class="timer-progress-fill" id="timer-fill-yuedu-jingsai" style="width:100%;"></div></div>
 
-  <!-- Header / Name inputs — 与其他模板一致风格 -->
-  <div class="pz-header bd-page-header">
+  <div class="bd-page-header">
     <div class="bd-header-row">
-      <div class="pz-name-row">
-        <div class="pz-field">
-          <label>姓名：</label><input type="text" id="pz-name" placeholder="请填写" autocomplete="off" style="width:88px;">
-        </div>
-        <div class="pz-field">
-          <label>编号（</label><input type="text" id="pz-num" placeholder="" autocomplete="off" style="width:36px;text-align:center;"><label>）</label>
-        </div>
+      <div class="bd-student-fields" style="gap:14px;flex-wrap:wrap;">
+        <span style="font-size:8.5pt;">姓名：<input type="text" id="yuedu-jinglian-name" style="width:90px;background:transparent;box-shadow:0 1px 0 0 rgba(0,0,0,0.28);font-family:inherit;font-size:inherit;color:inherit;padding:0 2px 1px;margin-left:2px;"></span>
+        <span style="font-size:8.5pt;">编号：<input type="text" id="yuedu-jinglian-class" style="width:72px;background:transparent;box-shadow:0 1px 0 0 rgba(0,0,0,0.28);font-family:inherit;font-size:inherit;color:inherit;padding:0 2px 1px;margin-left:2px;"></span>
       </div>
-      <div style="font-size:13pt;font-weight:400;color:#1a2a3a;letter-spacing:0.5px;">📸 拍照上传</div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;">
+        <div style="font-size:10.5pt;font-weight:400;color:#1a2a3a;letter-spacing:0.5px;font-family:'Noto Serif SC','Source Han Serif SC','思源宋体',serif;" contenteditable="false">阅读精练</div>
+      </div>
     </div>
     <div class="bd-divider"></div>
   </div>
 
-  <!-- Upload zone (shown when no photos) -->
-  <div class="pz-upload-zone" id="pz-upload-zone">
-    <input type="file" id="pz-file-input" accept="image/*" capture="environment" multiple="">
-    <div class="pz-upload-icon">📷</div>
-    <div class="pz-upload-label">点击拍照或选取图片</div>
-    <div class="pz-upload-hint">可同时选取多张照片</div>
+  <!-- 第一题：题目框 + 原版jingsai格子 -->
+  <div id="yj-q1-wrap">
+    <div style="background:#eef4fb;border-radius:8px;padding:10px 16px;margin-bottom:10px;position:relative;">
+      <div style="font-size:8.5pt;font-weight:600;color:#1a4070;margin-bottom:6px;" contenteditable="false">📌 题目：</div>
+      <div id="yuedu-jinglian-question" contenteditable="false" spellcheck="false" style="font-size:9.5pt;color:#1a2a3a;line-height:1.8;min-height:44px;outline:none;font-family:inherit;white-space:pre-wrap;">（老师在此输入题目，学生作答时只读）</div>
+    </div>
+    <div style="text-align:right;padding:2px 0 4px;">
+      <span id="yuedu-jinglian-wordcount" style="font-size:8pt;color:#388e3c;">字数：0</span>
+      <span id="jingsai-save-clock" style="font-size:7.5pt;color:#9e9e9e;margin-left:8px;"></span> <button id="jingsai-refocus-btn" onclick="(function(){var b=document.getElementById('jingsai-refocus-btn');var h=document.getElementById('jingsai-hi');if(b){b.textContent='✓ 已激活';b.style.background='#d4edda';b.style.color='#155724';}if(h){h.removeAttribute('readonly');h.style.fontSize='16px';h.blur(); h.focus();}setTimeout(function(){if(b)b.style.display='none';},2000);})()" style="font-size:7pt;padding:3px 10px;border:1px solid #f0ad4e;border-radius:4px;background:#fff3cd;color:#856404;cursor:pointer;margin-left:6px;display:none;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,0.15);active:background:#ffeeba;" title="点击恢复键盘输入">⌨️ 点击恢复输入</button>
+    </div>
+    <div id="yuedu-jinglian-pages-container" style="display:flex;flex-direction:column;gap:40px;" onclick="if(typeof yjActivateQ1==='function')yjActivateQ1()">
+      <div class="jingsai-page-block" data-page="0" data-rows="10">
+        <div style="display: block; width: 100%; box-sizing: border-box; background: rgb(255, 255, 255); line-height: 0; font-size: 0px; position: relative; overflow: visible !important; height: 414px;">
+          <div class="jingsai-grid-wrap" style="position: relative; background: rgb(255, 255, 255); cursor: text; overflow: visible !important; height: 410px;">
+            <canvas class="jingsai-grid-canvas" style="display: block; width: 688px; height: 410px;" width="1" height="1"></canvas>
+            <div class="jingsai-text-canvas" style="position: absolute; top: 0px; left: 0px; pointer-events: none; overflow: visible; width: 688px; height: 408px;"><span style="position: absolute; left: 0px; top: 6px; width: 34.4px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 300; line-height: 1; color: rgb(26, 92, 56); font-family: SimSun, 宋体, STSong, NSimSun, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; box-sizing: border-box; -webkit-font-smoothing: antialiased; transform: translateY(-1px); background: transparent; border-radius: 2px;"> </span><span style="position: absolute; left: 34.4px; top: 6px; width: 34.4px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 300; line-height: 1; color: rgb(26, 92, 56); font-family: SimSun, 宋体, STSong, NSimSun, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; box-sizing: border-box; -webkit-font-smoothing: antialiased; transform: translateY(-1px); background: transparent; border-radius: 2px;"> </span></div>
+            <div class="jingsai-cursor" style="position: absolute; width: 1.5px; background: rgb(46, 125, 50); pointer-events: none; display: block; animation: 1s step-end 0s infinite normal none running jc-blink; z-index: 4; left: 69.8px; top: 6px; height: 18px;"></div>
+          <textarea autocomplete="off" autocorrect="off" autocapitalize="sentences" spellcheck="false" style="position: absolute; inset: 0px; width: 100%; height: 100%; z-index: 5; opacity: 1; background: rgba(255, 255, 255, 0.01); color: rgba(0, 0, 0, 0.01); caret-color: auto; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; resize: none; padding: 0px; margin: 0px; font-size: 16px; user-select: text; touch-action: manipulation;"></textarea></div>
+        </div>
+        <div class="jingsai-page-num" style="font-size:8pt;color:#999;text-align:right;padding-right:4px;margin-top:5px;line-height:1;">第 1 页</div>
+      </div>
+    </div>
   </div>
 
-  <!-- Count + drag hint (shown when photos exist) -->
-  <div class="pz-count" id="pz-count"></div>
-  <div class="pz-drag-hint" id="pz-drag-hint">☰ 长按可拖动排序</div>
+  <!-- 额外题目（由JS动态添加，每题有独立的题目框+CSS格子） -->
+  <div id="yj-extra-container" style="margin-top:32px;"></div>
 
-  <!-- Photo grid -->
-  <div class="pz-grid" id="pz-grid"></div>
+  <!-- Edit模式下的添加按钮 -->
+  <div id="yj-add-btn-wrap" style="display:none;text-align:center;margin:16px 0 8px;">
+    <button onclick="yjAddExtraUnit()" style="background:#eef4fb;border:1.5px dashed #7bafd4;color:#1a4070;border-radius:8px;padding:8px 28px;font-size:9pt;font-family:inherit;cursor:pointer;font-weight:600;">➕ 添加题目</button>
+  </div>
 
-  <!-- Add more button (shown when photos exist) -->
-  <button class="pz-add-more" id="pz-add-more" style="display:none;">
-    <input type="file" id="pz-add-input" accept="image/*" capture="environment" multiple="">
-    ＋ 继续添加照片
-  </button>
+  <div id="yuedu-jinglian-grid-wrap" style="display:none;"></div>
+  <style>@keyframes jc-blink{0%,100%{opacity:1;}50%{opacity:0;}}</style>
 </div>
 <div id="draftToast" style="position:fixed;top:62px;left:50%;transform:translateX(-50%);background:#1a4f8a;color:#fff;padding:7px 22px;border-radius:20px;font-size:10pt;font-family:inherit;z-index:3000;pointer-events:none;opacity:0;transition:opacity 0.3s;white-space:nowrap;"></div>
 <div id="submitPanel" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #d0dae8;padding:10px 28px;justify-content:center;align-items:center;gap:10px;z-index:1000;flex-wrap:wrap;">
@@ -2089,7 +1820,7 @@
 </div>
 <div id="kt-tooltip"></div>
 <script>window.onerror=function(msg,src,line,col,err){console.warn("[student]",msg,src+":"+line);return true;};</script>
-<script id="studentMeta">window.STUDENT_META={class:"4hcl",assignTitle:"2017B",scriptUrl:"https://script.google.com/macros/s/AKfycbxmYibJps-FrT3u5t60gC3p-8SjTw6G8nUrLdWFPu_F4E_ZMRcFtFN3egivxsi7h7lG/exec",timerCfg:{"enabled":false,"t1":15,"t2":5,"t3":5,"te":5,"n1":"第一阶段","n2":"第二阶段","n3":"第三阶段","ne":"延时"},submitEnabled:true,fileToken:"mpdbv2yg",noPaste:true,jingsaiTopics:{"高华 · 高年级组（中三&中四）":[],"高华 · 低年级组（中一&中二）":[],"G3华文 · 高年级组（中三&中四）":[],"G3华文 · 低年级组（中一&中二）":[]}};var INITIAL_TEMPLATE="pazhao";</script>
+<script id="studentMeta">window.STUDENT_META={class:"4hcl",assignTitle:"2017B",scriptUrl:"https://script.google.com/macros/s/AKfycbxmYibJps-FrT3u5t60gC3p-8SjTw6G8nUrLdWFPu_F4E_ZMRcFtFN3egivxsi7h7lG/exec",timerCfg:{"enabled":false,"t1":20,"t2":0,"t3":0,"te":5,"n1":"","n2":"","n3":"","ne":"延时"},submitEnabled:true,fileToken:"mpf46v9t",noPaste:true,jingsaiTopics:{"高华 · 高年级组（中三&中四）":[],"高华 · 低年级组（中一&中二）":[],"G3华文 · 高年级组（中三&中四）":[],"G3华文 · 低年级组（中一&中二）":[]}};var INITIAL_TEMPLATE="yuedu-jinglian";var YJ_UNITS_DATA=[{"index":0,"question":"（老师在此输入题目，学生作答时只读）","text":"  ","cur":2,"rows":10}];</script>
 <script>
 (function(){
   if(!window.STUDENT_META)return;
