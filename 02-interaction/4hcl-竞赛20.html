@@ -1746,7 +1746,7 @@
 
   <div style="margin-bottom:8px;">
     <div style="padding:4px 0;text-align:right;">
-      <span id="jingsai-wordcount" style="font-size:8pt;color:#388e3c;">字数：0 / 460</span> <span id="jingsai-save-clock" style="font-size: 7.5pt; color: rgb(56, 142, 60); margin-left: 8px;">✓ 已保存 22:36</span> <button id="jingsai-refocus-btn" onclick="(function(){var b=document.getElementById('jingsai-refocus-btn');var h=document.getElementById('jingsai-hi');if(b){b.textContent='✓ 已激活';b.style.background='#d4edda';b.style.color='#155724';}if(h){h.removeAttribute('readonly');h.style.fontSize='16px';h.blur(); h.focus();}setTimeout(function(){if(b)b.style.display='none';},2000);})()" style="font-size:7pt;padding:3px 10px;border:1px solid #f0ad4e;border-radius:4px;background:#fff3cd;color:#856404;cursor:pointer;margin-left:6px;display:none;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,0.15);active:background:#ffeeba;" title="点击恢复键盘输入">⌨️ 点击恢复输入</button>
+      <span id="jingsai-wordcount" style="font-size:8pt;color:#388e3c;">字数：0 / 460</span> <span id="jingsai-save-clock" style="font-size: 7.5pt; color: rgb(56, 142, 60); margin-left: 8px;">✓ 已保存 22:46</span> <button id="jingsai-refocus-btn" onclick="(function(){var b=document.getElementById('jingsai-refocus-btn');var h=document.getElementById('jingsai-hi');if(b){b.textContent='✓ 已激活';b.style.background='#d4edda';b.style.color='#155724';}if(h){h.removeAttribute('readonly');h.style.fontSize='16px';h.blur(); h.focus();}setTimeout(function(){if(b)b.style.display='none';},2000);})()" style="font-size:7pt;padding:3px 10px;border:1px solid #f0ad4e;border-radius:4px;background:#fff3cd;color:#856404;cursor:pointer;margin-left:6px;display:none;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,0.15);active:background:#ffeeba;" title="点击恢复键盘输入">⌨️ 点击恢复输入</button>
     </div>
     <div id="jingsai-pages-container" style="display:flex;flex-direction:column;gap:40px;">
       <!-- 第一页稿纸 -->
@@ -1785,7 +1785,7 @@
 </div>
 <div id="kt-tooltip"></div>
 <script>window.onerror=function(msg,src,line,col,err){console.warn("[student]",msg,src+":"+line);return true;};</script>
-<script id="studentMeta">window.STUDENT_META={class:"4hcl",template:"zuowen-jingsai",assignTitle:"竞赛20",scriptUrl:"https://script.google.com/macros/s/AKfycbxmYibJps-FrT3u5t60gC3p-8SjTw6G8nUrLdWFPu_F4E_ZMRcFtFN3egivxsi7h7lG/exec",timerCfg:{"enabled":false,"t1":45,"t2":0,"t3":0,"te":5,"n1":"","n2":"","n3":"","ne":"延时"},submitEnabled:true,fileToken:"mpigbj8j",noPaste:true,jingsaiTopics:{"高华 · 高年级组（中三&中四）":["1"],"高华 · 低年级组（中一&中二）":["2"],"G3华文 · 高年级组（中三&中四）":["3"],"G3华文 · 低年级组（中一&中二）":["4"]}};var INITIAL_TEMPLATE="zuowen-jingsai";</script>
+<script id="studentMeta">window.STUDENT_META={class:"4hcl",template:"zuowen-jingsai",assignTitle:"竞赛20",scriptUrl:"https://script.google.com/macros/s/AKfycbxmYibJps-FrT3u5t60gC3p-8SjTw6G8nUrLdWFPu_F4E_ZMRcFtFN3egivxsi7h7lG/exec",timerCfg:{"enabled":false,"t1":45,"t2":0,"t3":0,"te":5,"n1":"","n2":"","n3":"","ne":"延时"},submitEnabled:true,fileToken:"mpigosp1",noPaste:true,jingsaiTopics:{"高华 · 高年级组（中三&中四）":["1"],"高华 · 低年级组（中一&中二）":["2"],"G3华文 · 高年级组（中三&中四）":["3"],"G3华文 · 低年级组（中一&中二）":["4"]}};var INITIAL_TEMPLATE="zuowen-jingsai";</script>
 <script>
 (function(){
   if(!window.STUDENT_META)return;
@@ -10403,11 +10403,70 @@ var dqb=document.querySelector('#langdu-fb-student-desk button');
         return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
 
+// ── Firebase 记录批量打印（简单 HTML 方式）──
+function _batchPrintFirebaseRecords(records) {
+    var allHtml = '';
+    records.forEach(function(r, i) {
+        var name  = r.studentName || '';
+        var num   = r.studentNum  || '';
+        var group = (r.inputs && r.inputs['jingsai_group']) || '';
+        var title = (r.inputs && r.inputs['jingsai_title']) || '';
+        var tpl   = r.template || 'other';
+        var bodyHtml = '';
+
+        if (tpl === 'yuedu-jinglian' && r.inputs && r.inputs['yj_units']) {
+            try {
+                var units = JSON.parse(r.inputs['yj_units']);
+                bodyHtml = units.map(function(u) {
+                    var q = u.question ? '<p style="font-weight:600;margin:10pt 0 4pt;">' + u.question + '</p>' : '';
+                    var t = (u.text||'').split('\n').map(function(p){
+                        return '<p style="text-indent:2em;line-height:1.8;margin:0;">' + (p.trim()||'&nbsp;') + '</p>';
+                    }).join('');
+                    return q + t;
+                }).join('');
+            } catch(e) {}
+        } else if (r.inputs && r.inputs['jingsai_text']) {
+            bodyHtml = r.inputs['jingsai_text'].split('\n').map(function(p){
+                return '<p style="text-indent:2em;line-height:1.8;margin:0;">' + (p.trim()||'&nbsp;') + '</p>';
+            }).join('');
+        } else if (r.content) {
+            bodyHtml = '<p style="text-indent:2em;line-height:1.8;">' + r.content + '</p>';
+        }
+
+        var pageBreak = i > 0 ? '<div style="page-break-before:always;"></div>' : '';
+        allHtml += pageBreak
+            + '<div style="font-family:SimSun,serif;font-size:12pt;padding:20mm;min-height:250mm;">'
+            + '<p style="margin:0 0 6pt;">'
+            + (name ? '姓名：' + name : '') + (name && num ? '　　' : '') + (num ? '编号：' + num : '')
+            + '</p>'
+            + (group || title ? '<p style="margin:0 0 16pt;">'
+                + (group ? '组别：' + group : '') + (group && title ? '　　' : '') + (title ? '题目：' + title : '')
+                + '</p>' : '')
+            + bodyHtml
+            + '</div>';
+    });
+
+    var win = window.open('', '_blank');
+    win.document.write('<!DOCTYPE html><html><head><meta charset="utf-8">'
+        + '<style>@page{size:A4;margin:0;}body{margin:0;}p{margin:0 0 4pt;}@media print{.no-print{display:none;}}</style>'
+        + '</head><body>' + allHtml
+        + '<script>window.onload=function(){window.print();}<\/script>'
+        + '</body></html>');
+    win.document.close();
+}
+
     // ── 第一种：生成批量打印 HTML 文件（本地，一次打印全部）──
     function batchGenerateHTML() {
         const checked = Array.from(document.querySelectorAll('.import-row-cb:checked'));
         if (!checked.length) return;
         const records = _getSortedCheckedRecords();
+
+        // Firebase 记录：用简单 HTML 打印方式生成 PDF
+        var isFirebaseRecords = records.some(function(r) { return !!r._firebaseId; });
+        if (isFirebaseRecords) {
+            _batchPrintFirebaseRecords(records);
+            return;
+        }
 
         // 提取格子图一次，src直接写入img
         var _sharedGridDataUrl = '';
