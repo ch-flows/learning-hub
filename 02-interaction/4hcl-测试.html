@@ -1765,7 +1765,7 @@
 </div>
 <div id="kt-tooltip"></div>
 <script>window.onerror=function(msg,src,line,col,err){console.warn("[student]",msg,src+":"+line);return true;};</script>
-<script id="studentMeta">window.STUDENT_META={class:"4hcl",assignTitle:"测试",scriptUrl:"https://script.google.com/macros/s/AKfycbxmYibJps-FrT3u5t60gC3p-8SjTw6G8nUrLdWFPu_F4E_ZMRcFtFN3egivxsi7h7lG/exec",timerCfg:{"enabled":false,"t1":20,"t2":0,"t3":0,"te":5,"n1":"","n2":"","n3":"","ne":"延时"},submitEnabled:true,fileToken:"mphsxs0f",noPaste:true,jingsaiTopics:{"高华 · 高年级组（中三&中四）":[],"高华 · 低年级组（中一&中二）":[],"G3华文 · 高年级组（中三&中四）":[],"G3华文 · 低年级组（中一&中二）":[]}};var INITIAL_TEMPLATE="yuedu-jinglian";var YJ_UNITS_DATA=[{"index":0,"question":"（老师在此输入题目，学生作答时只读）","text":"　　","cur":2,"rows":10}];</script>
+<script id="studentMeta">window.STUDENT_META={class:"4hcl",assignTitle:"测试",scriptUrl:"https://script.google.com/macros/s/AKfycbxmYibJps-FrT3u5t60gC3p-8SjTw6G8nUrLdWFPu_F4E_ZMRcFtFN3egivxsi7h7lG/exec",timerCfg:{"enabled":false,"t1":20,"t2":0,"t3":0,"te":5,"n1":"","n2":"","n3":"","ne":"延时"},submitEnabled:true,fileToken:"mphw0ho5",noPaste:true,jingsaiTopics:{"高华 · 高年级组（中三&中四）":[],"高华 · 低年级组（中一&中二）":[],"G3华文 · 高年级组（中三&中四）":[],"G3华文 · 低年级组（中一&中二）":[]}};var INITIAL_TEMPLATE="yuedu-jinglian";var YJ_UNITS_DATA=[{"index":0,"question":"（老师在此输入题目，学生作答时只读）","text":"　　","cur":2,"rows":10}];</script>
 <script>
 (function(){
   if(!window.STUDENT_META)return;
@@ -14661,15 +14661,25 @@ if (_fbStudentName) {
 
 // 保存到Firebase
 window._saveToFirebase = async function(content, studentName, studentClass, title) {
-  if (!content || content.replace(/　/g,'').trim().length === 0) return;
+  if (!content || String(content).replace(/　/g,'').trim().length === 0) return;
   try {
+    // content 可能是 JSON 字符串（units数组）或普通文本
+    var parsedContent = content;
+    var units = null;
+    try {
+      var parsed = JSON.parse(content);
+      if (Array.isArray(parsed)) { units = parsed; parsedContent = content; }
+      else if (parsed && parsed.text) { parsedContent = parsed.text; } // autosave格式
+    } catch(e) {}
+
     await addDoc(collection(db, 'worksheetRecords'), {
       studentName: studentName || _fbStudentName || '未知',
       class:       studentClass || _fbClass || '',
       schoolId:    _fbSchoolId,
       type:        'yuedu-jinglian',
       title:       title || '阅读精练',
-      content:     content,
+      content:     parsedContent,
+      units:       units,
       submittedAt: serverTimestamp(),
       createdAt:   serverTimestamp(),
     });
@@ -14723,6 +14733,73 @@ document.addEventListener('click', function(e) {
     }
   }, 500);
 });
+// ── 从 Firebase 拉取当前班级提交记录 ──
+async function fetchFirebaseRecords() {
+  var clsEl = document.getElementById('classSelect');
+  var ttlEl = document.getElementById('assignTitle');
+  var cls   = clsEl ? clsEl.value.trim() : '';
+  var ttl   = ttlEl ? ttlEl.value.trim() : '';
+
+  // 加载提示
+  var existing = document.getElementById('importDataOverlay');
+  if (existing) existing.remove();
+  var loadingDiv = document.createElement('div');
+  loadingDiv.id = 'importDataOverlay';
+  loadingDiv.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:5000;display:flex;align-items:center;justify-content:center;';
+  loadingDiv.innerHTML = '<div style="background:#fff;border-radius:12px;padding:32px 40px;text-align:center;"><div style="font-size:28px;margin-bottom:12px;">⏳</div><div style="font-size:13px;font-weight:600;color:#1e293b;">正在拉取提交记录…</div>' + (cls ? '<div style="font-size:11px;color:#64748b;margin-top:6px;">' + [ttl,cls].filter(Boolean).join(' · ') + '</div>' : '') + '</div>';
+  document.body.appendChild(loadingDiv);
+
+  try {
+    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js');
+    const { getFirestore, collection, query, where, getDocs, orderBy } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+
+    const app = getApps().length ? getApps()[0] : initializeApp({
+      apiKey:    "AIzaSyDHGWg2s8lZI_rlVTwLJzgdt-LJCEIXHgk",
+      authDomain:"huawen-platform.firebaseapp.com",
+      projectId: "huawen-platform"
+    });
+    const db = getFirestore(app);
+
+    var constraints = [where('type', '==', 'yuedu-jinglian')];
+    if (cls) constraints.push(where('class', '==', cls));
+    if (ttl) constraints.push(where('title', '==', ttl));
+    constraints.push(orderBy('submittedAt', 'desc'));
+
+    const snap = await getDocs(query(collection(db, 'worksheetRecords'), ...constraints));
+    loadingDiv.remove();
+
+    if (snap.empty) {
+      alert('没有找到提交记录' + (cls ? '（' + [ttl,cls].filter(Boolean).join(' · ') + '）' : ''));
+      return;
+    }
+
+    var records = [];
+    snap.forEach(function(doc) {
+      var d = doc.data();
+      records.push({
+        studentName:  d.studentName  || '',
+        studentNum:   d.schoolId     || '',
+        class:        d.class        || cls,
+        assignTitle:  d.title        || ttl,
+        submitTime:   d.submittedAt  ? new Date(d.submittedAt.seconds * 1000).toLocaleString('zh-CN') : '',
+        content:      d.content      || '',
+        template:     d.template     || 'yuedu-jinglian',
+        tabAwayLog:   d.tabAwayLog   || [],
+        tabAwayTotal: d.tabAwayTotal || 0,
+        _firebaseId:  doc.id
+      });
+    });
+
+    showImportedData(records);
+
+  } catch(err) {
+    var ld = document.getElementById('importDataOverlay');
+    if (ld) ld.remove();
+    console.error('Firebase fetch error:', err);
+    alert('拉取失败：' + err.message);
+  }
+}
+
 </script>
 <script>
 (function(){
