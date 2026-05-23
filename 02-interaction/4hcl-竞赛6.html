@@ -1737,7 +1737,7 @@
 
   <div style="margin-bottom:8px;">
     <div style="padding:4px 0;text-align:right;">
-      <span id="jingsai-wordcount" style="font-size:8pt;color:#388e3c;">字数：0 / 460</span> <span id="jingsai-save-clock" style="font-size: 7.5pt; color: rgb(56, 142, 60); margin-left: 8px;">✓ 已保存 20:16</span> <button id="jingsai-refocus-btn" onclick="(function(){var b=document.getElementById('jingsai-refocus-btn');var h=document.getElementById('jingsai-hi');if(b){b.textContent='✓ 已激活';b.style.background='#d4edda';b.style.color='#155724';}if(h){h.removeAttribute('readonly');h.style.fontSize='16px';h.blur(); h.focus();}setTimeout(function(){if(b)b.style.display='none';},2000);})()" style="font-size:7pt;padding:3px 10px;border:1px solid #f0ad4e;border-radius:4px;background:#fff3cd;color:#856404;cursor:pointer;margin-left:6px;display:none;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,0.15);active:background:#ffeeba;" title="点击恢复键盘输入">⌨️ 点击恢复输入</button>
+      <span id="jingsai-wordcount" style="font-size:8pt;color:#388e3c;">字数：0 / 460</span> <span id="jingsai-save-clock" style="font-size: 7.5pt; color: rgb(56, 142, 60); margin-left: 8px;">✓ 已保存 20:29</span> <button id="jingsai-refocus-btn" onclick="(function(){var b=document.getElementById('jingsai-refocus-btn');var h=document.getElementById('jingsai-hi');if(b){b.textContent='✓ 已激活';b.style.background='#d4edda';b.style.color='#155724';}if(h){h.removeAttribute('readonly');h.style.fontSize='16px';h.blur(); h.focus();}setTimeout(function(){if(b)b.style.display='none';},2000);})()" style="font-size:7pt;padding:3px 10px;border:1px solid #f0ad4e;border-radius:4px;background:#fff3cd;color:#856404;cursor:pointer;margin-left:6px;display:none;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,0.15);active:background:#ffeeba;" title="点击恢复键盘输入">⌨️ 点击恢复输入</button>
     </div>
     <div id="jingsai-pages-container" style="display:flex;flex-direction:column;gap:40px;">
       <!-- 第一页稿纸 -->
@@ -1776,7 +1776,7 @@
 </div>
 <div id="kt-tooltip"></div>
 <script>window.onerror=function(msg,src,line,col,err){console.warn("[student]",msg,src+":"+line);return true;};</script>
-<script id="studentMeta">window.STUDENT_META={class:"4hcl",assignTitle:"竞赛6",scriptUrl:"https://script.google.com/macros/s/AKfycbxmYibJps-FrT3u5t60gC3p-8SjTw6G8nUrLdWFPu_F4E_ZMRcFtFN3egivxsi7h7lG/exec",timerCfg:{"enabled":false,"t1":45,"t2":0,"t3":0,"te":5,"n1":"","n2":"","n3":"","ne":"延时"},submitEnabled:true,fileToken:"mpibcbu8",noPaste:true,jingsaiTopics:{"高华 · 高年级组（中三&中四）":["今天的太阳"],"高华 · 低年级组（中一&中二）":["明天的故事"],"G3华文 · 高年级组（中三&中四）":["夏日里的情思"],"G3华文 · 低年级组（中一&中二）":["低头结语"]}};var INITIAL_TEMPLATE="zuowen-jingsai";</script>
+<script id="studentMeta">window.STUDENT_META={class:"4hcl",assignTitle:"竞赛6",scriptUrl:"https://script.google.com/macros/s/AKfycbxmYibJps-FrT3u5t60gC3p-8SjTw6G8nUrLdWFPu_F4E_ZMRcFtFN3egivxsi7h7lG/exec",timerCfg:{"enabled":false,"t1":45,"t2":0,"t3":0,"te":5,"n1":"","n2":"","n3":"","ne":"延时"},submitEnabled:true,fileToken:"mpibsmsb",noPaste:true,jingsaiTopics:{"高华 · 高年级组（中三&中四）":["你好！"],"高华 · 低年级组（中一&中二）":["大家好！"],"G3华文 · 高年级组（中三&中四）":["同学们好！"],"G3华文 · 低年级组（中一&中二）":["老师好！"]}};var INITIAL_TEMPLATE="zuowen-jingsai";</script>
 <script>
 (function(){
   if(!window.STUDENT_META)return;
@@ -1834,7 +1834,7 @@ if (_fbStudentName) {
 }
 
 // 保存到Firebase
-window._saveToFirebase = async function(content, studentName, studentClass, title, schoolIdOverride) {
+window._saveToFirebase = async function(content, studentName, studentClass, title, schoolIdOverride, inputsData) {
   if (!content || String(content).replace(/　/g,'').trim().length === 0) return;
   try {
     var _pc=content,_un=null;
@@ -1847,6 +1847,7 @@ window._saveToFirebase = async function(content, studentName, studentClass, titl
       title:       title || '阅读精练',
       content:     _pc,
       units:       _un,
+      inputs:      inputsData || {},
       submittedAt: serverTimestamp(),
       createdAt:   serverTimestamp(),
     });
@@ -1940,25 +1941,26 @@ window._doFetchRecords = async function() {
     snap.forEach(function(doc) {
       var d = doc.data();
       // 把 Firebase 字段映射成 batchGenerateHTML 期望的 inputs 格式
-      var inputs = {};
-      // yj_units for yuedu-jinglian content
-      if (d.units && Array.isArray(d.units)) {
-        inputs['yj_units'] = JSON.stringify(d.units);
-      } else if (d.content) {
-        try {
-          var parsed = JSON.parse(d.content);
-          if (Array.isArray(parsed)) {
-            inputs['yj_units'] = d.content;
-          } else {
-            inputs['yj_units'] = d.content;
-          }
-        } catch(e) {
-          inputs['yj_units'] = d.content;
+      // Use stored inputs if available, otherwise reconstruct
+      var inputs = (d.inputs && typeof d.inputs === 'object') ? Object.assign({}, d.inputs) : {};
+      // yj_units fallback
+      if (!inputs['yj_units']) {
+        if (d.units && Array.isArray(d.units)) {
+          inputs['yj_units'] = JSON.stringify(d.units);
+        } else if (d.content) {
+          try {
+            var _pc2 = JSON.parse(d.content);
+            if (Array.isArray(_pc2)) inputs['yj_units'] = d.content;
+          } catch(e) {}
         }
+      }
+      // jingsai_text fallback
+      if (!inputs['jingsai_text'] && d.content && !inputs['yj_units']) {
+        inputs['jingsai_text'] = d.content;
       }
       // field_0 = studentName, field_1 = schoolId for generic restore
       if (d.studentName) inputs['field_0'] = d.studentName;
-      if (d.schoolId)    inputs['field_1'] = d.schoolId;
+      if (d.schoolId && d.schoolId !== 'default') inputs['field_1'] = d.schoolId;
       records.push({
         studentName:  d.studentName  || '',
         studentNum:   d.schoolId     || '',
@@ -2052,10 +2054,18 @@ window.openTopicsModal = function() {
 }
 
 window.saveTopics = function() {
-  var groups = ['topics-hh-high', 'topics-hh-low', 'topics-g3-high', 'topics-g3-low'];
-  groups.forEach(function(id) {
+  var groupMap = {
+    'topics-hh-high': '高华 · 高年级组（中三&中四）',
+    'topics-hh-low':  '高华 · 低年级组（中一&中二）',
+    'topics-g3-high': 'G3华文 · 高年级组（中三&中四）',
+    'topics-g3-low':  'G3华文 · 低年级组（中一&中二）',
+  };
+  var newTopics = {};
+  Object.keys(groupMap).forEach(function(id) {
     var tmEl = document.getElementById('tm-' + id);
     if (!tmEl) return;
+    var val = tmEl.value;
+    // Store in hidden element
     var el = document.getElementById(id);
     if (!el) {
       el = document.createElement('textarea');
@@ -2063,9 +2073,30 @@ window.saveTopics = function() {
       el.style.display = 'none';
       document.body.appendChild(el);
     }
-    el.value = tmEl.value;
-    el.textContent = tmEl.value;
+    el.value = val;
+    el.textContent = val;
+    // Build JINGSAI_TOPICS
+    var lines = val.split('\n').map(function(s){return s.trim();}).filter(Boolean);
+    if (lines.length) newTopics[groupMap[id]] = lines;
   });
+  // Update window.JINGSAI_TOPICS immediately so dropdowns work
+  window.JINGSAI_TOPICS = newTopics;
+}
+
+// ── 老师版 jingsaiGroupChange（学生版里也有同名函数）──
+if (typeof window.jingsaiGroupChange !== 'function') {
+  window.jingsaiGroupChange = function(sel) {
+    var titleSel = document.getElementById('jingsai-title-input');
+    if (!titleSel) return;
+    var group = sel.value;
+    var topics = (window.JINGSAI_TOPICS && window.JINGSAI_TOPICS[group]) || [];
+    titleSel.innerHTML = '<option value="">── 点击此处选题 ──</option>';
+    topics.forEach(function(t) {
+      var opt = document.createElement('option');
+      opt.value = t; opt.textContent = t;
+      titleSel.appendChild(opt);
+    });
+  };
 }
 
 </script>
@@ -9001,19 +9032,31 @@ var dqb=document.querySelector('#langdu-fb-student-desk button');
                     var _sCls   = (window.STUDENT_META && window.STUDENT_META.class)       || '';
                     var _sTitle = (window.STUDENT_META && window.STUDENT_META.assignTitle)  || '阅读精练';
                     var _fbContent = '';
+                    var _fbInputs = {};
+                    // yuedu-jinglian: read units
                     if (typeof window._yjGetAllUnits === 'function') {
                         var _u = window._yjGetAllUnits();
-                        if (_u && _u.length) _fbContent = JSON.stringify(_u);
+                        if (_u && _u.length) { _fbContent = JSON.stringify(_u); _fbInputs['yj_units'] = _fbContent; }
                     }
                     if (!_fbContent && payload && payload.inputs && payload.inputs['yj_units']) {
                         _fbContent = payload.inputs['yj_units'];
+                        _fbInputs['yj_units'] = _fbContent;
+                    }
+                    // zuowen-jingsai: read jingsai fields from payload
+                    if (payload && payload.inputs) {
+                        if (payload.inputs['jingsai_text'] !== undefined) {
+                            _fbInputs['jingsai_text']  = payload.inputs['jingsai_text'];
+                            _fbInputs['jingsai_group'] = payload.inputs['jingsai_group'] || '';
+                            _fbInputs['jingsai_title'] = payload.inputs['jingsai_title'] || '';
+                            if (!_fbContent) _fbContent = payload.inputs['jingsai_text'];
+                        }
                     }
                     if (!_fbContent) {
                         var _tok = window.STUDENT_META ? (window.STUDENT_META.fileToken || 'draft') : 'draft';
                         var _lsK = ['yuedu_jinglian_autosave_'+_tok, 'zuowen_jingsai_autosave_'+_tok];
-                        for (var _k of _lsK) { var _r = localStorage.getItem(_k); if (_r) { _fbContent = _r; break; } }
+                        for (var _k of _lsK) { var _r2 = localStorage.getItem(_k); if (_r2) { _fbContent = _r2; break; } }
                     }
-                    if (_fbContent) window._saveToFirebase(_fbContent, _sName, _sCls, _sTitle, _sNum);
+                    if (_fbContent) window._saveToFirebase(_fbContent, _sName, _sCls, _sTitle, _sNum, _fbInputs);
                 } catch(e) { console.error('Firebase save error:', e); }
             }
             // 停止所有计时器（含延时倒计时）
