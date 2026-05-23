@@ -1681,7 +1681,7 @@
 </head>
 <body style="padding-top:44px;">
 <script>\n(function(){\n  var _isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(/Macintosh/.test(navigator.userAgent)&&'ontouchend' in document);\n  if(!_isIOS)return;\n  var _tx=0,_ty=0,_moved=false;\n  document.addEventListener('touchstart',function(e){\n    _tx=e.touches[0].clientX;_ty=e.touches[0].clientY;_moved=false;\n  },{passive:true});\n  document.addEventListener('touchmove',function(e){\n    if(Math.abs(e.touches[0].clientX-_tx)>8||Math.abs(e.touches[0].clientY-_ty)>8)_moved=true;\n  },{passive:true});\n  document.addEventListener('touchend',function(e){\n    if(_moved)return;\n    var t=document.elementFromPoint(_tx,_ty);\n    if(!t)return;\n    var el=t;\n    for(var i=0;i<4;i++){\n      if(el.tagName==='INPUT'||el.tagName==='TEXTAREA')break;\n      el=el.parentElement;if(!el)break;\n    }\n    if(!el||(el.tagName!=='INPUT'&&el.tagName!=='TEXTAREA'))return;\n    if(el.readOnly||el.disabled)return;\n    var wasLocked=el.classList.contains('phase-locked');\n    if(wasLocked)el.classList.remove('phase-locked');\n    requestAnimationFrame(function(){\n      el.focus();\n      if(wasLocked)el.classList.add('phase-locked');\n    });\n  },{passive:true});\n  // iOS键盘消失时恢复滚动位置，防止点击坐标错位\n  var _savedScrollY=0,_kbVisible=false;\n  if(window.visualViewport){\n    window.visualViewport.addEventListener('resize',function(){\n      var vvH=window.visualViewport.height;\n      var kbH=window.innerHeight-vvH;\n      if(kbH<100)return;\n      var grid=document.querySelector('.jingsai-grid-wrap');\n      if(!grid)return;\n      var r=grid.getBoundingClientRect();\n      if(r.bottom>vvH-20){\n        window.scrollBy({top:r.bottom-(vvH-20),behavior:'smooth'});\n        // After scroll, reposition ta over grid\n        setTimeout(function(){\n          var ta=document.querySelector('textarea[data-jingsai-ta]');\n          if(ta&&ta._reposition)ta._reposition();\n        },350);\n      }\n    });\n  }\n})();\n</script>\n<div id="student-toolbar" style="position:fixed;top:0;left:0;right:0;background:#fff;border-bottom:0.5px solid #d4dae3;padding:0 14px;display:flex;align-items:center;justify-content:center;z-index:1000;box-sizing:border-box;min-height:44px;">
-<button id="toolbar-start-btn" onclick="timerStartWithCountdown(&quot;ketang&quot;)" style="background:transparent;border:none;color:#1D9E75;border-radius:8px;padding:7px 36px;font-size:17px;font-family:Georgia,serif;font-weight:700;letter-spacing:1px;cursor:pointer;background:radial-gradient(ellipse at center, #d4f0e8 0%, #edf8f4 55%, transparent 100%);">Let&#39;s Go</button>
+<button id="toolbar-start-btn" onclick="timerStartWithCountdown(&quot;yuedu-jinglian&quot;)" style="background:transparent;border:none;color:#1D9E75;border-radius:8px;padding:7px 36px;font-size:17px;font-family:Georgia,serif;font-weight:700;letter-spacing:1px;cursor:pointer;background:radial-gradient(ellipse at center, #d4f0e8 0%, #edf8f4 55%, transparent 100%);">Start</button>
 <div id="timer-float" style="display:none;align-items:center;gap:12px;">
 <div class="tf-phase" id="tf-phase"></div>
 <div id="tf-divider" style="width:1.5px;height:24px;background:#d1d5db;flex-shrink:0;"></div>
@@ -1691,467 +1691,62 @@
 <div class="tf-done" id="tf-done" style="font-size:7.5pt;color:#0f6e56;display:none;white-space:nowrap;"></div>
 <div class="tf-count" id="tf-count" style="font-size:7.5pt;color:#94a3b8;display:none;white-space:nowrap;"></div>
 </div></div></div>
-<div class="page active" id="page-ketang" style="">
+<div class="page" id="page-yuedu-jinglian" style="">
 
-    <div class="page-header">
-        <div class="header-row">
-            <div class="student-fields">
-                <span>姓名：<input type="text" class="share-name-input" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" style="width:88px;background:transparent;box-shadow:0 1px 0 0 rgba(0,0,0,0.3);font-family:inherit;font-size:inherit;color:inherit;padding:0 2px 1px;margin-left:2px;"></span>
-                <span>编号（<input type="text" class="share-num-input" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" style="width:36px;background:transparent;font-family:inherit;font-size:inherit;color:inherit;padding:0 2px;text-align:center;">）</span> <span class="bd-save-clock" style="font-size:7.5pt;color:#9e9e9e;margin-left:8px;"></span>
-            </div>
-            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:1px;">
-                <div style="font-size:13pt;font-weight:400;color:#1a2a3a;letter-spacing:0.5px;" contenteditable="false">课堂通用学习单</div>
-            </div>
+  <div class="timer-setup-bar" style="display:none;" id="timer-setup-yuedu-jingsai">
+    <span style="font-weight:600;color:#1e293b;" contenteditable="false">⏱ 计时设定</span>
+    <label>作答时长 <input type="number" min="1" max="120" value="20" id="t1-yuedu-jingsai"> 分钟</label>
+    <label>延时时长 <input type="number" min="1" max="15" value="5" id="te-yuedu-jingsai"> 分钟</label>
+  </div>
+  <div class="timer-progress" id="timer-progress-yuedu-jingsai" style="display:none;"><div class="timer-progress-fill" id="timer-fill-yuedu-jingsai" style="width:100%;"></div></div>
+
+  <div class="bd-page-header">
+    <div class="bd-header-row">
+      <div class="bd-student-fields" style="gap:14px;flex-wrap:wrap;">
+        <span style="font-size:8.5pt;">姓名：<input type="text" id="yuedu-jinglian-name" style="width:90px;background:transparent;box-shadow:0 1px 0 0 rgba(0,0,0,0.28);font-family:inherit;font-size:inherit;color:inherit;padding:0 2px 1px;margin-left:2px;"></span>
+        <span style="font-size:8.5pt;">编号：<input type="text" id="yuedu-jinglian-class" style="width:72px;background:transparent;box-shadow:0 1px 0 0 rgba(0,0,0,0.28);font-family:inherit;font-size:inherit;color:inherit;padding:0 2px 1px;margin-left:2px;"></span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;">
+        <div style="font-size:10.5pt;font-weight:400;color:#1a2a3a;letter-spacing:0.5px;font-family:'Noto Serif SC','Source Han Serif SC','思源宋体',serif;" contenteditable="false">阅读精练</div>
+      </div>
+    </div>
+    <div class="bd-divider"></div>
+  </div>
+
+  <!-- 第一题：题目框 + 原版jingsai格子 -->
+  <div id="yj-q1-wrap">
+    <div style="background:#eef4fb;border-radius:8px;padding:10px 16px;margin-bottom:10px;position:relative;">
+      <div style="font-size:8.5pt;font-weight:600;color:#1a4070;margin-bottom:6px;" contenteditable="false">📌 题目：</div>
+      <div id="yuedu-jinglian-question" contenteditable="false" spellcheck="false" style="font-size:9.5pt;color:#1a2a3a;line-height:1.8;min-height:44px;outline:none;font-family:inherit;white-space:pre-wrap;">（老师在此输入题目，学生作答时只读）</div>
+    </div>
+    <div style="text-align:right;padding:2px 0 4px;">
+      <span id="yuedu-jinglian-wordcount" style="font-size:8pt;color:#388e3c;">字数：0</span>
+      <span id="jingsai-save-clock" style="font-size:7.5pt;color:#9e9e9e;margin-left:8px;"></span> <button id="jingsai-refocus-btn" onclick="(function(){var b=document.getElementById('jingsai-refocus-btn');var h=document.getElementById('jingsai-hi');if(b){b.textContent='✓ 已激活';b.style.background='#d4edda';b.style.color='#155724';}if(h){h.removeAttribute('readonly');h.style.fontSize='16px';h.blur(); h.focus();}setTimeout(function(){if(b)b.style.display='none';},2000);})()" style="font-size:7pt;padding:3px 10px;border:1px solid #f0ad4e;border-radius:4px;background:#fff3cd;color:#856404;cursor:pointer;margin-left:6px;display:none;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,0.15);active:background:#ffeeba;" title="点击恢复键盘输入">⌨️ 点击恢复输入</button>
+    </div>
+    <div id="yuedu-jinglian-pages-container" style="display:flex;flex-direction:column;gap:40px;" onclick="if(typeof yjActivateQ1==='function')yjActivateQ1()">
+      <div class="jingsai-page-block" data-page="0" data-rows="10">
+        <div style="display: block; width: 100%; box-sizing: border-box; background: rgb(255, 255, 255); line-height: 0; font-size: 0px; position: relative; overflow: visible !important; height: 414px;">
+          <div class="jingsai-grid-wrap" style="position: relative; background: rgb(255, 255, 255); cursor: text; overflow: visible !important; height: 410px;">
+            <canvas class="jingsai-grid-canvas" style="display: block; width: 688px; height: 410px;" width="1" height="1"></canvas>
+            <div class="jingsai-text-canvas" style="position: absolute; top: 0px; left: 0px; pointer-events: none; overflow: visible; width: 688px; height: 408px;"><span style="position: absolute; left: 0px; top: 6px; width: 34.4px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 300; line-height: 1; color: rgb(26, 92, 56); font-family: SimSun, 宋体, STSong, NSimSun, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; box-sizing: border-box; -webkit-font-smoothing: antialiased; transform: translateY(-1px); background: transparent; border-radius: 2px;">　</span><span style="position: absolute; left: 34.4px; top: 6px; width: 34.4px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 300; line-height: 1; color: rgb(26, 92, 56); font-family: SimSun, 宋体, STSong, NSimSun, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; box-sizing: border-box; -webkit-font-smoothing: antialiased; transform: translateY(-1px); background: transparent; border-radius: 2px;">　</span></div>
+            <div class="jingsai-cursor" style="position: absolute; width: 1.5px; background: rgb(46, 125, 50); pointer-events: none; display: block; animation: 1s step-end 0s infinite normal none running jc-blink; z-index: 4; left: 69.8px; top: 6px; height: 18px;"></div>
+          <textarea autocomplete="off" autocorrect="off" autocapitalize="sentences" spellcheck="false" style="position: absolute; inset: 0px; width: 100%; height: 100%; z-index: 5; opacity: 1; background: rgba(255, 255, 255, 0.01); color: rgba(0, 0, 0, 0.01); caret-color: auto; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; resize: none; padding: 0px; margin: 0px; font-size: 16px; user-select: text; touch-action: manipulation;"></textarea></div>
         </div>
-        <div class="divider"></div>
+        <div class="jingsai-page-num" style="font-size:8pt;color:#999;text-align:right;padding-right:4px;margin-top:5px;line-height:1;">第 1 页</div>
+      </div>
     </div>
-    <!-- ══ 计时系统 ══ -->
-    <div class="timer-setup-bar" style="display: none;" id="timer-setup-ketang">
-        <span style="font-weight:600;color:#1e293b;" contenteditable="false">⏱ 计时设定</span>
-        <label>第一阶段（活动）<input type="number" min="1" max="60" value="15" id="t1-ketang"> 分钟</label>
-        <label>第二阶段（复盘）<input type="number" min="1" max="30" value="5" id="t2-ketang"> 分钟</label>
-        <label>第三阶段（分享）<input type="number" min="1" max="30" value="5" id="t3-ketang"> 分钟</label>
-        <label>延时时长 <input type="number" min="1" max="15" value="5" id="te-ketang"> 分钟</label>
-    </div>
-    <div class="timer-progress" id="timer-progress-ketang" style="display: none;"><div class="timer-progress-fill" id="timer-fill-ketang" style="width:100%;"></div>
+  </div>
 
-    </div>
+  <!-- 额外题目（由JS动态添加，每题有独立的题目框+CSS格子） -->
+  <div id="yj-extra-container" style="margin-top:32px;"></div>
 
-    <!-- ══ 第一部分：学习材料 ══ -->
-    <div style="display: grid; grid-template-columns: 441.93px 7.99663px 237.963px; gap: 0px; margin-bottom: 10px; min-height: 60vh; position: relative; height: 998px;" id="kt-dual-pane">
-    <div class="kt-phase1" style="border:0.5px solid #c8d8f0;border-radius:8px;overflow:hidden;display:flex;flex-direction:column;min-width:0;" id="kt-text-section">
-        <div style="background:linear-gradient(135deg,#eef4fb 0%,#e8f0fa 100%);border-bottom:0.5px solid #c8d8f0;padding:6px 10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:5px;">
-            <!-- 编辑模式工具栏 -->
-            <div style="display: none;" id="kt-text-toolbar">
-                <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;">
-                    <!-- 撤销/重做 -->
-                    <button onclick="ktGlobalUndo()" title="撤销 (Ctrl+Z)" style="width:24px;height:24px;border-radius:4px;border:0.5px solid #a8c4e0;background:#fff;color:#4a7fc1;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;">
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"></path><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"></path></svg>
-                    </button>
-                    <button onclick="ktGlobalRedo()" title="重做 (Ctrl+Y)" style="width:24px;height:24px;border-radius:4px;border:0.5px solid #a8c4e0;background:#fff;color:#4a7fc1;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;">
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 7v6h-6"></path><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"></path></svg>
-                    </button>
-                    <span style="width:1px;height:16px;background:#d4dae3;margin:0 1px;"></span>
-                    <!-- 字体选择 -->
-                    <select id="kt-font-family" title="字体" onchange="ktApplyFontFamily(this.value)" style="height:24px;font-size:7.5pt;border:0.5px solid #a8c4e0;border-radius:4px;padding:0 4px;background:#fff;color:#1a2a3a;cursor:pointer;min-width:64px;">
-                        <option value="">默认字体</option>
-                        <option value="'Microsoft YaHei','PingFang SC',sans-serif">微软雅黑</option>
-                        <option value="'SimSun','Song Ti',serif">宋体</option>
-                        <option value="'KaiTi','STKaiti',serif">楷体</option>
-                        <option value="'SimHei','STHeiti',sans-serif">黑体</option>
-                        <option value="'FangSong','STFangsong',serif">仿宋</option>
-                        <option value="Georgia,serif">Georgia</option>
-                    </select>
-                    <!-- 字号 -->
-                    <select id="kt-font-size" title="字号" onchange="ktApplyFontSize(this.value)" style="height:24px;font-size:7.5pt;border:0.5px solid #a8c4e0;border-radius:4px;padding:0 3px;background:#fff;color:#1a2a3a;cursor:pointer;width:56px;">
-                        <option value="">字号</option>
-                        <option value="7.5pt">7.5</option>
-                        <option value="8pt">8</option>
-                        <option value="8.5pt">8.5</option>
-                        <option value="9pt">9</option>
-                        <option value="9.5pt" selected="">9.5</option>
-                        <option value="10pt">10</option>
-                        <option value="10.5pt">10.5</option>
-                        <option value="11pt">11</option>
-                        <option value="12pt">12</option>
-                    </select>
-                    <!-- 行距 -->
-                    <select id="kt-line-height" title="行距" onchange="ktApplyLineHeight(this.value)" style="height:24px;font-size:7.5pt;border:0.5px solid #a8c4e0;border-radius:4px;padding:0 3px;background:#fff;color:#1a2a3a;cursor:pointer;width:52px;">
-                        <option value="">行距</option>
-                        <option value="1.4">1.4×</option>
-                        <option value="1.6">1.6×</option>
-                        <option value="1.8">1.8×</option>
-                        <option value="2.0">2.0×</option>
-                        <option value="2.2">2.2×</option>
-                        <option value="2.4" selected="">2.4×</option>
-                        <option value="2.8">2.8×</option>
-                    </select>
-                    <!-- 段距 -->
-                    <select id="kt-para-spacing" title="段间距" onchange="ktApplyParaSpacing(this.value)" style="height:24px;font-size:7.5pt;border:0.5px solid #a8c4e0;border-radius:4px;padding:0 3px;background:#fff;color:#1a2a3a;cursor:pointer;width:52px;">
-                        <option value="">段距</option>
-                        <option value="0">无</option>
-                        <option value="0.3em">小</option>
-                        <option value="0.6em" selected="">中</option>
-                        <option value="0.9em">大</option>
-                        <option value="1.2em">特大</option>
-                    </select>
-                    <span style="width:1px;height:16px;background:#d4dae3;margin:0 1px;"></span>
-                    <button onclick="ktToggleBold()" id="kt-bold-btn" title="加粗 (Ctrl+B)" style="font-size:8pt;padding:2px 9px;border-radius:4px;border:0.5px solid #a8c4e0;background:#fff;color:#1a2a3a;cursor:pointer;font-weight:800;letter-spacing:0.5px;height:24px;">B</button>
-                    <!-- 字色 (split button) -->
-                    <div style="position:relative;display:inline-flex;align-items:center;gap:0;">
-                        <button onclick="ktApplyFontColor()" id="kt-fontcolor-btn" title="文字颜色" style="font-size:7.5pt;padding:2px 7px;border-radius:4px 0 0 4px;border:0.5px solid #a8c4e0;border-right:none;background:#fff;color:#2e86c1;cursor:pointer;display:flex;align-items:center;gap:3px;height:24px;"><span style="display:inline-block;width:11px;height:11px;border-radius:2px;background:var(--kt-fc-color,#c0392b);border:0.5px solid rgba(0,0,0,0.12);flex-shrink:0;"></span><span style="font-size:6.5pt;color:#555;">色</span></button>
-                        <button onclick="ktToggleFontColorPicker(event)" id="kt-fc-picker-btn" title="选择颜色" style="font-size:7pt;padding:2px 4px;border-radius:0 4px 4px 0;border:0.5px solid #a8c4e0;background:#fff;color:#555;cursor:pointer;height:24px;">▾</button>
-                        <div id="kt-fc-picker" style="display:none;position:absolute;top:calc(100% + 4px);left:0;z-index:999;background:#fff;border:0.5px solid #d0dae8;border-radius:8px;padding:8px 10px;box-shadow:0 4px 16px rgba(0,0,0,0.14);min-width:160px;">
-                            <div style="font-size:7pt;color:#888;margin-bottom:6px;font-weight:600;">文字颜色</div>
-                            <div style="display:flex;gap:5px;flex-wrap:wrap;" id="kt-fc-swatches"></div>
-                            <button onclick="ktRemoveFontColor()" style="margin-top:7px;font-size:7pt;padding:2px 8px;border-radius:3px;border:0.5px solid #d0dae8;background:#f4f7fb;color:#888;cursor:pointer;width:100%;">✕ 清除颜色</button>
-                        </div>
-                    </div>
-                    <span style="width:1px;height:16px;background:#d4dae3;margin:0 1px;"></span>
-                    <button onclick="ktAddAnnotation()" style="font-size:7.5pt;padding:2px 8px;border-radius:4px;border:0.5px solid #a8c4e0;background:#fff;color:#2e86c1;cursor:pointer;white-space:nowrap;height:24px;">＋ 注释</button>
-                    <button onclick="ktClearAnnotations()" title="清除所有注释" style="font-size:7.5pt;padding:2px 7px;border-radius:4px;border:0.5px solid #d0dae8;background:#fff;color:#aaa;cursor:pointer;white-space:nowrap;height:24px;">清除</button>
-                </div>
-            </div>
-            <!-- 学生模式画笔工具栏 -->
-            <div style="display: none; gap: 5px; align-items: center; flex-wrap: wrap;" id="kt-highlight-toolbar">
-                <button id="kt-mode-hl-btn" onclick="ktSetMode('highlight')" title="高亮笔" style="font-size: 7pt; padding: 2px 7px; border-radius: 3px; border: 0.5px solid rgb(224, 201, 122); background: rgb(253, 246, 236); color: rgb(122, 88, 0); cursor: pointer; white-space: nowrap; font-weight: 600; opacity: 0.35; pointer-events: none;">🖊 高亮</button>
-                <button onclick="ktSetHLColor('#fff176');ktSetMode('highlight')" id="kt-hl-y" title="黄色" style="width: 15px; height: 15px; border-radius: 3px; background: rgb(255, 241, 118); border: 1.5px solid rgb(230, 216, 0); cursor: pointer; opacity: 0.35; pointer-events: none;"></button>
-                <button onclick="ktSetHLColor('#b3e5fc');ktSetMode('highlight')" id="kt-hl-b" title="蓝色" style="width: 15px; height: 15px; border-radius: 3px; background: rgb(179, 229, 252); border: 0.5px solid rgb(204, 204, 204); cursor: pointer; opacity: 0.35; pointer-events: none;"></button>
-                <button onclick="ktSetHLColor('#c8e6c9');ktSetMode('highlight')" id="kt-hl-g" title="绿色" style="width: 15px; height: 15px; border-radius: 3px; background: rgb(200, 230, 201); border: 0.5px solid rgb(204, 204, 204); cursor: pointer; opacity: 0.35; pointer-events: none;"></button>
-                <button onclick="ktSetHLColor('#f8bbd0');ktSetMode('highlight')" id="kt-hl-p" title="粉色" style="width: 15px; height: 15px; border-radius: 3px; background: rgb(248, 187, 208); border: 0.5px solid rgb(204, 204, 204); cursor: pointer; opacity: 0.35; pointer-events: none;"></button>
-                <button onclick="ktSetMode('hl-erase')" title="高亮橡皮擦" style="width: 20px; height: 20px; border-radius: 3px; background: rgb(255, 248, 225); border: 0.5px solid rgb(255, 224, 130); cursor: pointer; font-size: 9pt; line-height: 20px; text-align: center; opacity: 0.35; pointer-events: none;" id="kt-hl-erase"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;"><rect x="2" y="4" width="10" height="6" rx="1" fill="none" stroke="currentColor" stroke-width="1.3" transform="rotate(-15 7 7)"></rect><line x1="6" y1="4.2" x2="8" y2="10.2" stroke="currentColor" stroke-width="1" transform="rotate(-15 7 7)"></line></svg></button>
-                <button onclick="ktRemoveHighlight()" title="清除全部高亮" style="width: 15px; height: 15px; border-radius: 3px; background: rgb(244, 244, 244); border: 0.5px solid rgb(204, 204, 204); cursor: pointer; font-size: 8pt; line-height: 15px; text-align: center; opacity: 0.35; pointer-events: none;">✕</button>
-                <span style="width:1px;height:14px;background:#d4dae3;margin:0 1px;"></span>
-                <button id="kt-mode-draw-btn" onclick="ktSetMode('draw')" title="画笔" style="font-size: 7pt; padding: 2px 7px; border-radius: 3px; border: 0.5px solid rgb(192, 212, 232); background: rgb(255, 255, 255); color: rgb(85, 85, 85); cursor: pointer; white-space: nowrap; opacity: 0.35; pointer-events: none;">✏ 画笔</button>
-                <button onclick="ktDrawColor('#e53935');ktSetMode('draw')" title="红" style="width: 14px; height: 14px; border-radius: 50%; background: rgb(229, 57, 53); border: none; cursor: pointer; opacity: 0.35; pointer-events: none;"></button>
-                <button onclick="ktDrawColor('#1e88e5');ktSetMode('draw')" title="蓝" style="width: 14px; height: 14px; border-radius: 50%; background: rgb(30, 136, 229); border: none; cursor: pointer; opacity: 0.35; pointer-events: none;"></button>
-                <button onclick="ktDrawColor('#43a047');ktSetMode('draw')" title="绿" style="width: 14px; height: 14px; border-radius: 50%; background: rgb(67, 160, 71); border: none; cursor: pointer; opacity: 0.35; pointer-events: none;"></button>
-                <button onclick="ktDrawColor('#000');ktSetMode('draw')" title="黑" style="width: 14px; height: 14px; border-radius: 50%; background: rgb(34, 34, 34); border: none; cursor: pointer; opacity: 0.35; pointer-events: none;"></button>
-                <span style="width:1px;height:14px;background:#d4dae3;margin:0 1px;"></span>
-                <button onclick="ktDrawErase()" title="橡皮擦" style="width: 20px; height: 20px; background: none; border: 0.5px solid rgb(204, 204, 204); border-radius: 3px; padding: 0px; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0.35; pointer-events: none;">
-                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="2" y="5" width="10" height="6" rx="1" fill="#f5c6a0" stroke="#c8845a" stroke-width="0.8"></rect>
-                        <rect x="7" y="5" width="5" height="6" rx="0" fill="#e8967a" stroke="#c8845a" stroke-width="0.8"></rect>
-                        <line x1="2" y1="11" x2="12" y2="11" stroke="#c8845a" stroke-width="0.8"></line>
-                        <line x1="7" y1="5" x2="7" y2="11" stroke="#c8845a" stroke-width="0.8"></line>
-                    </svg>
-                </button>
-                <select onchange="_ktDrawLineWidth=parseFloat(this.value)" title="线宽" style="font-size: 7pt; height: 20px; border: 0.5px solid rgb(204, 204, 204); border-radius: 3px; padding: 0px 2px; background: rgb(255, 255, 255); color: rgb(85, 85, 85); cursor: pointer; opacity: 0.35; pointer-events: none;">
-                    <option value="0.8">细</option>
-                    <option value="1.5">中</option>
-                    <option value="3">粗</option>
-                </select>
-                <button onclick="ktDrawClear()" title="清除画笔" style="font-size: 7pt; background: none; border: 0.5px solid rgb(204, 204, 204); border-radius: 3px; padding: 0px 4px; height: 20px; cursor: pointer; color: rgb(170, 170, 170); opacity: 0.35; pointer-events: none;">全清</button>
-                <span id="kt-hl-pen-tip" style="display:none;font-size:6.5pt;color:#b8860b;background:#fff9c4;border-radius:3px;padding:1px 5px;white-space:nowrap;" contenteditable="false">✏ 点两下标记范围</span>
-                <span style="flex:1;"></span>
-                <!-- 批注画笔总开关 -->
-                <label id="kt-annotate-label" title="开启后可在文章上自由画线批注" style="display:flex;align-items:center;gap:5px;cursor:pointer;user-select:none;flex-shrink:0;">
-                    <span style="font-size:6.5pt;color:#888;white-space:nowrap;">批注</span>
-                    <span id="kt-annotate-track" style="position:relative;display:inline-block;width:30px;height:16px;border-radius:8px;background:#d1d5db;transition:background 0.2s;flex-shrink:0;">
-                        <span id="kt-annotate-thumb" style="position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.25);transition:left 0.2s;"></span>
-                    </span>
-                </label>
-            </div>
-        </div>
-        <!-- 文本内容区 + 手写层 -->
-        <div id="kt-text-body" style="padding:12px 14px 14px;flex:1;overflow-y:auto;min-height:0;font-size:9.5pt;line-height:2.4;color:#1a1a1a;position:relative;">
-            <div id="kt-text-content" style="outline:none;position:relative;z-index:1;" contenteditable="false"><p style="margin-bottom:0.6em;"><strong>1</strong>　人与人之间存在着各种各样的<ruby class="kt-ruby" data-py="shè huì guān xì" data-zh="人与人之间互动、联系的方式" data-en="social relationships" data-tip="拼音：shè huì guān xì
-华文：人与人之间互动、联系的方式
-英文：social relationships" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>社会关系</span><rt>shè huì guān xì</rt></ruby>。其中，每个人都会面对的就是邻里关系，建立良好的邻里关系非常重要。</p>
+  <!-- Edit模式下的添加按钮 -->
+  <div id="yj-add-btn-wrap" style="display:none;text-align:center;margin:16px 0 8px;">
+    <button onclick="yjAddExtraUnit()" style="background:#eef4fb;border:1.5px dashed #7bafd4;color:#1a4070;border-radius:8px;padding:8px 28px;font-size:9pt;font-family:inherit;cursor:pointer;font-weight:600;">➕ 添加题目</button>
+  </div>
 
-<p style="margin-bottom:0.6em;"><strong>2</strong>　邻里之间，<ruby class="kt-ruby" data-py="chún chǐ xiāng yī" data-zh="比喻关系密切，互相依赖" data-en="interdependent like lips and teeth" data-tip="拼音：chún chǐ xiāng yī
-华文：比喻关系密切，互相依赖
-英文：interdependent like lips and teeth" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>唇齿相依</span><rt>chún chǐ xiāng yī</rt></ruby>，不是亲人，<ruby class="kt-ruby" data-py="shèng sì qīn rén" data-zh="比亲人还要亲近" data-en="better than relatives" data-tip="拼音：shèng sì qīn rén
-华文：比亲人还要亲近
-英文：better than relatives" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>胜似亲人</span><rt>shèng sì qīn rén</rt></ruby>。<ruby class="kt-ruby" data-py="sú huà" data-zh="民间流传的通俗语句" data-en="a saying; common proverb" data-tip="拼音：sú huà
-华文：民间流传的通俗语句
-英文：a saying; common proverb" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>俗话</span><rt>sú huà</rt></ruby>说："远亲不如近邻。""远亲"虽是亲人，但因彼此距离遥远，不可能<ruby class="kt-ruby" data-py="jīng cháng" data-zh="时常；常常" data-en="often; frequently" data-tip="拼音：jīng cháng
-华文：时常；常常
-英文：often; frequently" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>经常</span><rt>jīng cháng</rt></ruby>见面。相反的，我们与邻居却每天<ruby class="kt-ruby" data-py="tái tóu bú jiàn dī tóu jiàn" data-zh="形容每天都会见面" data-en="to see each other every day whether you look up or down" data-tip="拼音：tái tóu bú jiàn dī tóu jiàn
-华文：形容每天都会见面
-英文：to see each other every day whether you look up or down" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>抬头不见低头见</span><rt>tái tóu bú jiàn dī tóu jiàn</rt></ruby>，关系往往比"远亲"更亲近。在日常生活中，当你遇到<ruby class="kt-ruby" data-py="yì xiǎng bú dào" data-zh="没有料到；出乎意料" data-en="unexpected; unforeseen" data-tip="拼音：yì xiǎng bú dào
-华文：没有料到；出乎意料
-英文：unexpected; unforeseen" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>意想不到</span><rt>yì xiǎng bú dào</rt></ruby>的紧急情况需要帮助的时候，远方的亲戚无法及时赶到。这时，可以马上伸出援手的常常是住家附近的邻居。</p>
-
-<p style="margin-bottom:0.6em;"><strong>3</strong>　几年前，<ruby class="kt-ruby" data-py="Yù lǎng dōng" data-zh="新加坡西部一个市镇" data-en="Jurong East (a town in Singapore)" data-tip="拼音：Yù lǎng dōng
-华文：新加坡西部一个市镇
-英文：Jurong East (a town in Singapore)" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>裕廊东</span><rt>Yù lǎng dōng</rt></ruby>一个组屋单位发生<ruby class="kt-ruby" data-py="huǒ huàn" data-zh="火灾；发生火灾的灾难" data-en="a fire; fire disaster" data-tip="拼音：huǒ huàn
-华文：火灾；发生火灾的灾难
-英文：a fire; fire disaster" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>火患</span><rt>huǒ huàn</rt></ruby>，失火的单位住着林女士一家母女三人。虽然她们<ruby class="kt-ruby" data-py="jiǎo xìng táo shēng" data-zh="幸运地脱离危险，保住性命" data-en="to escape by luck; to survive narrowly" data-tip="拼音：jiǎo xìng táo shēng
-华文：幸运地脱离危险，保住性命
-英文：to escape by luck; to survive narrowly" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>侥幸逃生</span><rt>jiǎo xìng táo shēng</rt></ruby>，但无情的大火把家中的一切全部烧光了。在她们最<ruby class="kt-ruby" data-py="jiān nán" data-zh="困苦；处境很差" data-en="difficult; hard" data-tip="拼音：jiān nán
-华文：困苦；处境很差
-英文：difficult; hard" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>艰难</span><rt>jiān nán</rt></ruby>的时候，邻居们<ruby class="kt-ruby" data-py="bù yuē ér tóng" data-zh="没有事先商量，却做出同样的行动" data-en="to act alike without prior agreement" data-tip="拼音：bù yuē ér tóng
-华文：没有事先商量，却做出同样的行动
-英文：to act alike without prior agreement" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>不约而同</span><rt>bù yuē ér tóng</rt></ruby>地伸出援手。有的<ruby class="kt-ruby" data-py="téng chū" data-zh="空出；腾空让出" data-en="to vacate; to free up" data-tip="拼音：téng chū
-华文：空出；腾空让出
-英文：to vacate; to free up" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>腾出</span><rt>téng chū</rt></ruby>房间让她们<ruby class="kt-ruby" data-py="zàn zhù" data-zh="暂时居住" data-en="to stay temporarily" data-tip="拼音：zàn zhù
-华文：暂时居住
-英文：to stay temporarily" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>暂住</span><rt>zàn zhù</rt></ruby>，有的为她们提供一日三餐，有的则帮忙处理搬家的事情。不仅如此，邻居们还纷纷<ruby class="kt-ruby" data-py="kāng kǎi jiě náng" data-zh="不计较钱财，慷慨地拿出钱来帮助别人" data-en="to donate generously; to open one's purse" data-tip="拼音：kāng kǎi jiě náng
-华文：不计较钱财，慷慨地拿出钱来帮助别人
-英文：to donate generously; to open one's purse" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>慷慨解囊</span><rt>kāng kǎi jiě náng</rt></ruby>，捐款捐物，帮她们<ruby class="kt-ruby" data-py="dù guò nán guān" data-zh="克服困难，渡过艰难的时期" data-en="to get through a difficult time; to overcome hardship" data-tip="拼音：dù guò nán guān
-华文：克服困难，渡过艰难的时期
-英文：to get through a difficult time; to overcome hardship" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>渡过难关</span><rt>dù guò nán guān</rt></ruby>。这些善良无私的行为汇成了一股股暖流，温暖了林家母女的心。所谓"一排篱笆十根桩，一家有难大家帮"，在<ruby class="kt-ruby" data-py="wēi jí" data-zh="非常紧急；形势危险" data-en="critical; in danger" data-tip="拼音：wēi jí
-华文：非常紧急；形势危险
-英文：critical; in danger" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>危急</span><rt>wēi jí</rt></ruby>时刻，更能看出邻里关系的重要。</p>
-
-<p style="margin-bottom:0.6em;"><strong>4</strong>　邻里关系的重要不只<ruby class="kt-ruby" data-py="tǐ xiàn" data-zh="表现出来；显示出来" data-en="to reflect; to embody" data-tip="拼音：tǐ xiàn
-华文：表现出来；显示出来
-英文：to reflect; to embody" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>体现</span><rt>tǐ xiàn</rt></ruby>在危急的<ruby class="kt-ruby" data-py="guān tóu" data-zh="关键的时刻；重要的时候" data-en="a critical moment; a turning point" data-tip="拼音：guān tóu
-华文：关键的时刻；重要的时候
-英文：a critical moment; a turning point" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>关头</span><rt>guān tóu</rt></ruby>，在日常生活的<ruby class="kt-ruby" data-py="diǎn diǎn dī dī" data-zh="形容细小的事情；点点滴滴" data-en="the little details; bits and pieces" data-tip="拼音：diǎn diǎn dī dī
-华文：形容细小的事情；点点滴滴
-英文：the little details; bits and pieces" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>点点滴滴</span><rt>diǎn diǎn dī dī</rt></ruby>中也能看出来。住在<ruby class="kt-ruby" data-py="Dàn bīn ní" data-zh="新加坡东部一个市镇" data-en="Tampines (a town in Singapore)" data-tip="拼音：Dàn bīn ní
-华文：新加坡东部一个市镇
-英文：Tampines (a town in Singapore)" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>淡滨尼</span><rt>Dàn bīn ní</rt></ruby>的马来同胞阿都拉与邻居的关系一向<ruby class="kt-ruby" data-py="róng qià" data-zh="和睦；关系良好" data-en="harmonious; on good terms" data-tip="拼音：róng qià
-华文：和睦；关系良好
-英文：harmonious; on good terms" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>融洽</span><rt>róng qià</rt></ruby>。<ruby class="kt-ruby" data-py="nóng lì xīn nián" data-zh="华人传统新年，即春节" data-en="Chinese New Year; Lunar New Year" data-tip="拼音：nóng lì xīn nián
-华文：华人传统新年，即春节
-英文：Chinese New Year; Lunar New Year" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>农历新年</span><rt>nóng lì xīn nián</rt></ruby>时，他<ruby class="kt-ruby" data-py="zhǔ dòng" data-zh="自己主动去做；不等别人要求" data-en="to take the initiative; on one's own accord" data-tip="拼音：zhǔ dòng
-华文：自己主动去做；不等别人要求
-英文：to take the initiative; on one's own accord" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>主动</span><rt>zhǔ dòng</rt></ruby>在居住楼层的走廊布置新年装饰，为大家<ruby class="kt-ruby" data-py="yíng zào" data-zh="创造；制造出某种氛围或环境" data-en="to create; to build up (an atmosphere)" data-tip="拼音：yíng zào
-华文：创造；制造出某种氛围或环境
-英文：to create; to build up (an atmosphere)" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>营造</span><rt>yíng zào</rt></ruby><ruby class="kt-ruby" data-py="xǐ qìng" data-zh="喜庆的；欢乐热闹的" data-en="festive; joyous" data-tip="拼音：xǐ qìng
-华文：喜庆的；欢乐热闹的
-英文：festive; joyous" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>喜庆</span><rt>xǐ qìng</rt></ruby>的<ruby class="kt-ruby" data-py="jiā jié fēn wéi" data-zh="节日的气氛；欢乐的节庆环境" data-en="festive atmosphere" data-tip="拼音：jiā jié fēn wéi
-华文：节日的气氛；欢乐的节庆环境
-英文：festive atmosphere" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>佳节氛围</span><rt>jiā jié fēn wéi</rt></ruby>。当被问及为何这么做时，阿都拉说，当年父亲去世的时候，他<ruby class="kt-ruby" data-py="xīn lì jiāo cuì" data-zh="精力、体力、心思都用尽了，非常疲惫" data-en="exhausted in body and mind" data-tip="拼音：xīn lì jiāo cuì
-华文：精力、体力、心思都用尽了，非常疲惫
-英文：exhausted in body and mind" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>心力交瘁</span><rt>xīn lì jiāo cuì</rt></ruby>，没有时间顾及家里的大小事。幸好<ruby class="kt-ruby" data-py="zuǒ lín yòu shè" data-zh="周围的邻居；左边右边的邻居" data-en="neighbours on all sides" data-tip="拼音：zuǒ lín yòu shè
-华文：周围的邻居；左边右边的邻居
-英文：neighbours on all sides" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>左邻右舍</span><rt>zuǒ lín yòu shè</rt></ruby>主动慰问，帮他照料<ruby class="kt-ruby" data-py="pén zāi" data-zh="种在盆里的植物" data-en="potted plants" data-tip="拼音：pén zāi
-华文：种在盆里的植物
-英文：potted plants" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>盆栽</span><rt>pén zāi</rt></ruby>，打扫走廊，<ruby class="kt-ruby" data-py="shū jiě" data-zh="解除；减轻（压力、情绪等）" data-en="to relieve; to ease (pressure or stress)" data-tip="拼音：shū jiě
-华文：解除；减轻（压力、情绪等）
-英文：to relieve; to ease (pressure or stress)" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>疏解</span><rt>shū jiě</rt></ruby>了他身心上所承受的巨大<ruby class="kt-ruby" data-py="yā lì" data-zh="心理或身体上的负担和紧张" data-en="pressure; stress" data-tip="拼音：yā lì
-华文：心理或身体上的负担和紧张
-英文：pressure; stress" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>压力</span><rt>yā lì</rt></ruby>。因此，他想借农历新年的装饰表达感激之情，也希望借此<ruby class="kt-ruby" data-py="lā jìn" data-zh="使关系变得更亲近" data-en="to bring closer; to narrow the distance" data-tip="拼音：lā jìn
-华文：使关系变得更亲近
-英文：to bring closer; to narrow the distance" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>拉近</span><rt>lā jìn</rt></ruby>各族邻居之间的关系。</p>
-
-<p style="margin-bottom:0.6em;"><strong>5</strong>　不管是遇到<ruby class="kt-ruby" data-py="jǐn jí qíng kuàng" data-zh="紧急的情况；危急的时刻" data-en="emergency; urgent situation" data-tip="拼音：jǐn jí qíng kuàng
-华文：紧急的情况；危急的时刻
-英文：emergency; urgent situation" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>紧急情况</span><rt>jǐn jí qíng kuàng</rt></ruby>，还是帮忙处理日常小事，都能看出邻里关系的重要。亲人虽亲，也可能有照顾不到的时候。如果邻居能够<ruby class="kt-ruby" data-py="xuě zhōng sòng tàn" data-zh="在别人最困难的时候给予帮助（比喻）" data-en="to offer help in time of need; to send charcoal in snowy weather (idiom)" data-tip="拼音：xuě zhōng sòng tàn
-华文：在别人最困难的时候给予帮助（比喻）
-英文：to offer help in time of need; to send charcoal in snowy weather (idiom)" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>雪中送炭</span><rt>xuě zhōng sòng tàn</rt></ruby>，则<ruby class="kt-ruby" data-py="qià hǎo" data-zh="正好；恰恰好" data-en="just right; exactly" data-tip="拼音：qià hǎo
-华文：正好；恰恰好
-英文：just right; exactly" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>恰好</span><rt>qià hǎo</rt></ruby>可以<ruby class="kt-ruby" data-py="mí bǔ" data-zh="弥补不足；填补缺陷" data-en="to make up for; to compensate" data-tip="拼音：mí bǔ
-华文：弥补不足；填补缺陷
-英文：to make up for; to compensate" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>弥补</span><rt>mí bǔ</rt></ruby>这种<ruby class="kt-ruby" data-py="quē hàn" data-zh="不圆满；遗憾的地方" data-en="a deficiency; a regret; something lacking" data-tip="拼音：quē hàn
-华文：不圆满；遗憾的地方
-英文：a deficiency; a regret; something lacking" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>缺憾</span><rt>quē hàn</rt></ruby>。正如<ruby class="kt-ruby" data-py="yàn yǔ" data-zh="民间流传的有道理的短句" data-en="a proverb; an adage" data-tip="拼音：yàn yǔ
-华文：民间流传的有道理的短句
-英文：a proverb; an adage" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>谚语</span><rt>yàn yǔ</rt></ruby>所说："没有木头，支不起房子；没有邻居，过不好日子。"与邻居<ruby class="kt-ruby" data-py="hé mù xiāng chǔ" data-zh="和谐、友好地相处在一起" data-en="to get along harmoniously" data-tip="拼音：hé mù xiāng chǔ
-华文：和谐、友好地相处在一起
-英文：to get along harmoniously" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>和睦相处</span><rt>hé mù xiāng chǔ</rt></ruby>，可以让我们的生活更加愉快，更加<ruby class="kt-ruby" data-py="shū xīn" data-zh="舒适惬意；心情轻松" data-en="comfortable; at ease" data-tip="拼音：shū xīn
-华文：舒适惬意；心情轻松
-英文：comfortable; at ease" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>舒心</span><rt>shū xīn</rt></ruby>。</p>
-
-<p style="margin-bottom:0.6em;"><strong>6</strong>　要让邻里关系更加<ruby class="kt-ruby" data-py="hé mù" data-zh="和谐；感情好，相处愉快" data-en="harmonious; amicable" data-tip="拼音：hé mù
-华文：和谐；感情好，相处愉快
-英文：harmonious; amicable" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>和睦</span><rt>hé mù</rt></ruby>，邻居之间应该多一些关心，少一些<ruby class="kt-ruby" data-py="lěng mò" data-zh="不关心；态度冷淡" data-en="indifference; coldness" data-tip="拼音：lěng mò
-华文：不关心；态度冷淡
-英文：indifference; coldness" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>冷漠</span><rt>lěng mò</rt></ruby>；多一些<ruby class="kt-ruby" data-py="bāo róng" data-zh="宽容；接受并原谅别人的不足" data-en="tolerance; acceptance" data-tip="拼音：bāo róng
-华文：宽容；接受并原谅别人的不足
-英文：tolerance; acceptance" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>包容</span><rt>bāo róng</rt></ruby>，少一些<ruby class="kt-ruby" data-py="tiāo tì" data-zh="对别人的缺点或不足过分挑剔" data-en="fault-finding; fussiness" data-tip="拼音：tiāo tì
-华文：对别人的缺点或不足过分挑剔
-英文：fault-finding; fussiness" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>挑剔</span><rt>tiāo tì</rt></ruby>；多一些<ruby class="kt-ruby" data-py="lǐ ràng" data-zh="谦让；主动让步给别人" data-en="courtesy; to yield to others" data-tip="拼音：lǐ ràng
-华文：谦让；主动让步给别人
-英文：courtesy; to yield to others" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>礼让</span><rt>lǐ ràng</rt></ruby>，少一些<ruby class="kt-ruby" data-py="jì jiào" data-zh="斤斤计较；对小事过分在意" data-en="to haggle over; to be petty" data-tip="拼音：jì jiào
-华文：斤斤计较；对小事过分在意
-英文：to haggle over; to be petty" data-color="#1565c0" data-rubystyle="soft" style="--rc: #1565c0; --rca: rgba(21,101,192,0.18);"><span>计较</span><rt>jì jiào</rt></ruby>。如果能做到这几点，那么家家户户都可以拥有"不是亲人，胜似亲人"的好邻居。</p></div>
-            <!-- 手写层：仅学生模式下叠在文本上方 -->
-            <canvas id="kt-draw-canvas" style="display: none; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; z-index: 2; cursor: crosshair; touch-action: none; pointer-events: none;" width="800" height="300"></canvas>
-            <!-- 手写工具栏已移至header合并行，此处无需重复 -->
-        </div>
-        <!-- 注释列表（老师版有注释时显示，在编辑态下可见） -->
-        <div id="kt-annotation-list" style="display: none;"></div>
-    </div>
-    <div id="kt-dual-handle" style="width: 8px; cursor: default; display: flex; align-items: center; justify-content: center; flex-shrink: 0; z-index: 10; margin: 0px 1px; pointer-events: none; visibility: hidden;" title="拖拽调整宽度">
-        <div style="width:2px;height:40px;background:#d1d5db;border-radius:2px;pointer-events:none;"></div>
-    </div>
-    <div class="kt-phase1" style="border:0.5px solid #c8d8f0;border-radius:8px;overflow:hidden;display:flex;flex-direction:column;min-width:0;transition:all 0.25s;" id="kt-reading-section">
-        <div style="background:linear-gradient(135deg,#eef4fb 0%,#e8f0fa 100%);border-bottom:0.5px solid #c8d8f0;padding:6px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
-            <span style="font-size:9.5pt;font-weight:700;color:#1a4070;" contenteditable="false">❓ 阅读理解</span>
-            <div style="display:flex;align-items:center;gap:5px;">
-                <div style="display: none;" id="kt-reading-toolbar">
-                    <button onclick="ktReadingAddQ()" style="font-size:7.5pt;padding:2px 9px;border-radius:4px;border:0.5px solid #a8c4e0;background:#fff;color:#2e86c1;cursor:pointer;white-space:nowrap;">＋ 加题目</button>
-                </div>
-                <!-- 折叠/展开按钮已移除；可通过版面设置菜单控制阅读理解栏的显示 -->
-            </div>
-        </div>
-        <div id="kt-reading-body" style="padding:10px 12px 12px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;flex:1;">
-            <div class="kt-reading-q" data-qid="1">
-                <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:4px;">
-                    <span style="font-size:9pt;font-weight:700;color:#2e86c1;white-space:nowrap;min-width:1.8em;">1.</span>
-                    <div class="kt-rq-text" contenteditable="false" style="flex:1;font-size:9pt;color:#1a2a3a;outline:none;line-height:1.65;">根据材料，回答以下问题。</div>
-                    <div class="kt-rq-edit-btns" style="display: none; gap: 3px; flex-shrink: 0;">
-                        <button onclick="ktReadingEditQ(this)" style="font-size:7pt;padding:1px 5px;border-radius:3px;border:0.5px solid #a8c4e0;background:#fff;color:#2e86c1;cursor:pointer;">编辑</button>
-                        <button onclick="ktReadingDelQ(this)" style="font-size:7pt;padding:1px 5px;border-radius:3px;border:0.5px solid #e8b4b4;background:#fff;color:#c0392b;cursor:pointer;">删除</button>
-                    </div>
-                </div>
-                <textarea class="kt-rq-answer" placeholder="在此作答……" style="width: 100%; min-height: 70px; border: 0.5px solid rgb(200, 216, 240); border-radius: 4px; padding: 6px 8px; font-size: 9pt; font-family: inherit; resize: vertical; box-sizing: border-box; outline: none; line-height: 1.6; color: rgb(26, 42, 58); background: rgb(255, 255, 255); opacity: 1;" autocorrect="off" autocapitalize="none" spellcheck="false"></textarea>
-            </div>
-        </div>
-    </div>
-    </div>
-    <!-- 上下拖拽调整双栏高度（仅老师版） -->
-    <div id="kt-vertical-handle" style="height: 8px; cursor: row-resize; display: none; align-items: center; justify-content: center; margin-bottom: 2px;" title="拖拽调整高度">
-        <div style="width:40px;height:2px;background:#d1d5db;border-radius:2px;pointer-events:none;"></div>
-    </div>
-
-    <!-- ══ 第二部分：课堂任务 ══ -->
-    <div id="kt-task-wrapper">
-    <div class="kt-phase1" style="border:0.5px solid #c8d8f0;border-radius:8px;overflow:hidden;margin-bottom:10px;" id="kt-questions-section">
-        <div style="background:#eef4fb;border-bottom:0.5px solid #c8d8f0;padding:6px 13px;display:flex;align-items:center;justify-content:space-between;">
-            <span id="kt-task-title" contenteditable="false" style="font-size:10pt;font-weight:700;color:#1a4070;outline:none;min-width:4em;">✏️ 课堂任务</span>
-            <!-- 编辑模式下的操作栏 -->
-            <div style="display: none; gap: 6px; align-items: center;" id="kt-task-toolbar">
-                <button onclick="ktAddQuestion()" style="font-size:7.5pt;padding:2px 9px;border-radius:4px;border:0.5px solid #a8c4e0;background:#fff;color:#2e86c1;cursor:pointer;white-space:nowrap;">＋ 加题目</button>
-            </div>
-            <!-- 学生模式下：全区切换 -->
-
-        </div>
-        <div id="kt-questions-body" style="padding:10px 14px 12px;display:flex;flex-direction:column;gap:12px;">
-
-            <!-- 默认题目 1 -->
-            <div class="kt-q-block" data-qid="1" data-size="m" data-mode="text">
-                <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:5px;">
-                    <span class="kt-q-num" style="font-size:9pt;font-weight:700;color:#2e86c1;white-space:nowrap;padding-top:1px;min-width:2em;">1.</span>
-                    <div class="kt-q-text" contenteditable="false" style="flex:1;font-size:9pt;color:#1a2a3a;outline:none;line-height:1.65;">根据材料，回答以下问题。</div>
-                    <!-- 编辑模式控件 -->
-                    <div class="kt-q-controls" style="display: none; gap: 4px; flex-shrink: 0; align-items: center;">
-                        <select class="kt-size-sel" onchange="ktResizeBox(this)" style="font-size:7pt;border:0.5px solid #d0dae8;border-radius:3px;padding:1px 3px;background:#fff;color:#555;cursor:pointer;">
-                            <option value="s">小</option>
-                            <option value="m" selected="">中</option>
-                            <option value="l">大</option>
-                        </select>
-                        <button onclick="ktRemoveQuestion(this)" style="font-size:8pt;color:#ccc;background:none;border:none;cursor:pointer;padding:0 2px;">✕</button>
-                    </div>
-                    <!-- 学生模式：单题模式切换 -->
-                    <div class="kt-q-mode-btns" style="display:none;gap:3px;flex-shrink:0;align-items:center;">
-                        <button onclick="ktSwitchMode(this,'text')" title="文字输入" style="font-size:7pt;padding:2px 6px;border-radius:3px;border:0.5px solid #c0d4e8;background:#e8f2fb;color:#2e86c1;cursor:pointer;">📝</button>
-                        <button onclick="ktSwitchMode(this,'canvas')" title="手写画布" style="font-size:7pt;padding:2px 6px;border-radius:3px;border:0.5px solid #c0d4e8;background:#fff;color:#555;cursor:pointer;">🖊</button>
-                        <button onclick="ktSwitchMode(this,'mindmap')" title="思维导图" style="font-size:7pt;padding:2px 6px;border-radius:3px;border:0.5px solid #c0d4e8;background:#fff;color:#555;cursor:pointer;">🧠</button>
-                    </div>
-                </div>
-                <!-- 文字模式 -->
-                <div class="kt-mode-text">
-                    <textarea class="kt-answer-box" placeholder="在这里作答……" style="width:100%;min-height:58px;height:58px;max-height:80vh;border:0.5px solid #c0d4e8;border-radius:5px;padding:7px 10px;font-size:9pt;font-family:inherit;resize:vertical;line-height:1.7;box-sizing:border-box;background:transparent;outline:none;" autocorrect="off" autocapitalize="none" spellcheck="false"></textarea>
-                </div>
-                <!-- 画布模式（默认隐藏） -->
-                <div class="kt-mode-canvas" style="display:none;position:relative;border:0.5px solid #c0d4e8;border-radius:5px;overflow:auto;background:#fafcff;resize:vertical;min-height:180px;">
-                    <canvas class="kt-q-canvas" width="900" height="180" style="width:100%;height:100%;min-height:180px;cursor:crosshair;touch-action:none;display:block;"></canvas>
-                    <div style="position:absolute;bottom:4px;right:6px;display:flex;gap:4px;">
-                        <button onclick="ktQCanvasClear(this)" style="font-size:7pt;padding:1px 7px;border-radius:3px;border:0.5px solid #ccc;background:rgba(255,255,255,0.88);color:#888;cursor:pointer;">全清</button>
-                    </div>
-                </div>
-                <!-- 思维导图模式（默认隐藏） -->
-                <div class="kt-mode-mindmap" style="display:none;">
-                    <div class="kt-mm-editor" style="border:0.5px solid #c0d4e8;border-radius:5px;padding:8px 10px;background:#fafcff;">
-                        <div style="font-size:7.5pt;color:#888;margin-bottom:5px;" contenteditable="false">🧠 输入大纲（每行一个节点，用空格缩进表示层级）：</div>
-                        <textarea class="kt-mm-input" oninput="ktMmLivePreview(this)" placeholder="中心主题
-- 分支一
-- 分支二
-  - 细节（缩进=子节点）" style="width:100%;height:90px;border:0.5px solid #c8d8ee;border-radius:4px;padding:5px 8px;font-size:8.5pt;font-family:monospace;resize:none;line-height:1.7;box-sizing:border-box;background:#fff;outline:none;" onkeydown="ktMmTabKey(event)" autocorrect="off" autocapitalize="none" spellcheck="false"></textarea>
-                        <div style="display:flex;gap:6px;align-items:center;margin-top:6px;flex-wrap:wrap;">
-                            <button onclick="ktRenderMindmap(this)" style="font-size:7.5pt;padding:2px 10px;border-radius:4px;border:0.5px solid #a8c4e0;background:#fff;color:#2e86c1;cursor:pointer;">Preview</button>
-                            <button onclick="ktMmIndent(this,-1)" title="Shift+Tab：退缩一级" style="font-size:7.5pt;padding:2px 8px;border-radius:4px;border:0.5px solid #b8c8d8;background:#f4f7fb;color:#555;cursor:pointer;">← 退缩</button>
-                            <button onclick="ktMmIndent(this,1)" title="Tab：缩进一级" style="font-size:7.5pt;padding:2px 8px;border-radius:4px;border:0.5px solid #b8c8d8;background:#f4f7fb;color:#555;cursor:pointer;">缩进 →</button>
-                            <button class="kt-mm-dir-toggle" data-dir="h" onclick="ktToggleMmDir(this)" style="font-size:7pt;padding:2px 7px;border-radius:3px;border:0.5px solid #b8c8d8;background:#f4f7fb;color:#555;cursor:pointer;">↔ 横向</button>
-                            <span style="font-size:7pt;color:#aaa;" contenteditable="false">样式：</span>
-                            <label style="font-size:7pt;color:#555;cursor:pointer;"><input type="radio" name="kt-mm-style-1" value="tree" checked="" style="margin-right:2px;">树状</label>
-                            <label style="font-size:7pt;color:#555;cursor:pointer;"><input type="radio" name="kt-mm-style-1" value="bracket" style="margin-right:2px;">方括号</label>
-                            <label style="font-size:7pt;color:#555;cursor:pointer;"><input type="radio" name="kt-mm-style-1" value="oval" style="margin-right:2px;">圆括号</label>
-                        </div>
-                    </div>
-                    <div class="kt-mm-preview" style="display:none;margin-top:6px;border:0.5px solid #c0d4e8;border-radius:5px;overflow:hidden;background:#fff;">
-                        <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 10px;background:#f4f7fb;border-bottom:0.5px solid #d0dae8;">
-                            <span style="font-size:7.5pt;color:#888;" contenteditable="false">思维导图预览</span>
-                            <button onclick="ktCloseMindmapPreview(this)" style="font-size:7pt;background:none;border:none;color:#aaa;cursor:pointer;">收起 ▲</button>
-                        </div>
-                        <div class="kt-mm-svg-wrap" style="padding:10px;overflow:auto;"></div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    </div><!-- end kt-task-wrapper -->
-    <!-- ══ 第三部分：写后复盘 + 与同学分享 ══ -->
-    <div id="kt-bottom-row" style="display:grid;grid-template-columns:55fr 45fr;gap:10px 12px;">
-
-        <!-- 写后复盘 -->
-        <div id="kt-phase2-wrapper"><div class="kt-phase2" style="border:0.5px solid #c8d8f0;border-radius:8px;overflow:hidden;">
-            <div style="background:#eef4fb;border-bottom:0.5px solid #c8d8f0;padding:6px 13px;display:flex;align-items:center;justify-content:space-between;">
-                <span style="font-size:10pt;font-weight:700;color:#1a4070;" contenteditable="false">✅ 写后复盘</span>
-                <button class="review-add-btn" onclick="reviewAddItem(this,'kt')" style="display: none; font-size: 7.5pt; padding: 2px 9px; border-radius: 4px; border: 0.5px solid rgb(168, 196, 224); background: rgb(255, 255, 255); color: rgb(46, 134, 193); cursor: pointer; white-space: nowrap;">＋ 添加项目</button>
-                <button class="review-restore-btn" onclick="reviewRestoreDefaults(this)" data-tpl="kt" style="display: none; font-size: 7.5pt; padding: 2px 9px; border-radius: 4px; border: 0.5px solid rgb(184, 212, 240); background: rgb(255, 255, 255); color: rgb(74, 127, 193); cursor: pointer; white-space: nowrap;">↺ 恢复</button>
-            </div>
-            <div style="padding:10px 13px 12px;display:flex;flex-direction:column;gap:8px;">
-                <div style="font-size:8.5pt;color:#333;font-weight:600;" contenteditable="false">✍️ 我表现得怎么样？</div>
-                <div id="kt-review-grid" style="display:grid;grid-template-columns:1.4em auto 1fr 3em 3.5em;gap:5px 8px;font-size:8pt;color:#2c3e50;align-items:baseline;">
-                    <span style="color:#888;font-size:7pt;" data-delrow="row-kt-self-1">①</span>
-                    <span style="font-weight:600;color:#4a7fc1;white-space:nowrap;" contenteditable="false" data-delrow="row-kt-self-1">理解：</span>
-                    <span style="color:#555;" contenteditable="false" data-delrow="row-kt-self-1">我能理解材料的主要内容。</span>
-                    <label style="display:flex;align-items:center;gap:3px;white-space:nowrap;cursor:pointer;justify-content:center;" data-delrow="row-kt-self-1"><input type="checkbox" data-group="kt-self-1" onchange="enforceOneCheck(this)" style="accent-color:#4a7fc1;width:12px;height:12px;"> 是</label>
-                    <label style="display:flex;align-items:center;gap:3px;white-space:nowrap;cursor:pointer;overflow:visible;" data-delrow="row-kt-self-1"><input type="checkbox" data-group="kt-self-1" onchange="enforceOneCheck(this)" style="accent-color:#4a7fc1;width:12px;height:12px;"> 不是<button class="review-item-del" title="删除此项" style="display: none; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0; background: rgb(254, 226, 226); color: rgb(220, 38, 38); border: 1px solid rgb(252, 165, 165); border-radius: 4px; font-size: 9px; font-weight: 700; cursor: pointer; padding: 0px; line-height: 1; margin-left: 6px; vertical-align: middle; transition: background 0.15s;">✕</button></label>
-
-                    <span style="color:#888;font-size:7pt;" data-delrow="row-kt-self-2">②</span>
-                    <span style="font-weight:600;color:#1e8449;white-space:nowrap;" contenteditable="false" data-delrow="row-kt-self-2">作答：</span>
-                    <span style="color:#555;" contenteditable="false" data-delrow="row-kt-self-2">我的答案有根据材料来回答。</span>
-                    <label style="display:flex;align-items:center;gap:3px;white-space:nowrap;cursor:pointer;justify-content:center;" data-delrow="row-kt-self-2"><input type="checkbox" data-group="kt-self-2" onchange="enforceOneCheck(this)" style="accent-color:#4a7fc1;width:12px;height:12px;"> 是</label>
-                    <label style="display:flex;align-items:center;gap:3px;white-space:nowrap;cursor:pointer;overflow:visible;" data-delrow="row-kt-self-2"><input type="checkbox" data-group="kt-self-2" onchange="enforceOneCheck(this)" style="accent-color:#4a7fc1;width:12px;height:12px;"> 不是<button class="review-item-del" title="删除此项" style="display: none; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0; background: rgb(254, 226, 226); color: rgb(220, 38, 38); border: 1px solid rgb(252, 165, 165); border-radius: 4px; font-size: 9px; font-weight: 700; cursor: pointer; padding: 0px; line-height: 1; margin-left: 6px; vertical-align: middle; transition: background 0.15s;">✕</button></label>
-
-                    <span style="color:#888;font-size:7pt;" data-delrow="row-kt-self-3">③</span>
-                    <span style="font-weight:600;color:#8e44ad;white-space:nowrap;" contenteditable="false" data-delrow="row-kt-self-3">收获：</span>
-                    <span style="color:#555;" contenteditable="false" data-delrow="row-kt-self-3">我学到了新的内容或方法。</span>
-                    <label style="display:flex;align-items:center;gap:3px;white-space:nowrap;cursor:pointer;justify-content:center;" data-delrow="row-kt-self-3"><input type="checkbox" data-group="kt-self-3" onchange="enforceOneCheck(this)" style="accent-color:#4a7fc1;width:12px;height:12px;"> 是</label>
-                    <label style="display:flex;align-items:center;gap:3px;white-space:nowrap;cursor:pointer;overflow:visible;" data-delrow="row-kt-self-3"><input type="checkbox" data-group="kt-self-3" onchange="enforceOneCheck(this)" style="accent-color:#4a7fc1;width:12px;height:12px;"> 不是<button class="review-item-del" title="删除此项" style="display: none; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0; background: rgb(254, 226, 226); color: rgb(220, 38, 38); border: 1px solid rgb(252, 165, 165); border-radius: 4px; font-size: 9px; font-weight: 700; cursor: pointer; padding: 0px; line-height: 1; margin-left: 6px; vertical-align: middle; transition: background 0.15s;">✕</button></label>
-                </div>
-                <!-- 自定义复盘项目区 -->
-                <div id="kt-review-custom" style="display:flex;flex-direction:column;gap:4px;"></div>
-            </div>
-        </div></div>
-
-        <!-- 与同学分享 -->
-        <div id="kt-share-wrapper"><div class="share-zone" style="border:0.5px solid #b0d4c0;border-radius:8px;display:flex;flex-direction:column;">
-            <div style="background:#f0fbf6;border-bottom:0.5px solid #b0d4c0;padding:6px 11px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;">
-                <span style="font-size:10pt;font-weight:700;color:#085041;" contenteditable="false">🗣️ 与同学分享</span>
-                <button class="share-add-btn" onclick="shareAddItem(this,'kt')" style="display: none; font-size: 7.5pt; padding: 2px 9px; border-radius: 4px; border: 0.5px solid rgb(133, 197, 160); background: rgb(255, 255, 255); color: rgb(8, 80, 65); cursor: pointer; white-space: nowrap;">＋ 添加反馈项</button>
-                <button class="share-restore-btn" onclick="shareRestoreDefaults(this)" data-tpl="kt" style="display: none; font-size: 7.5pt; padding: 2px 9px; border-radius: 4px; border: 0.5px solid rgb(133, 197, 160); background: rgb(255, 255, 255); color: rgb(8, 80, 65); cursor: pointer; white-space: nowrap;">↺ 恢复</button>
-            </div>
-            <div style="padding:10px 11px 12px;display:flex;flex-direction:column;gap:5px;flex:1;font-size:8pt;color:#333;line-height:1.65;">
-
-                <div style="display:inline-flex;align-items:center;gap:4px;background:#d4edda;color:#085041;font-size:8.5pt;font-weight:600;padding:2px 8px;border-radius:3px;align-self:flex-start;letter-spacing:0.3px;" contenteditable="false">🙋 我来分享</div>
-
-                <div style="display:grid;grid-template-columns:1.5em 1fr;align-items:baseline;row-gap:1px;" id="kt-share-intro-grid">
-                    <span>💬</span><span style="color:#444;" contenteditable="false">我会跟你分享我的学习：</span>
-                    <label style="display:contents;cursor:default;" class="kt-share-label kt-share-intro-label"><span style="color:#888;">1.</span><span class="kt-share-text" style="color: rgb(85, 85, 85); outline: none; border-radius: 2px;" contenteditable="false">这个材料讲的是……<button class="share-item-del" title="删除此项" style="display: none; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0; background: rgb(254, 226, 226); color: rgb(220, 38, 38); border: 1px solid rgb(252, 165, 165); border-radius: 4px; font-size: 9px; font-weight: 700; cursor: pointer; padding: 0px; line-height: 1; margin-left: 6px; vertical-align: middle; transition: background 0.15s;">✕</button></span></label>
-                    <label style="display:contents;cursor:default;" class="kt-share-label kt-share-intro-label"><span style="color:#888;">2.</span><span class="kt-share-text" style="color: rgb(85, 85, 85); outline: none; border-radius: 2px;" contenteditable="false">我的答案是……<button class="share-item-del" title="删除此项" style="display: none; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0; background: rgb(254, 226, 226); color: rgb(220, 38, 38); border: 1px solid rgb(252, 165, 165); border-radius: 4px; font-size: 9px; font-weight: 700; cursor: pointer; padding: 0px; line-height: 1; margin-left: 6px; vertical-align: middle; transition: background 0.15s;">✕</button></span></label>
-                    <label style="display:contents;cursor:default;" class="kt-share-label kt-share-intro-label"><span style="color:#888;">3.</span><span class="kt-share-text" style="color: rgb(85, 85, 85); outline: none; border-radius: 2px;" contenteditable="false">我今天学到的是……<button class="share-item-del" title="删除此项" style="display: none; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0; background: rgb(254, 226, 226); color: rgb(220, 38, 38); border: 1px solid rgb(252, 165, 165); border-radius: 4px; font-size: 9px; font-weight: 700; cursor: pointer; padding: 0px; line-height: 1; margin-left: 6px; vertical-align: middle; transition: background 0.15s;">✕</button></span></label>
-                </div>
-
-                <div style="font-weight:600;color:#085041;font-size:8.5pt;margin-top:3px;" contenteditable="false">✅ 我来反馈</div>
-
-                <div id="kt-share-items" style="display:grid;grid-template-columns:1.5em 1fr;align-items:baseline;row-gap:3px;">
-                    <span>✍️</span><span style="color:#555;" contenteditable="false">我想对你说（可以多选）：</span>
-                    <label style="display:contents;cursor:pointer;" class="kt-share-label">
-                        <input type="checkbox" style="accent-color:#085041;width:12px;height:12px;align-self:center;justify-self:start;margin-top:1px;">
-                        <span class="kt-share-text" style="color: rgb(68, 68, 68); outline: none; border-radius: 2px;" contenteditable="false">你的理解很准确，抓到了重点。<button class="share-item-del" title="删除此项" style="display: none; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0; background: rgb(254, 226, 226); color: rgb(220, 38, 38); border: 1px solid rgb(252, 165, 165); border-radius: 4px; font-size: 9px; font-weight: 700; cursor: pointer; padding: 0px; line-height: 1; margin-left: 6px; vertical-align: middle; transition: background 0.15s;">✕</button></span>
-                    </label>
-                    <label style="display:contents;cursor:pointer;" class="kt-share-label">
-                        <input type="checkbox" style="accent-color:#085041;width:12px;height:12px;align-self:center;justify-self:start;margin-top:1px;">
-                        <span class="kt-share-text" style="color: rgb(68, 68, 68); outline: none; border-radius: 2px;" contenteditable="false">你的答案有根据材料，很有说服力。<button class="share-item-del" title="删除此项" style="display: none; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0; background: rgb(254, 226, 226); color: rgb(220, 38, 38); border: 1px solid rgb(252, 165, 165); border-radius: 4px; font-size: 9px; font-weight: 700; cursor: pointer; padding: 0px; line-height: 1; margin-left: 6px; vertical-align: middle; transition: background 0.15s;">✕</button></span>
-                    </label>
-                    <label style="display:contents;cursor:pointer;" class="kt-share-label">
-                        <input type="checkbox" style="accent-color:#085041;width:12px;height:12px;align-self:center;justify-self:start;margin-top:1px;">
-                        <span class="kt-share-text" style="color: rgb(68, 68, 68); outline: none; border-radius: 2px;" contenteditable="false">你分享的收获让我也有新的想法。<button class="share-item-del" title="删除此项" style="display: none; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0; background: rgb(254, 226, 226); color: rgb(220, 38, 38); border: 1px solid rgb(252, 165, 165); border-radius: 4px; font-size: 9px; font-weight: 700; cursor: pointer; padding: 0px; line-height: 1; margin-left: 6px; vertical-align: middle; transition: background 0.15s;">✕</button></span>
-                    </label>
-                </div>
-
-                <div style="display:flex;align-items:center;gap:5px;font-size:8pt;">
-                    <label style="display:flex;align-items:center;gap:5px;cursor:pointer;white-space:nowrap;flex-shrink:0;"><input type="checkbox" id="kt-other-cb" style="accent-color:#085041;width:12px;height:12px;" onchange="var inp=document.getElementById('kt-other-inp');inp.disabled=!this.checked;inp.style.opacity=this.checked?'1':'0.4';if(!this.checked)inp.value='';"> 其他：</label>
-                    <input type="text" id="kt-other-inp" disabled="" placeholder="请输入……" style="flex:1;min-width:0;height:20px;font-size:8pt;font-family:inherit;background:transparent;border:none;border-bottom:0.5px solid #b0d4c0;outline:none;padding:0 3px;opacity:0.4;color:#333;transition:opacity 0.15s;">
-                </div>
-
-                <div style="border:0.5px solid #b0d4c0;border-radius:5px;flex-shrink:0;margin-top:2px;">
-                    <div style="display:flex;align-items:center;border-bottom:0.5px solid #b0d4c0;padding:0 8px;">
-                        <span style="font-size:8pt;color:#555;white-space:nowrap;flex-shrink:0;" contenteditable="false">姓名：</span>
-                        <input type="text" class="share-name-input" style="flex:1;min-width:0;height:24px;font-size:8pt;font-family:inherit;background:transparent;border:none;outline:none;padding:0 4px;">
-                    </div>
-                    <div style="position:relative;">
-                        <div style="font-size:7.5pt;color:#555;padding:2px 8px 0;" contenteditable="false">签名：</div>
-                        <canvas id="canvas-kt-sign" class="bd-sign-canvas-box" width="252" height="36" style="width: 100%; height: 40px; border-radius: 0px; box-shadow: none; display: block; cursor: crosshair; touch-action: none; background: rgb(255, 255, 255);"></canvas>
-                        <button class="bd-clear-sm" style="position:absolute;bottom:3px;right:5px;" onclick="clearCanvas('canvas-kt-sign')">×</button>
-                    <canvas width="279" height="40" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; pointer-events: none; z-index: 3;"></canvas><canvas width="279" height="40" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; pointer-events: none; z-index: 3;"></canvas><canvas width="279" height="40" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; pointer-events: none; z-index: 3;"></canvas><canvas width="279" height="40" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; pointer-events: none; z-index: 3;"></canvas><canvas width="279" height="40" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; pointer-events: none; z-index: 3;"></canvas></div>
-                </div>
-            </div>
-        </div>
-
-    </div></div><!-- end 第三部分 / close kt-share-wrapper -->
-
+  <div id="yuedu-jinglian-grid-wrap" style="display:none;"></div>
+  <style>@keyframes jc-blink{0%,100%{opacity:1;}50%{opacity:0;}}</style>
 </div>
 <div id="draftToast" style="position:fixed;top:62px;left:50%;transform:translateX(-50%);background:#1a4f8a;color:#fff;padding:7px 22px;border-radius:20px;font-size:10pt;font-family:inherit;z-index:3000;pointer-events:none;opacity:0;transition:opacity 0.3s;white-space:nowrap;"></div>
 <div id="submitPanel" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #d0dae8;padding:10px 28px;justify-content:center;align-items:center;gap:10px;z-index:1000;flex-wrap:wrap;">
@@ -2170,7 +1765,7 @@
 </div>
 <div id="kt-tooltip"></div>
 <script>window.onerror=function(msg,src,line,col,err){console.warn("[student]",msg,src+":"+line);return true;};</script>
-<script id="studentMeta">window.STUDENT_META={class:"4hcl",assignTitle:"测试",scriptUrl:"https://script.google.com/macros/s/AKfycbxmYibJps-FrT3u5t60gC3p-8SjTw6G8nUrLdWFPu_F4E_ZMRcFtFN3egivxsi7h7lG/exec",timerCfg:{"enabled":false,"t1":15,"t2":5,"t3":5,"te":5,"n1":"第一阶段","n2":"第二阶段","n3":"第三阶段","ne":"延时"},submitEnabled:true,fileToken:"mphw2ilr",noPaste:true,jingsaiTopics:{"高华 · 高年级组（中三&中四）":[],"高华 · 低年级组（中一&中二）":[],"G3华文 · 高年级组（中三&中四）":[],"G3华文 · 低年级组（中一&中二）":[]}};var INITIAL_TEMPLATE="ketang";</script>
+<script id="studentMeta">window.STUDENT_META={class:"4hcl",assignTitle:"测试",scriptUrl:"https://script.google.com/macros/s/AKfycbxmYibJps-FrT3u5t60gC3p-8SjTw6G8nUrLdWFPu_F4E_ZMRcFtFN3egivxsi7h7lG/exec",timerCfg:{"enabled":false,"t1":20,"t2":0,"t3":0,"te":5,"n1":"","n2":"","n3":"","ne":"延时"},submitEnabled:true,fileToken:"mphw4x5k",noPaste:true,jingsaiTopics:{"高华 · 高年级组（中三&中四）":[],"高华 · 低年级组（中一&中二）":[],"G3华文 · 高年级组（中三&中四）":[],"G3华文 · 低年级组（中一&中二）":[]}};var INITIAL_TEMPLATE="yuedu-jinglian";var YJ_UNITS_DATA=[{"index":0,"question":"（老师在此输入题目，学生作答时只读）","text":"　　","cur":2,"rows":10}];</script>
 <script>
 (function(){
   if(!window.STUDENT_META)return;
