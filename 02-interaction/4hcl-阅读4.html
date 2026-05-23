@@ -1681,7 +1681,7 @@
 </head>
 <body style="padding-top:44px;">
 <script>\n(function(){\n  var _isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(/Macintosh/.test(navigator.userAgent)&&'ontouchend' in document);\n  if(!_isIOS)return;\n  var _tx=0,_ty=0,_moved=false;\n  document.addEventListener('touchstart',function(e){\n    _tx=e.touches[0].clientX;_ty=e.touches[0].clientY;_moved=false;\n  },{passive:true});\n  document.addEventListener('touchmove',function(e){\n    if(Math.abs(e.touches[0].clientX-_tx)>8||Math.abs(e.touches[0].clientY-_ty)>8)_moved=true;\n  },{passive:true});\n  document.addEventListener('touchend',function(e){\n    if(_moved)return;\n    var t=document.elementFromPoint(_tx,_ty);\n    if(!t)return;\n    var el=t;\n    for(var i=0;i<4;i++){\n      if(el.tagName==='INPUT'||el.tagName==='TEXTAREA')break;\n      el=el.parentElement;if(!el)break;\n    }\n    if(!el||(el.tagName!=='INPUT'&&el.tagName!=='TEXTAREA'))return;\n    if(el.readOnly||el.disabled)return;\n    var wasLocked=el.classList.contains('phase-locked');\n    if(wasLocked)el.classList.remove('phase-locked');\n    requestAnimationFrame(function(){\n      el.focus();\n      if(wasLocked)el.classList.add('phase-locked');\n    });\n  },{passive:true});\n  // iOS键盘消失时恢复滚动位置，防止点击坐标错位\n  var _savedScrollY=0,_kbVisible=false;\n  if(window.visualViewport){\n    window.visualViewport.addEventListener('resize',function(){\n      var vvH=window.visualViewport.height;\n      var kbH=window.innerHeight-vvH;\n      if(kbH<100)return;\n      var grid=document.querySelector('.jingsai-grid-wrap');\n      if(!grid)return;\n      var r=grid.getBoundingClientRect();\n      if(r.bottom>vvH-20){\n        window.scrollBy({top:r.bottom-(vvH-20),behavior:'smooth'});\n        // After scroll, reposition ta over grid\n        setTimeout(function(){\n          var ta=document.querySelector('textarea[data-jingsai-ta]');\n          if(ta&&ta._reposition)ta._reposition();\n        },350);\n      }\n    });\n  }\n})();\n</script>\n<div id="student-toolbar" style="position:fixed;top:0;left:0;right:0;background:#fff;border-bottom:0.5px solid #d4dae3;padding:0 14px;display:flex;align-items:center;justify-content:center;z-index:1000;box-sizing:border-box;min-height:44px;">
-<button id="toolbar-start-btn" onclick="timerStartWithCountdown(&quot;yuedu-jinglian&quot;)" style="background:transparent;border:none;color:#1D9E75;border-radius:8px;padding:7px 36px;font-size:17px;font-family:Georgia,serif;font-weight:700;letter-spacing:1px;cursor:pointer;background:radial-gradient(ellipse at center, #d4f0e8 0%, #edf8f4 55%, transparent 100%);">Start</button>
+<button id="toolbar-start-btn" onclick="timerStartWithCountdown(&quot;zuowen-jingsai&quot;)" style="background:transparent;border:none;color:#1D9E75;border-radius:8px;padding:7px 36px;font-size:17px;font-family:Georgia,serif;font-weight:700;letter-spacing:1px;cursor:pointer;background:radial-gradient(ellipse at center, #d4f0e8 0%, #edf8f4 55%, transparent 100%);">Start</button>
 <div id="timer-float" style="display:none;align-items:center;gap:12px;">
 <div class="tf-phase" id="tf-phase"></div>
 <div id="tf-divider" style="width:1.5px;height:24px;background:#d1d5db;flex-shrink:0;"></div>
@@ -1691,62 +1691,73 @@
 <div class="tf-done" id="tf-done" style="font-size:7.5pt;color:#0f6e56;display:none;white-space:nowrap;"></div>
 <div class="tf-count" id="tf-count" style="font-size:7.5pt;color:#94a3b8;display:none;white-space:nowrap;"></div>
 </div></div></div>
-<div class="page" id="page-yuedu-jinglian" style="">
+<div class="page" id="page-zuowen-jingsai" style="">
 
-  <div class="timer-setup-bar" style="display:none;" id="timer-setup-yuedu-jingsai">
+  <div class="timer-setup-bar" style="display:none;" id="timer-setup-jingsai">
     <span style="font-weight:600;color:#1e293b;" contenteditable="false">⏱ 计时设定</span>
-    <label>作答时长 <input type="number" min="1" max="120" value="20" id="t1-yuedu-jingsai"> 分钟</label>
-    <label>延时时长 <input type="number" min="1" max="15" value="5" id="te-yuedu-jingsai"> 分钟</label>
+    <label>写作时长 <input type="number" min="1" max="120" value="45" id="t1-jingsai"> 分钟</label>
+    <label>延时时长 <input type="number" min="1" max="15" value="5" id="te-jingsai"> 分钟</label>
   </div>
-  <div class="timer-progress" id="timer-progress-yuedu-jingsai" style="display:none;"><div class="timer-progress-fill" id="timer-fill-yuedu-jingsai" style="width:100%;"></div></div>
+  <div class="timer-progress" id="timer-progress-jingsai" style="display:none;"><div class="timer-progress-fill" id="timer-fill-jingsai" style="width:100%;"></div></div>
 
   <div class="bd-page-header">
     <div class="bd-header-row">
       <div class="bd-student-fields" style="gap:14px;flex-wrap:wrap;">
-        <span style="font-size:8.5pt;">姓名：<input type="text" id="yuedu-jinglian-name" style="width:90px;background:transparent;box-shadow:0 1px 0 0 rgba(0,0,0,0.28);font-family:inherit;font-size:inherit;color:inherit;padding:0 2px 1px;margin-left:2px;"></span>
-        <span style="font-size:8.5pt;">编号：<input type="text" id="yuedu-jinglian-class" style="width:72px;background:transparent;box-shadow:0 1px 0 0 rgba(0,0,0,0.28);font-family:inherit;font-size:inherit;color:inherit;padding:0 2px 1px;margin-left:2px;"></span>
+        <span style="font-size:8.5pt;">姓名：<input type="text" id="jingsai-name" style="width:90px;background:transparent;box-shadow:0 1px 0 0 rgba(0,0,0,0.28);font-family:inherit;font-size:inherit;color:inherit;padding:0 2px 1px;margin-left:2px;"></span>
+        <span style="font-size:8.5pt;">班级：<input type="text" id="jingsai-class" style="width:72px;background:transparent;box-shadow:0 1px 0 0 rgba(0,0,0,0.28);font-family:inherit;font-size:inherit;color:inherit;padding:0 2px 1px;margin-left:2px;"></span>
+
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;">
-        <div style="font-size:10.5pt;font-weight:400;color:#1a2a3a;letter-spacing:0.5px;font-family:'Noto Serif SC','Source Han Serif SC','思源宋体',serif;" contenteditable="false">阅读精练</div>
+        <div style="font-size:10.5pt;font-weight:400;color:#1a2a3a;letter-spacing:0.5px;font-family:'Noto Serif SC','Source Han Serif SC','思源宋体',serif;" contenteditable="false">2026年_毅道中学创意作文比赛</div>
+
       </div>
     </div>
     <div class="bd-divider"></div>
   </div>
 
-  <!-- 第一题：题目框 + 原版jingsai格子 -->
-  <div id="yj-q1-wrap">
-    <div style="background:#eef4fb;border-radius:8px;padding:10px 16px;margin-bottom:10px;position:relative;">
-      <div style="font-size:8.5pt;font-weight:600;color:#1a4070;margin-bottom:6px;" contenteditable="false">📌 题目：</div>
-      <div id="yuedu-jinglian-question" contenteditable="false" spellcheck="false" style="font-size:9.5pt;color:#1a2a3a;line-height:1.8;min-height:44px;outline:none;font-family:inherit;white-space:pre-wrap;">（老师在此输入题目，学生作答时只读）</div>
+    <div style="background:#eef4fb;border-radius:8px;padding:8px 16px;margin-bottom:14px;">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+        <span style="font-size:8.5pt;font-weight:600;color:#1a4070;white-space:nowrap;">📌 参赛组别：</span>
+        <select id="jingsai-group-sel" style="font-size:8.5pt;font-family:inherit;color:#1a2a3a;background:transparent;border:none;border-bottom:1px solid #a8c4e0;outline:none;padding:2px 4px;" onchange="jingsaiGroupChange(this)">
+          <option value="">── 请选择 ──</option>
+          <option>高华 · 高年级组（中三&amp;中四）</option>
+          <option>高华 · 低年级组（中一&amp;中二）</option>
+          <option>G3华文 · 高年级组（中三&amp;中四）</option>
+          <option>G3华文 · 低年级组（中一&amp;中二）</option>
+        </select>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;flex:1;min-width:180px;">
+        <span style="font-size:8.5pt;font-weight:600;color:#1a4070;white-space:nowrap;">✏️ 作文题目：</span>
+        <select id="jingsai-title-input" style="flex:1;font-size:8.5pt;font-family:inherit;color:#1a2a3a;background:transparent;border:none;border-bottom:1px solid #a8c4e0;outline:none;padding:2px 4px;" onchange="jingsaiUpdateTitle(this)">
+          <option value="">── 点击此处选题 ──</option>
+        </select>
+      </div>
+    </div></div>
+
+  <div style="margin-bottom:8px;">
+    <div style="padding:4px 0;text-align:right;">
+      <span id="jingsai-wordcount" style="font-size:8pt;color:#388e3c;">字数：0 / 460</span> <span id="jingsai-save-clock" style="font-size: 7.5pt; color: rgb(56, 142, 60); margin-left: 8px;">✓ 已保存 20:16</span> <button id="jingsai-refocus-btn" onclick="(function(){var b=document.getElementById('jingsai-refocus-btn');var h=document.getElementById('jingsai-hi');if(b){b.textContent='✓ 已激活';b.style.background='#d4edda';b.style.color='#155724';}if(h){h.removeAttribute('readonly');h.style.fontSize='16px';h.blur(); h.focus();}setTimeout(function(){if(b)b.style.display='none';},2000);})()" style="font-size:7pt;padding:3px 10px;border:1px solid #f0ad4e;border-radius:4px;background:#fff3cd;color:#856404;cursor:pointer;margin-left:6px;display:none;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,0.15);active:background:#ffeeba;" title="点击恢复键盘输入">⌨️ 点击恢复输入</button>
     </div>
-    <div style="text-align:right;padding:2px 0 4px;">
-      <span id="yuedu-jinglian-wordcount" style="font-size:8pt;color:#388e3c;">字数：0</span>
-      <span id="jingsai-save-clock" style="font-size:7.5pt;color:#9e9e9e;margin-left:8px;"></span> <button id="jingsai-refocus-btn" onclick="(function(){var b=document.getElementById('jingsai-refocus-btn');var h=document.getElementById('jingsai-hi');if(b){b.textContent='✓ 已激活';b.style.background='#d4edda';b.style.color='#155724';}if(h){h.removeAttribute('readonly');h.style.fontSize='16px';h.blur(); h.focus();}setTimeout(function(){if(b)b.style.display='none';},2000);})()" style="font-size:7pt;padding:3px 10px;border:1px solid #f0ad4e;border-radius:4px;background:#fff3cd;color:#856404;cursor:pointer;margin-left:6px;display:none;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,0.15);active:background:#ffeeba;" title="点击恢复键盘输入">⌨️ 点击恢复输入</button>
-    </div>
-    <div id="yuedu-jinglian-pages-container" style="display:flex;flex-direction:column;gap:40px;" onclick="if(typeof yjActivateQ1==='function')yjActivateQ1()">
-      <div class="jingsai-page-block" data-page="0" data-rows="10">
-        <div style="display: block; width: 100%; box-sizing: border-box; background: rgb(255, 255, 255); line-height: 0; font-size: 0px; position: relative; overflow: visible !important; height: 414px;">
-          <div class="jingsai-grid-wrap" style="position: relative; background: rgb(255, 255, 255); cursor: text; overflow: visible !important; height: 410px;">
-            <canvas class="jingsai-grid-canvas" style="display: block; width: 688px; height: 410px;" width="1" height="1"></canvas>
-            <div class="jingsai-text-canvas" style="position: absolute; top: 0px; left: 0px; pointer-events: none; overflow: visible; width: 688px; height: 408px;"><span style="position: absolute; left: 0px; top: 6px; width: 34.4px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 300; line-height: 1; color: rgb(26, 92, 56); font-family: SimSun, 宋体, STSong, NSimSun, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; box-sizing: border-box; -webkit-font-smoothing: antialiased; transform: translateY(-1px); background: transparent; border-radius: 2px;">　</span><span style="position: absolute; left: 34.4px; top: 6px; width: 34.4px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 300; line-height: 1; color: rgb(26, 92, 56); font-family: SimSun, 宋体, STSong, NSimSun, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; box-sizing: border-box; -webkit-font-smoothing: antialiased; transform: translateY(-1px); background: transparent; border-radius: 2px;">　</span><span style="position: absolute; left: 0px; top: 48px; width: 34.4px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 300; line-height: 1; color: rgb(26, 92, 56); font-family: SimSun, 宋体, STSong, NSimSun, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; box-sizing: border-box; -webkit-font-smoothing: antialiased; transform: translateY(-1px); background: transparent; border-radius: 2px;">　</span><span style="position: absolute; left: 34.4px; top: 48px; width: 34.4px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 300; line-height: 1; color: rgb(26, 92, 56); font-family: SimSun, 宋体, STSong, NSimSun, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; box-sizing: border-box; -webkit-font-smoothing: antialiased; transform: translateY(-1px); background: transparent; border-radius: 2px;">　</span><span style="position: absolute; left: 0px; top: 90px; width: 34.4px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 300; line-height: 1; color: rgb(26, 92, 56); font-family: SimSun, 宋体, STSong, NSimSun, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; box-sizing: border-box; -webkit-font-smoothing: antialiased; transform: translateY(-1px); background: transparent; border-radius: 2px;">　</span><span style="position: absolute; left: 34.4px; top: 90px; width: 34.4px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 300; line-height: 1; color: rgb(26, 92, 56); font-family: SimSun, 宋体, STSong, NSimSun, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; box-sizing: border-box; -webkit-font-smoothing: antialiased; transform: translateY(-1px); background: transparent; border-radius: 2px;">　</span></div>
-            <div class="jingsai-cursor" style="position: absolute; width: 1.5px; background: rgb(46, 125, 50); pointer-events: none; display: block; animation: 1s step-end 0s infinite normal none running jc-blink; z-index: 4; left: 69.8px; top: 90px; height: 18px;"></div>
+    <div id="jingsai-pages-container" style="display:flex;flex-direction:column;gap:40px;">
+      <!-- 第一页稿纸 -->
+      <div class="jingsai-page-block" data-page="0">
+        <div style="display: block; width: 100%; box-sizing: border-box; background: rgb(255, 255, 255); line-height: 0; font-size: 0px; position: relative; height: 918px; overflow: visible !important;">
+          <div class="jingsai-grid-wrap" style="position: relative; background: rgb(255, 255, 255); overflow: visible !important; height: 914px; cursor: text;">
+            <canvas class="jingsai-grid-canvas" style="display: block; width: 688px; height: 914px;" width="1" height="1"></canvas>
+            <div class="jingsai-text-canvas" style="position: absolute; top: 0px; left: 0px; pointer-events: none; overflow: visible; width: 688px; height: 912px;"><span style="position: absolute; left: 0px; top: 6px; width: 34.4px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 300; line-height: 1; color: rgb(26, 92, 56); font-family: SimSun, 宋体, STSong, NSimSun, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; box-sizing: border-box; -webkit-font-smoothing: antialiased; transform: translateY(-1px); background: transparent; border-radius: 2px;">　</span><span style="position: absolute; left: 34.4px; top: 6px; width: 34.4px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 300; line-height: 1; color: rgb(26, 92, 56); font-family: SimSun, 宋体, STSong, NSimSun, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; box-sizing: border-box; -webkit-font-smoothing: antialiased; transform: translateY(-1px); background: transparent; border-radius: 2px;">　</span><span style="position: absolute; left: 0px; top: 48px; width: 34.4px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 300; line-height: 1; color: rgb(26, 92, 56); font-family: SimSun, 宋体, STSong, NSimSun, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; box-sizing: border-box; -webkit-font-smoothing: antialiased; transform: translateY(-1px); background: transparent; border-radius: 2px;">　</span><span style="position: absolute; left: 34.4px; top: 48px; width: 34.4px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 300; line-height: 1; color: rgb(26, 92, 56); font-family: SimSun, 宋体, STSong, NSimSun, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; box-sizing: border-box; -webkit-font-smoothing: antialiased; transform: translateY(-1px); background: transparent; border-radius: 2px;">　</span><span style="position: absolute; left: 0px; top: 90px; width: 34.4px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 300; line-height: 1; color: rgb(26, 92, 56); font-family: SimSun, 宋体, STSong, NSimSun, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; box-sizing: border-box; -webkit-font-smoothing: antialiased; transform: translateY(-1px); background: transparent; border-radius: 2px;">　</span><span style="position: absolute; left: 34.4px; top: 90px; width: 34.4px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 300; line-height: 1; color: rgb(26, 92, 56); font-family: SimSun, 宋体, STSong, NSimSun, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; box-sizing: border-box; -webkit-font-smoothing: antialiased; transform: translateY(-1px); background: transparent; border-radius: 2px;">　</span></div>
+            <div class="jingsai-cursor" style="position: absolute; width: 1.5px; background: rgb(46, 125, 50); pointer-events: none; display: block; animation: 1s step-end 0s infinite normal none running jc-blink; z-index: 4; left: 69.8px; top: 6px; height: 18px;"></div>
           <textarea autocomplete="off" autocorrect="off" autocapitalize="sentences" spellcheck="false" style="position: absolute; inset: 0px; width: 100%; height: 100%; z-index: 5; opacity: 1; background: rgba(255, 255, 255, 0.01); color: rgba(0, 0, 0, 0.01); caret-color: auto; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; resize: none; padding: 0px; margin: 0px; font-size: 16px; user-select: text; touch-action: manipulation;"></textarea></div>
         </div>
         <div class="jingsai-page-num" style="font-size:8pt;color:#999;text-align:right;padding-right:4px;margin-top:5px;line-height:1;">第 1 页</div>
       </div>
     </div>
+    <!-- 保留旧ID兼容性 -->
+    <div id="jingsai-grid-wrap" style="display:none;"></div>
+    <style>@keyframes jc-blink{0%,100%{opacity:1;}50%{opacity:0;}}</style>
+
   </div>
 
-  <!-- 额外题目（由JS动态添加，每题有独立的题目框+CSS格子） -->
-  <div id="yj-extra-container" style="margin-top:32px;"></div>
-
-  <!-- Edit模式下的添加按钮 -->
-  <div id="yj-add-btn-wrap" style="display:none;text-align:center;margin:16px 0 8px;">
-    <button onclick="yjAddExtraUnit()" style="background:#eef4fb;border:1.5px dashed #7bafd4;color:#1a4070;border-radius:8px;padding:8px 28px;font-size:9pt;font-family:inherit;cursor:pointer;font-weight:600;">➕ 添加题目</button>
-  </div>
-
-  <div id="yuedu-jinglian-grid-wrap" style="display:none;"></div>
-  <style>@keyframes jc-blink{0%,100%{opacity:1;}50%{opacity:0;}}</style>
 </div>
 <div id="draftToast" style="position:fixed;top:62px;left:50%;transform:translateX(-50%);background:#1a4f8a;color:#fff;padding:7px 22px;border-radius:20px;font-size:10pt;font-family:inherit;z-index:3000;pointer-events:none;opacity:0;transition:opacity 0.3s;white-space:nowrap;"></div>
 <div id="submitPanel" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #d0dae8;padding:10px 28px;justify-content:center;align-items:center;gap:10px;z-index:1000;flex-wrap:wrap;">
@@ -1765,7 +1776,7 @@
 </div>
 <div id="kt-tooltip"></div>
 <script>window.onerror=function(msg,src,line,col,err){console.warn("[student]",msg,src+":"+line);return true;};</script>
-<script id="studentMeta">window.STUDENT_META={class:"4hcl",assignTitle:"阅读4",scriptUrl:"https://script.google.com/macros/s/AKfycbxmYibJps-FrT3u5t60gC3p-8SjTw6G8nUrLdWFPu_F4E_ZMRcFtFN3egivxsi7h7lG/exec",timerCfg:{"enabled":false,"t1":20,"t2":0,"t3":0,"te":5,"n1":"","n2":"","n3":"","ne":"延时"},submitEnabled:true,fileToken:"mpiakgfd",noPaste:true,jingsaiTopics:{"高华 · 高年级组（中三&中四）":[],"高华 · 低年级组（中一&中二）":[],"G3华文 · 高年级组（中三&中四）":[],"G3华文 · 低年级组（中一&中二）":[]}};var INITIAL_TEMPLATE="yuedu-jinglian";var YJ_UNITS_DATA=[{"index":0,"question":"（老师在此输入题目，学生作答时只读）","text":"　　\n　　\n　　","cur":2,"rows":10}];</script>
+<script id="studentMeta">window.STUDENT_META={class:"4hcl",assignTitle:"阅读4",scriptUrl:"https://script.google.com/macros/s/AKfycbxmYibJps-FrT3u5t60gC3p-8SjTw6G8nUrLdWFPu_F4E_ZMRcFtFN3egivxsi7h7lG/exec",timerCfg:{"enabled":false,"t1":45,"t2":0,"t3":0,"te":5,"n1":"","n2":"","n3":"","ne":"延时"},submitEnabled:true,fileToken:"mpibbmi8",noPaste:true,jingsaiTopics:{"高华 · 高年级组（中三&中四）":["今天的太阳"],"高华 · 低年级组（中一&中二）":["明天的故事"],"G3华文 · 高年级组（中三&中四）":["夏日里的情思"],"G3华文 · 低年级组（中一&中二）":["低头结语"]}};var INITIAL_TEMPLATE="zuowen-jingsai";</script>
 <script>
 (function(){
   if(!window.STUDENT_META)return;
@@ -1976,6 +1987,87 @@ window._doFetchRecords = async function() {
 };
 
 // Firebase save handled in submitWork success callback
+
+
+// ── 竞赛题目设置弹窗 ──
+window.openTopicsModal = function() {
+  var existing = document.getElementById('topicsModal');
+  if (existing) { existing.style.display = 'flex'; return; }
+
+  var modal = document.createElement('div');
+  modal.id = 'topicsModal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:20000;display:flex;align-items:center;justify-content:center;';
+
+  var inner = document.createElement('div');
+  inner.style.cssText = 'background:#fff;border-radius:14px;padding:22px 24px;width:90%;max-width:480px;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);';
+
+  var header = document.createElement('div');
+  header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;';
+  header.innerHTML = '<div style="font-size:14px;font-weight:700;color:#1a4070;">⚙️ Set Competition Topics</div>';
+  var closeBtn = document.createElement('button');
+  closeBtn.textContent = '✕';
+  closeBtn.style.cssText = 'width:26px;height:26px;border-radius:50%;border:none;background:#e2e8f0;color:#64748b;font-size:13px;cursor:pointer;';
+  closeBtn.onclick = function() { modal.style.display = 'none'; };
+  header.appendChild(closeBtn);
+  inner.appendChild(header);
+
+  var hint = document.createElement('div');
+  hint.textContent = '每行输入一个题目，学生版下拉框会自动显示对应组别的题目。';
+  hint.style.cssText = 'font-size:10.5px;color:#64748b;margin-bottom:14px;';
+  inner.appendChild(hint);
+
+  var groups = [
+    { id: 'topics-hh-high', label: '高华 · 高年级组（中三&中四）' },
+    { id: 'topics-hh-low',  label: '高华 · 低年级组（中一&中二）' },
+    { id: 'topics-g3-high', label: 'G3华文 · 高年级组（中三&中四）' },
+    { id: 'topics-g3-low',  label: 'G3华文 · 低年级组（中一&中二）' },
+  ];
+
+  groups.forEach(function(g) {
+    var wrap = document.createElement('div');
+    wrap.style.marginBottom = '12px';
+    var lbl = document.createElement('div');
+    lbl.textContent = g.label;
+    lbl.style.cssText = 'font-size:11px;font-weight:600;color:#1a4070;margin-bottom:4px;';
+    var ta = document.createElement('textarea');
+    ta.id = 'tm-' + g.id;
+    ta.rows = 3;
+    ta.placeholder = '每行一个题目';
+    ta.style.cssText = 'width:100%;padding:6px 8px;border:1.5px solid #b8d4ee;border-radius:6px;font-size:12px;font-family:inherit;box-sizing:border-box;resize:vertical;';
+    var stored = document.getElementById(g.id);
+    ta.value = stored ? (stored.value || stored.textContent || '') : '';
+    wrap.appendChild(lbl);
+    wrap.appendChild(ta);
+    inner.appendChild(wrap);
+  });
+
+  var saveBtn = document.createElement('button');
+  saveBtn.textContent = 'Save';
+  saveBtn.style.cssText = 'width:100%;padding:9px;border-radius:8px;border:none;background:#1a4f8a;color:#fff;font-size:13px;font-weight:600;cursor:pointer;margin-top:4px;';
+  saveBtn.onclick = function() { saveTopics(); modal.style.display = 'none'; };
+  inner.appendChild(saveBtn);
+
+  modal.appendChild(inner);
+  document.body.appendChild(modal);
+}
+
+window.saveTopics = function() {
+  var groups = ['topics-hh-high', 'topics-hh-low', 'topics-g3-high', 'topics-g3-low'];
+  groups.forEach(function(id) {
+    var tmEl = document.getElementById('tm-' + id);
+    if (!tmEl) return;
+    var el = document.getElementById(id);
+    if (!el) {
+      el = document.createElement('textarea');
+      el.id = id;
+      el.style.display = 'none';
+      document.body.appendChild(el);
+    }
+    el.value = tmEl.value;
+    el.textContent = tmEl.value;
+  });
+}
+
 </script>
 <script>
 (function(){
