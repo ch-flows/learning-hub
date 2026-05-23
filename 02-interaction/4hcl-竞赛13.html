@@ -1720,12 +1720,12 @@
       <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
         <span style="font-size:8.5pt;font-weight:600;color:#1a4070;white-space:nowrap;">📌 参赛组别：</span>
         <div id="jingsai-group-wrap" style="position:relative;display:inline-block;">
-          <div id="jingsai-group-display" onclick="jingsaiGroupDropdown()" style="font-size:8.5pt;font-family:inherit;color:#1a2a3a;background:transparent;border:none;border-bottom:1px solid #a8c4e0;outline:none;padding:2px 20px 2px 4px;cursor:pointer;min-width:120px;">── 请选择 ──</div>
+          <div id="jingsai-group-display" onclick="jingsaiGroupDropdown()" style="font-size:8.5pt;font-family:inherit;color:#1a2a3a;background:transparent;border:none;border-bottom:1px solid #a8c4e0;outline:none;padding:2px 20px 2px 4px;cursor:pointer;min-width:120px;">高华 · 高年级组（中三&amp;中四）</div>
           <span onclick="jingsaiGroupDropdown()" style="position:absolute;right:2px;top:50%;transform:translateY(-50%);font-size:8px;color:#94a3b8;cursor:pointer;">▼</span>
-          <input type="hidden" id="jingsai-group-sel" value="">
+          <input type="hidden" id="jingsai-group-sel" value="高华 · 高年级组（中三&amp;中四）">
           <div id="jingsai-group-dropdown" style="display: none; position: fixed; background: rgb(255, 255, 255); border: 1px solid rgb(184, 212, 238); border-radius: 8px; box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 16px; z-index: 99999; min-width: 200px; overflow: hidden; left: 353.134px; top: 162.9px;">
             <div onclick="jingsaiGroupSelect('')" style="padding:8px 12px;font-size:8.5pt;color:#94a3b8;cursor:pointer;border-bottom:1px solid #f1f5f9;">── 请选择 ──</div>
-            <div onclick="jingsaiGroupSelect('高华 · 高年级组（中三&amp;中四）')" style="padding:8px 12px;font-size:8.5pt;color:#1a2a3a;cursor:pointer;" onmouseenter="this.style.background='#f0f9ff'" onmouseleave="this.style.background=''">高华 · 高年级组（中三&amp;中四）</div>
+            <div onclick="jingsaiGroupSelect('高华 · 高年级组（中三&amp;中四）')" style="padding: 8px 12px; font-size: 8.5pt; color: rgb(26, 42, 58); cursor: pointer;" onmouseenter="this.style.background='#f0f9ff'" onmouseleave="this.style.background=''">高华 · 高年级组（中三&amp;中四）</div>
             <div onclick="jingsaiGroupSelect('高华 · 低年级组（中一&amp;中二）')" style="padding:8px 12px;font-size:8.5pt;color:#1a2a3a;cursor:pointer;" onmouseenter="this.style.background='#f0f9ff'" onmouseleave="this.style.background=''">高华 · 低年级组（中一&amp;中二）</div>
             <div onclick="jingsaiGroupSelect('G3华文 · 高年级组（中三&amp;中四）')" style="padding:8px 12px;font-size:8.5pt;color:#1a2a3a;cursor:pointer;" onmouseenter="this.style.background='#f0f9ff'" onmouseleave="this.style.background=''">G3华文 · 高年级组（中三&amp;中四）</div>
             <div onclick="jingsaiGroupSelect('G3华文 · 低年级组（中一&amp;中二）')" style="padding:8px 12px;font-size:8.5pt;color:#1a2a3a;cursor:pointer;" onmouseenter="this.style.background='#f0f9ff'" onmouseleave="this.style.background=''">G3华文 · 低年级组（中一&amp;中二）</div>
@@ -1738,15 +1738,14 @@
           <div id="jingsai-title-display" onclick="jingsaiTitleDropdown()" style="font-size:8.5pt;font-family:inherit;color:#1a2a3a;background:transparent;border:none;border-bottom:1px solid #a8c4e0;outline:none;padding:2px 20px 2px 4px;cursor:pointer;min-width:150px;">── 点击此处选题 ──</div>
           <span onclick="jingsaiTitleDropdown()" style="position:absolute;right:2px;top:50%;transform:translateY(-50%);font-size:8px;color:#94a3b8;cursor:pointer;">▼</span>
           <input type="hidden" id="jingsai-title-input" value="">
-          <div id="jingsai-title-dropdown" style="display:none;position:fixed;background:#fff;border:1px solid #b8d4ee;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.15);z-index:99999;min-width:200px;max-height:200px;overflow-y:auto;">
-          </div>
+          <div id="jingsai-title-dropdown" style="display: none; position: fixed; background: rgb(255, 255, 255); border: 1px solid rgb(184, 212, 238); border-radius: 8px; box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 16px; z-index: 99999; min-width: 200px; max-height: 200px; overflow-y: auto; left: 595.142px; top: 162.9px;"><div style="padding:8px 12px;font-size:8.5pt;color:#94a3b8;">（请先在 Set Competition Topics 中设置题目）</div></div>
         </div>
       </div>
     </div></div>
 
   <div style="margin-bottom:8px;">
     <div style="padding:4px 0;text-align:right;">
-      <span id="jingsai-wordcount" style="font-size:8pt;color:#388e3c;">字数：0 / 460</span> <span id="jingsai-save-clock" style="font-size: 7.5pt; color: rgb(56, 142, 60); margin-left: 8px;">✓ 已保存 21:18</span> <button id="jingsai-refocus-btn" onclick="(function(){var b=document.getElementById('jingsai-refocus-btn');var h=document.getElementById('jingsai-hi');if(b){b.textContent='✓ 已激活';b.style.background='#d4edda';b.style.color='#155724';}if(h){h.removeAttribute('readonly');h.style.fontSize='16px';h.blur(); h.focus();}setTimeout(function(){if(b)b.style.display='none';},2000);})()" style="font-size:7pt;padding:3px 10px;border:1px solid #f0ad4e;border-radius:4px;background:#fff3cd;color:#856404;cursor:pointer;margin-left:6px;display:none;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,0.15);active:background:#ffeeba;" title="点击恢复键盘输入">⌨️ 点击恢复输入</button>
+      <span id="jingsai-wordcount" style="font-size:8pt;color:#388e3c;">字数：0 / 460</span> <span id="jingsai-save-clock" style="font-size: 7.5pt; color: rgb(56, 142, 60); margin-left: 8px;">✓ 已保存 21:43</span> <button id="jingsai-refocus-btn" onclick="(function(){var b=document.getElementById('jingsai-refocus-btn');var h=document.getElementById('jingsai-hi');if(b){b.textContent='✓ 已激活';b.style.background='#d4edda';b.style.color='#155724';}if(h){h.removeAttribute('readonly');h.style.fontSize='16px';h.blur(); h.focus();}setTimeout(function(){if(b)b.style.display='none';},2000);})()" style="font-size:7pt;padding:3px 10px;border:1px solid #f0ad4e;border-radius:4px;background:#fff3cd;color:#856404;cursor:pointer;margin-left:6px;display:none;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,0.15);active:background:#ffeeba;" title="点击恢复键盘输入">⌨️ 点击恢复输入</button>
     </div>
     <div id="jingsai-pages-container" style="display:flex;flex-direction:column;gap:40px;">
       <!-- 第一页稿纸 -->
@@ -1785,7 +1784,7 @@
 </div>
 <div id="kt-tooltip"></div>
 <script>window.onerror=function(msg,src,line,col,err){console.warn("[student]",msg,src+":"+line);return true;};</script>
-<script id="studentMeta">window.STUDENT_META={class:"4hcl",assignTitle:"竞赛13",scriptUrl:"https://script.google.com/macros/s/AKfycbxmYibJps-FrT3u5t60gC3p-8SjTw6G8nUrLdWFPu_F4E_ZMRcFtFN3egivxsi7h7lG/exec",timerCfg:{"enabled":false,"t1":45,"t2":0,"t3":0,"te":5,"n1":"","n2":"","n3":"","ne":"延时"},submitEnabled:true,fileToken:"mpidj9s1",noPaste:true,jingsaiTopics:{"高华 · 高年级组（中三&中四）":["1"],"高华 · 低年级组（中一&中二）":["2"],"G3华文 · 高年级组（中三&中四）":["3"],"G3华文 · 低年级组（中一&中二）":["4"]}};var INITIAL_TEMPLATE="zuowen-jingsai";</script>
+<script id="studentMeta">window.STUDENT_META={class:"4hcl",assignTitle:"竞赛13",scriptUrl:"https://script.google.com/macros/s/AKfycbxmYibJps-FrT3u5t60gC3p-8SjTw6G8nUrLdWFPu_F4E_ZMRcFtFN3egivxsi7h7lG/exec",timerCfg:{"enabled":false,"t1":45,"t2":0,"t3":0,"te":5,"n1":"","n2":"","n3":"","ne":"延时"},submitEnabled:true,fileToken:"mpiefar7",noPaste:true,jingsaiTopics:{"高华 · 高年级组（中三&中四）":["1"],"高华 · 低年级组（中一&中二）":["2"],"G3华文 · 高年级组（中三&中四）":["3"],"G3华文 · 低年级组（中一&中二）":["4"]}};var INITIAL_TEMPLATE="zuowen-jingsai";</script>
 <script>
 (function(){
   if(!window.STUDENT_META)return;
@@ -2000,97 +1999,6 @@ window._doFetchRecords = async function() {
 // Firebase save handled in submitWork success callback
 
 
-// ── 竞赛题目设置弹窗 ──
-window.openTopicsModal = function() {
-  var existing = document.getElementById('topicsModal');
-  if (existing) { existing.style.display = 'flex'; return; }
-
-  var modal = document.createElement('div');
-  modal.id = 'topicsModal';
-  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:20000;display:flex;align-items:center;justify-content:center;';
-
-  var inner = document.createElement('div');
-  inner.style.cssText = 'background:#fff;border-radius:14px;padding:22px 24px;width:90%;max-width:480px;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);';
-
-  var header = document.createElement('div');
-  header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;';
-  header.innerHTML = '<div style="font-size:14px;font-weight:700;color:#1a4070;">⚙️ Set Competition Topics</div>';
-  var closeBtn = document.createElement('button');
-  closeBtn.textContent = '✕';
-  closeBtn.style.cssText = 'width:26px;height:26px;border-radius:50%;border:none;background:#e2e8f0;color:#64748b;font-size:13px;cursor:pointer;';
-  closeBtn.onclick = function() { modal.style.display = 'none'; };
-  header.appendChild(closeBtn);
-  inner.appendChild(header);
-
-  var hint = document.createElement('div');
-  hint.textContent = '每行输入一个题目，学生版下拉框会自动显示对应组别的题目。';
-  hint.style.cssText = 'font-size:10.5px;color:#64748b;margin-bottom:14px;';
-  inner.appendChild(hint);
-
-  var groups = [
-    { id: 'topics-hh-high', label: '高华 · 高年级组（中三&中四）' },
-    { id: 'topics-hh-low',  label: '高华 · 低年级组（中一&中二）' },
-    { id: 'topics-g3-high', label: 'G3华文 · 高年级组（中三&中四）' },
-    { id: 'topics-g3-low',  label: 'G3华文 · 低年级组（中一&中二）' },
-  ];
-
-  groups.forEach(function(g) {
-    var wrap = document.createElement('div');
-    wrap.style.marginBottom = '12px';
-    var lbl = document.createElement('div');
-    lbl.textContent = g.label;
-    lbl.style.cssText = 'font-size:11px;font-weight:600;color:#1a4070;margin-bottom:4px;';
-    var ta = document.createElement('textarea');
-    ta.id = 'tm-' + g.id;
-    ta.rows = 3;
-    ta.placeholder = '每行一个题目';
-    ta.style.cssText = 'width:100%;padding:6px 8px;border:1.5px solid #b8d4ee;border-radius:6px;font-size:12px;font-family:inherit;box-sizing:border-box;resize:vertical;';
-    var stored = document.getElementById(g.id);
-    ta.value = stored ? (stored.value || stored.textContent || '') : '';
-    wrap.appendChild(lbl);
-    wrap.appendChild(ta);
-    inner.appendChild(wrap);
-  });
-
-  var saveBtn = document.createElement('button');
-  saveBtn.textContent = 'Save';
-  saveBtn.style.cssText = 'width:100%;padding:9px;border-radius:8px;border:none;background:#1a4f8a;color:#fff;font-size:13px;font-weight:600;cursor:pointer;margin-top:4px;';
-  saveBtn.onclick = function() { saveTopics(); modal.style.display = 'none'; };
-  inner.appendChild(saveBtn);
-
-  modal.appendChild(inner);
-  document.body.appendChild(modal);
-}
-
-window.saveTopics = function() {
-  var groupMap = {
-    'topics-hh-high': '高华 · 高年级组（中三&中四）',
-    'topics-hh-low':  '高华 · 低年级组（中一&中二）',
-    'topics-g3-high': 'G3华文 · 高年级组（中三&中四）',
-    'topics-g3-low':  'G3华文 · 低年级组（中一&中二）',
-  };
-  var newTopics = {};
-  Object.keys(groupMap).forEach(function(id) {
-    var tmEl = document.getElementById('tm-' + id);
-    if (!tmEl) return;
-    var val = tmEl.value;
-    // Store in hidden element
-    var el = document.getElementById(id);
-    if (!el) {
-      el = document.createElement('textarea');
-      el.id = id;
-      el.style.display = 'none';
-      document.body.appendChild(el);
-    }
-    el.value = val;
-    el.textContent = val;
-    // Build JINGSAI_TOPICS
-    var lines = val.split('\n').map(function(s){return s.trim();}).filter(Boolean);
-    if (lines.length) newTopics[groupMap[id]] = lines;
-  });
-  // Update window.JINGSAI_TOPICS immediately so dropdowns work
-  window.JINGSAI_TOPICS = newTopics;
-}
 
 // ── 老师版 jingsaiGroupChange（学生版里也有同名函数）──
 if (typeof window.jingsaiGroupChange !== 'function') {
@@ -10041,7 +9949,7 @@ var dqb=document.querySelector('#langdu-fb-student-desk button');
 
                 html += "<div style=\"margin-bottom:28px;\">";
                 html += "<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #e2e8f0;\">";
-                html += "<div style=\"font-size:10.5pt;font-weight:700;color:#1e293b;\">📋 " + grpKey.replace(" — ", "_") + "（" + grpRecords.length + "）</div>";
+                html += "<div style=\"font-size:10.5pt;font-weight:700;color:#1e293b;\">📋 " + grpKey.replace(" — ", "_") + "</div>";
                 html += "</div>";
 
                 
@@ -15012,6 +14920,141 @@ function jingsaiSyncTopic(){var sel=document.getElementById('jingsai-topic-num')
 })();
 </script>
 <script>
+
+// ── 竞赛题目设置弹窗 ──
+window.openTopicsModal = function() {
+  var existing = document.getElementById('topicsModal');
+  if (existing) { existing.style.display = 'flex'; return; }
+
+  var modal = document.createElement('div');
+  modal.id = 'topicsModal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:20000;display:flex;align-items:center;justify-content:center;';
+
+  var inner = document.createElement('div');
+  inner.style.cssText = 'background:#fff;border-radius:14px;padding:22px 24px;width:90%;max-width:480px;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);';
+
+  var header = document.createElement('div');
+  header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;';
+  header.innerHTML = '<div style="font-size:14px;font-weight:700;color:#1a4070;">⚙️ Set Competition Topics</div>';
+  var closeBtn = document.createElement('button');
+  closeBtn.textContent = '✕';
+  closeBtn.style.cssText = 'width:26px;height:26px;border-radius:50%;border:none;background:#e2e8f0;color:#64748b;font-size:13px;cursor:pointer;';
+  closeBtn.onclick = function() { modal.style.display = 'none'; };
+  header.appendChild(closeBtn);
+  inner.appendChild(header);
+
+  var hint = document.createElement('div');
+  hint.textContent = '每行输入一个题目，学生版下拉框会自动显示对应组别的题目。';
+  hint.style.cssText = 'font-size:10.5px;color:#64748b;margin-bottom:14px;';
+  inner.appendChild(hint);
+
+  var groups = [
+    { id: 'topics-hh-high', label: '高华 · 高年级组（中三&中四）' },
+    { id: 'topics-hh-low',  label: '高华 · 低年级组（中一&中二）' },
+    { id: 'topics-g3-high', label: 'G3华文 · 高年级组（中三&中四）' },
+    { id: 'topics-g3-low',  label: 'G3华文 · 低年级组（中一&中二）' },
+  ];
+
+  groups.forEach(function(g) {
+    var wrap = document.createElement('div');
+    wrap.style.marginBottom = '12px';
+    var lbl = document.createElement('div');
+    lbl.textContent = g.label;
+    lbl.style.cssText = 'font-size:11px;font-weight:600;color:#1a4070;margin-bottom:4px;';
+    var ta = document.createElement('textarea');
+    ta.id = 'tm-' + g.id;
+    ta.rows = 3;
+    ta.placeholder = '每行一个题目';
+    ta.style.cssText = 'width:100%;padding:6px 8px;border:1.5px solid #b8d4ee;border-radius:6px;font-size:12px;font-family:inherit;box-sizing:border-box;resize:vertical;';
+    var stored = document.getElementById(g.id);
+    ta.value = stored ? (stored.value || stored.textContent || '') : '';
+    wrap.appendChild(lbl);
+    wrap.appendChild(ta);
+    inner.appendChild(wrap);
+  });
+
+  var saveBtn = document.createElement('button');
+  saveBtn.textContent = 'Save';
+  saveBtn.style.cssText = 'width:100%;padding:9px;border-radius:8px;border:none;background:#1a4f8a;color:#fff;font-size:13px;font-weight:600;cursor:pointer;margin-top:4px;';
+  saveBtn.onclick = function() { saveTopics(); modal.style.display = 'none'; };
+  inner.appendChild(saveBtn);
+
+  modal.appendChild(inner);
+  document.body.appendChild(modal);
+}
+
+window.saveTopics = function() {
+  var groupMap = {
+    'topics-hh-high': '高华 · 高年级组（中三&中四）',
+    'topics-hh-low':  '高华 · 低年级组（中一&中二）',
+    'topics-g3-high': 'G3华文 · 高年级组（中三&中四）',
+    'topics-g3-low':  'G3华文 · 低年级组（中一&中二）',
+  };
+  var newTopics = {};
+  Object.keys(groupMap).forEach(function(id) {
+    var tmEl = document.getElementById('tm-' + id);
+    if (!tmEl) return;
+    var val = tmEl.value;
+    // Store in hidden element
+    var el = document.getElementById(id);
+    if (!el) {
+      el = document.createElement('textarea');
+      el.id = id;
+      el.style.display = 'none';
+      document.body.appendChild(el);
+    }
+    el.value = val;
+    el.textContent = val;
+    // Build JINGSAI_TOPICS
+    var lines = val.split('\n').map(function(s){return s.trim();}).filter(Boolean);
+    if (lines.length) newTopics[groupMap[id]] = lines;
+  });
+  // Update window.JINGSAI_TOPICS immediately
+  window.JINGSAI_TOPICS = newTopics;
+  // Persist to localStorage
+  try { localStorage.setItem('jingsai_topics', JSON.stringify(newTopics)); } catch(e) {}
+  // Show save confirmation
+  var saveBtn = document.querySelector('#topicsModal button[onclick*="saveTopics"]');
+  if (saveBtn) {
+    var orig = saveBtn.textContent;
+    saveBtn.textContent = '✅ Saved!';
+    saveBtn.style.background = '#1b5e20';
+    setTimeout(function() {
+      saveBtn.textContent = orig;
+      saveBtn.style.background = '#1a4f8a';
+    }, 1500);
+  }
+}
+
+;// Load saved topics on startup
+(function() {
+  try {
+    var saved = localStorage.getItem('jingsai_topics');
+    if (saved) {
+      window.JINGSAI_TOPICS = JSON.parse(saved);
+      // Also restore hidden textareas for Publish to read
+      var groupMap = {
+        'topics-hh-high': '高华 · 高年级组（中三&中四）',
+        'topics-hh-low':  '高华 · 低年级组（中一&中二）',
+        'topics-g3-high': 'G3华文 · 高年级组（中三&中四）',
+        'topics-g3-low':  'G3华文 · 低年级组（中一&中二）',
+      };
+      Object.keys(groupMap).forEach(function(id) {
+        var topics = window.JINGSAI_TOPICS[groupMap[id]] || [];
+        if (!topics.length) return;
+        var el = document.getElementById(id);
+        if (!el) {
+          el = document.createElement('textarea');
+          el.id = id;
+          el.style.display = 'none';
+          document.body.appendChild(el);
+        }
+        el.value = topics.join('\n');
+        el.textContent = topics.join('\n');
+      });
+    }
+  } catch(e) {}
+})();
 
 // ── 作文竞赛自定义下拉（解决 CSS zoom 导致原生 select 闪退问题）──
 window.jingsaiGroupDropdown = function() {
