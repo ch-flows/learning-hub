@@ -1730,7 +1730,7 @@
             <canvas class="jingsai-grid-canvas" style="display: block; width: 688px; height: 410px;" width="1" height="1"></canvas>
             <div class="jingsai-text-canvas" style="position: absolute; top: 0px; left: 0px; pointer-events: none; overflow: visible; width: 688px; height: 408px;"><span style="position: absolute; left: 0px; top: 6px; width: 34.4px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 300; line-height: 1; color: rgb(26, 92, 56); font-family: SimSun, 宋体, STSong, NSimSun, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; box-sizing: border-box; -webkit-font-smoothing: antialiased; transform: translateY(-1px); background: none; border-radius: 2px;">　</span><span style="position: absolute; left: 34.4px; top: 6px; width: 34.4px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 300; line-height: 1; color: rgb(26, 92, 56); font-family: SimSun, 宋体, STSong, NSimSun, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; box-sizing: border-box; -webkit-font-smoothing: antialiased; transform: translateY(-1px); background: none; border-radius: 2px;">　</span></div>
             <div class="jingsai-cursor" style="position: absolute; width: 1.5px; background: rgb(46, 125, 50); pointer-events: none; display: block; animation: 1s steps(1) infinite jc-blink; z-index: 4; left: 69.8px; top: 6px; height: 18px;"></div>
-          <textarea autocomplete="off" autocorrect="off" autocapitalize="sentences" spellcheck="false" style="position: absolute; inset: 0px; width: 100%; height: 100%; z-index: 5; opacity: 1; background: rgba(255, 255, 255, 0.01); color: rgba(0, 0, 0, 0.01); caret-color: auto; border: medium; outline: medium; resize: none; padding: 0px; margin: 0px; font-size: 16px; -webkit-user-select: text; touch-action: manipulation;"></textarea></div>
+          <textarea autocomplete="off" autocorrect="off" autocapitalize="sentences" spellcheck="false" style="position: absolute; inset: 42px 0px 0px 413px; width: 34px; height: 42px; z-index: 5; opacity: 1; background: rgba(255, 255, 255, 0.01); color: rgba(0, 0, 0, 0.01); caret-color: auto; border: medium; outline: medium; resize: none; padding: 0px; margin: 0px; font-size: 16px; -webkit-user-select: text; touch-action: manipulation;"></textarea></div>
         </div>
         <div class="jingsai-page-num" style="font-size:8pt;color:#999;text-align:right;padding-right:4px;margin-top:5px;line-height:1;">第 1 页</div>
       </div>
@@ -1765,7 +1765,7 @@
 </div>
 <div id="kt-tooltip"></div>
 <script>window.onerror=function(msg,src,line,col,err){console.warn("[student]",msg,src+":"+line);return true;};</script>
-<script id="studentMeta">window.STUDENT_META={class:"3G3",template:"yuedu-jinglian",assignTitle:"远亲不如近邻",scriptUrl:"https://script.google.com/macros/s/AKfycbxmYibJps-FrT3u5t60gC3p-8SjTw6G8nUrLdWFPu_F4E_ZMRcFtFN3egivxsi7h7lG/exec",timerCfg:{"enabled":false,"t1":20,"t2":0,"t3":0,"te":5,"n1":"","n2":"","n3":"","ne":"延时"},submitEnabled:true,fileToken:"mpunpn9f",noPaste:true,jingsaiTopics:{"高华 · 高年级组（中三&中四）":[],"高华 · 低年级组（中一&中二）":[],"G3华文 · 高年级组（中三&中四）":[],"G3华文 · 低年级组（中一&中二）":[]}};var INITIAL_TEMPLATE="yuedu-jinglian";var YJ_UNITS_DATA=[{"index":0,"question":"（老师在此输入题目，学生作答时只读）","text":"　　","cur":2,"rows":10}];</script>
+<script id="studentMeta">window.STUDENT_META={class:"3G3",template:"yuedu-jinglian",assignTitle:"远亲不如近邻",scriptUrl:"https://script.google.com/macros/s/AKfycbxmYibJps-FrT3u5t60gC3p-8SjTw6G8nUrLdWFPu_F4E_ZMRcFtFN3egivxsi7h7lG/exec",timerCfg:{"enabled":false,"t1":20,"t2":0,"t3":0,"te":5,"n1":"","n2":"","n3":"","ne":"延时"},submitEnabled:true,fileToken:"mpuowb2f",noPaste:true,jingsaiTopics:{"高华 · 高年级组（中三&中四）":[],"高华 · 低年级组（中一&中二）":[],"G3华文 · 高年级组（中三&中四）":[],"G3华文 · 低年级组（中一&中二）":[]}};var INITIAL_TEMPLATE="yuedu-jinglian";var YJ_UNITS_DATA=[{"index":0,"question":"（老师在此输入题目，学生作答时只读）","text":"　　","cur":2,"rows":10}];</script>
 <script>
 (function(){
   if(!window.STUDENT_META)return;
@@ -6341,9 +6341,6 @@ var dqb=document.querySelector('#langdu-fb-student-desk button');
         // Show/hide jingsai topic section in getlink overlay
         var topicsSec = document.getElementById('getlink-topics-section');
         if (topicsSec) topicsSec.style.display = (name === 'zuowen-jingsai') ? '' : 'none';
-        // Hide template dropdown when in zuowen-jingsai mode
-        var tplDropdown = document.getElementById('tplDropdown');
-        if (tplDropdown) tplDropdown.style.display = (name === 'zuowen-jingsai') ? 'none' : '';
         // 阅读精练：题目框 contenteditable 根据 isEditMode 控制
         var yjQ = document.getElementById('yuedu-jinglian-question');
         if (yjQ) yjQ.setAttribute('contenteditable', (typeof isEditMode !== 'undefined' && isEditMode) ? 'true' : 'false');
@@ -8083,6 +8080,22 @@ var dqb=document.querySelector('#langdu-fb-student-desk button');
                     _updateDirIndex(cat, fileName, _listTitle, cls);
                 }
                 // photo-upload: 不更新目录页
+                // ── 同步写入 Firestore worksheet_tasks ──
+(function(){
+    var FB_KEY = 'AIzaSyDHGWg2s8lZI_rlVTwLJzgdt-LJCEIXHgk';
+    var FB_URL = 'https://firestore.googleapis.com/v1/projects/huawen-platform/databases/(default)/documents/worksheet_tasks?key=' + FB_KEY;
+    fetch(FB_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fields: {
+            title:     { stringValue: title },
+            class:     { stringValue: cls },
+            link:      { stringValue: link },
+            cat:       { stringValue: cat },
+            createdAt: { stringValue: new Date().toISOString() }
+        }})
+    }).catch(function(){});
+})();
             } else {
                 if (statusEl) { statusEl.style.background = '#fef2f2'; statusEl.style.color = '#dc2626'; statusEl.textContent = '❌ 上传失败：' + (d.message || '未知错误'); }
             }
